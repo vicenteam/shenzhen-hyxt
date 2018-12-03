@@ -1,5 +1,5 @@
 /**
- * 初始化积分类型详情对话框
+ * 初始化商品类型维护详情对话框
  */
 var IntegralrecordtypeInfoDlg = {
     integralrecordtypeInfoData : {}
@@ -46,7 +46,19 @@ IntegralrecordtypeInfoDlg.close = function() {
 IntegralrecordtypeInfoDlg.collectData = function() {
     this
     .set('id')
-    .set('name');
+    .set('names')
+    .set('productname')
+    .set('producttype')
+    .set('productspecification')
+    .set('productnum')
+    .set('productbalance')
+    .set('productjifen')
+    .set('producteatingdose')
+    .set('deptid')
+    .set('createtime')
+    .set('updatetime')
+    .set('createuserid')
+    .set('updateuserid');
 }
 
 /**

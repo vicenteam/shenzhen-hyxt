@@ -1,5 +1,5 @@
 /**
- * 积分类型管理初始化
+ * 商品类型维护管理初始化
  */
 var Integralrecordtype = {
     id: "IntegralrecordtypeTable",	//表格id
@@ -14,8 +14,39 @@ var Integralrecordtype = {
 Integralrecordtype.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '积分类型', field: 'name', visible: true, align: 'center', valign: 'middle'}
+        {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
+        {title: '积分类型', field: 'names', visible: true, align: 'center', valign: 'middle'},
+        {title: '产品名称', field: 'productname', visible: true, align: 'center', valign: 'middle'},
+        {
+            title: '产品类别',
+            field: 'producttype',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                    if(value==0){
+                        return "礼品类";
+                    }else if(value==1){
+                        return "积分兑换类";
+                    }
+                    else if(value==2){
+                        return "销售类";
+                    }
+                    else if(value==3){
+                        return "积分+金额类";
+                    }
+            }
+        },
+        {title: '产品规格', field: 'productspecification', visible: true, align: 'center', valign: 'middle'},
+        {title: '产品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
+        {title: '产品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
+        {title: '产品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
+        {title: '食用剂量', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
+        // {title: '', field: 'deptid', visible: true, align: 'center', valign: 'middle'},
+        // {title: '', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+        // {title: '', field: 'updatetime', visible: true, align: 'center', valign: 'middle'},
+        // {title: '', field: 'createuserid', visible: true, align: 'center', valign: 'middle'},
+        // {title: '', field: 'updateuserid', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 
@@ -24,22 +55,22 @@ Integralrecordtype.initColumn = function () {
  */
 Integralrecordtype.check = function () {
     var selected = $('#' + this.id).bootstrapTable('getSelections');
-    if(selected.length == 0){
+    if (selected.length == 0) {
         Feng.info("请先选中表格中的某一记录！");
         return false;
-    }else{
+    } else {
         Integralrecordtype.seItem = selected[0];
         return true;
     }
 };
 
 /**
- * 点击添加积分类型
+ * 点击添加商品类型维护
  */
 Integralrecordtype.openAddIntegralrecordtype = function () {
     var index = layer.open({
         type: 2,
-        title: '添加积分类型',
+        title: '添加商品类型维护',
         area: ['800px', '420px'], //宽高
         fix: false, //不固定
         maxmin: true,
@@ -49,13 +80,13 @@ Integralrecordtype.openAddIntegralrecordtype = function () {
 };
 
 /**
- * 打开查看积分类型详情
+ * 打开查看商品类型维护详情
  */
 Integralrecordtype.openIntegralrecordtypeDetail = function () {
     if (this.check()) {
         var index = layer.open({
             type: 2,
-            title: '积分类型详情',
+            title: '商品类型维护详情',
             area: ['800px', '420px'], //宽高
             fix: false, //不固定
             maxmin: true,
@@ -66,7 +97,7 @@ Integralrecordtype.openIntegralrecordtypeDetail = function () {
 };
 
 /**
- * 删除积分类型
+ * 删除商品类型维护
  */
 Integralrecordtype.delete = function () {
     if (this.check()) {
@@ -76,13 +107,13 @@ Integralrecordtype.delete = function () {
         }, function (data) {
             Feng.error("删除失败!" + data.responseJSON.message + "!");
         });
-        ajax.set("integralrecordtypeId",this.seItem.id);
+        ajax.set("integralrecordtypeId", this.seItem.id);
         ajax.start();
     }
 };
 
 /**
- * 查询积分类型列表
+ * 查询商品类型维护列表
  */
 Integralrecordtype.search = function () {
     var queryData = {};

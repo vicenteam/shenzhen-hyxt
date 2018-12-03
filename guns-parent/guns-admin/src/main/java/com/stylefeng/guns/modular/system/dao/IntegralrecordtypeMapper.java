@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author stylefeng
- * @since 2018-10-30
+ * @since 2018-12-03
  */
 public interface IntegralrecordtypeMapper extends BaseMapper<Integralrecordtype> {
 

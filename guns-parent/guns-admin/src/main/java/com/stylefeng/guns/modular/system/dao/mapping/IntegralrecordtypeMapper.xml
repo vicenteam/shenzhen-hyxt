@@ -6,11 +6,23 @@
     <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.Integralrecordtype">
         <id column="id" property="id" />
         <result column="names" property="names" />
+        <result column="productname" property="productname" />
+        <result column="producttype" property="producttype" />
+        <result column="productspecification" property="productspecification" />
+        <result column="productnum" property="productnum" />
+        <result column="productbalance" property="productbalance" />
+        <result column="productjifen" property="productjifen" />
+        <result column="producteatingdose" property="producteatingdose" />
+        <result column="deptid" property="deptid" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="createuserid" property="createuserid" />
+        <result column="updateuserid" property="updateuserid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, names
+        id, names, productname, producttype, productspecification, productnum, productbalance, productjifen, producteatingdose, deptid, createtime, updatetime, createuserid, updateuserid
     </sql>
 
 </mapper>
