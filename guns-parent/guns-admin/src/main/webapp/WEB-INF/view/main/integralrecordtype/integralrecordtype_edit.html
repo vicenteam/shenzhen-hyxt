@@ -2,26 +2,27 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                <input type="hidden" id="id" value="${item.id}">
+                <input type="hidden" id="producttype_temp" value="${item.producttype}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="" value="${item.id}" underline="true"/>
                             <#input id="names" name="积分类型" value="${item.names}" underline="true"/>
                             <#input id="productname" name="产品名称" value="${item.productname}" underline="true"/>
-                            <#input id="producttype" name="产品类别(0礼品类、1积分兑换类、2销售类、3积分+金额类)" value="${item.producttype}" underline="true"/>
+                            <#select id="producttype" name="产品类别" underline="true">
+                            <option value="0">礼品类</option>
+                            <option value="1">积分兑换类</option>
+                            <option value="2">销售类</option>
+                            <option value="3">积分+金额类</option>
+                        </#select>
                             <#input id="productspecification" name="产品规格" value="${item.productspecification}" underline="true"/>
-                            <#input id="productnum" name="产品数量" value="${item.productnum}" underline="true"/>
-                            <#input id="productbalance" name="产品结余" value="${item.productbalance}" />
+
                 </div>
 
                 <div class="col-sm-6">
+                            <#input id="productnum" name="产品数量" value="${item.productnum}" underline="true"/>
+                            <#input id="productbalance" name="产品结余" value="${item.productbalance}" underline="true"/>
                             <#input id="productjifen" name="产品积分" value="${item.productjifen}" underline="true"/>
                             <#input id="producteatingdose" name="食用剂量(,号隔开)" value="${item.producteatingdose}" underline="true"/>
-                            <#input id="deptid" name="" value="${item.deptid}" underline="true"/>
-                            <#input id="createtime" name="" value="${item.createtime}" underline="true"/>
-                            <#input id="updatetime" name="" value="${item.updatetime}" underline="true"/>
-                            <#input id="createuserid" name="" value="${item.createuserid}" underline="true"/>
-                            <#input id="updateuserid" name="" value="${item.updateuserid}" />
                 </div>
             </div>
 
@@ -36,4 +37,7 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/integralrecordtype/integralrecordtype_info.js"></script>
+<script>
+    $("#producttype").val($("#producttype_temp").val())
+</script>
 @}

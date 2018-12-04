@@ -1,6 +1,8 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.util.DateUtil;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -14,6 +16,8 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
+
+import java.util.Date;
 
 /**
  * 积分类型控制器
@@ -65,6 +69,7 @@ public class IntegralrecordtypeController extends BaseController {
     public Object list(String condition) {
         Page<Integralrecordtype> page = new PageFactory<Integralrecordtype>().defaultPage();
         BaseEntityWrapper<Integralrecordtype> baseEntityWrapper = new BaseEntityWrapper<>();
+        baseEntityWrapper.eq("status",0);
         Page<Integralrecordtype> result = integralrecordtypeService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
@@ -75,6 +80,10 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Integralrecordtype integralrecordtype) {
+        integralrecordtype.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        integralrecordtype.setCreateuserid(ShiroKit.getUser().id+"");
+        integralrecordtype.setDeptid(ShiroKit.getUser().getDeptId()+"");
+        integralrecordtype.setStatus(0);
         integralrecordtypeService.insert(integralrecordtype);
         return SUCCESS_TIP;
     }
@@ -85,7 +94,9 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer integralrecordtypeId) {
-        integralrecordtypeService.deleteById(integralrecordtypeId);
+        Integralrecordtype integralrecordtype = integralrecordtypeService.selectById(integralrecordtypeId);
+        integralrecordtype.setStatus(1);
+        integralrecordtypeService.updateById(integralrecordtype);
         return SUCCESS_TIP;
     }
 
@@ -95,6 +106,8 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Integralrecordtype integralrecordtype) {
+        integralrecordtype.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId()+"");
         integralrecordtypeService.updateById(integralrecordtype);
         return SUCCESS_TIP;
     }

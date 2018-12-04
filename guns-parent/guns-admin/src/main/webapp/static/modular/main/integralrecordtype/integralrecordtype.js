@@ -24,7 +24,7 @@ Integralrecordtype.initColumn = function () {
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) {
-                    if(value==0){
+                    if(value==0&&value.length>0){
                         return "礼品类";
                     }else if(value==1){
                         return "积分兑换类";
@@ -34,6 +34,8 @@ Integralrecordtype.initColumn = function () {
                     }
                     else if(value==3){
                         return "积分+金额类";
+                    }else {
+                        return ""
                     }
             }
         },
