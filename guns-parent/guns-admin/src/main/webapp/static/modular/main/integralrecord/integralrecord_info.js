@@ -129,4 +129,91 @@ IntegralrecordInfoDlg.editSubmit = function() {
 
 $(function() {
     Feng.initValidator("integralrecordInfoTable", IntegralrecordInfoDlg.validateFields);
+
+    //绑定商品搜索
+    $('.selectpicker').selectpicker({
+        'selectedText': 'cat'
+    });
+    $(".selectpicker" ).selectpicker('refresh');
+    $(".bs-searchbox input").keyup(function(event){
+        // if(event.keyCode == "13") {//判断如果按下的是回车键则执行下面的代码
+            var search=($(".bs-searchbox input").val())
+            //进行搜索 integralrecordtype/list
+            var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/list", function (data) {
+                console.log(data)
+                $("#productname").empty();
+                if(data.rows.length>0){
+                    for(var i=0;i<data.rows.length;i++){
+                        $("#productname").append("<option value='"+data.rows[i].id+"'>【"+data.rows[i].productname+"】 库存("+data.rows[i].productnum+")</option>");
+                    }
+                }
+                $(".selectpicker" ).selectpicker('refresh');
+            }, function (data) {
+            });
+            ajax.set("condition", search);
+            ajax.set("producttype", $("#typeId").val());
+            ajax.set("limit", 9999);
+            ajax.start();
+        // }
+
+    });;
+    $("#typeId").change(function () {
+        changeselect();
+
+
+    })
+    $("#productname").change(function () {
+      //查询商品
+        findbyid();
+
+    })
+    changeselect();
+    findbyid();
+    $("#play").keyup(function(event){
+        console.log($("#play").val())
+       changejifen();
+
+    })
 });
+function changeselect() {
+    var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/list", function (data) {
+        $("#productname").empty();
+        if(data.rows.length>0){
+            for(var i=0;i<data.rows.length;i++){
+                $("#productname").append("<option value='"+data.rows[i].id+"' obj='"+data.rows[i].producttype+"'>【"+data.rows[i].productname+"】 库存("+data.rows[i].productnum+")</option>");
+            }
+        }
+        $(".selectpicker" ).selectpicker('refresh');
+        findbyid();
+    }, function (data) {
+    });
+    ajax.set("producttype", $("#typeId").val());
+    ajax.set("limit", 100);
+    ajax.start();
+}
+function findbyid() {
+    var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/detail/"+ $("#productname").val(), function (data) {
+       console.log(data)
+        $("#integral").val(data.productjifen);
+        if(data.producttype==2||data.producttype==3){
+            $("#divplay").css("display","");
+        }else {
+            $("#divplay").css("display","none");
+        }
+    }, function (data) {
+    });
+    ajax.set("producttype", $("#typeId").val());
+    ajax.start();
+}
+function changejifen() {
+    if($("#typeId").val()==3){
+        var tempIntegral= $("#play").val()*10;
+        var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/detail/"+ $("#productname").val(), function (data) {
+            console.log(data)
+            $("#integral").val((parseInt(data.productjifen)+tempIntegral))
+        }, function (data) {
+        });
+        ajax.start();
+    }
+}
+

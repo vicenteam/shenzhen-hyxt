@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -66,9 +67,11 @@ public class IntegralrecordtypeController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String condition,Integer producttype) {
         Page<Integralrecordtype> page = new PageFactory<Integralrecordtype>().defaultPage();
         BaseEntityWrapper<Integralrecordtype> baseEntityWrapper = new BaseEntityWrapper<>();
+        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("productname",condition);
+        if(producttype!=null) baseEntityWrapper.eq("producttype",producttype);
         baseEntityWrapper.eq("status",0);
         Page<Integralrecordtype> result = integralrecordtypeService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);

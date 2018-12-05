@@ -8,7 +8,14 @@
     clickFun : 点击事件的方法名
     style : 附加的css属性
 @*/
-<div class="form-group">
+<div class="form-group"
+     @if(isNotEmpty(display)){
+         style="display:${display}"
+     @}
+     @if(isNotEmpty(divId)){
+     id="${divId}"
+     @}
+>
     <label class="col-sm-3 control-label">${name}</label>
     <div class="col-sm-9">
         <input class="form-control" id="${id}" name="${id}"
