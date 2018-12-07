@@ -15,7 +15,7 @@ Integralrecordtype.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
-        {title: '积分类型', field: 'names', visible: true, align: 'center', valign: 'middle'},
+        {title: '积分类型', field: 'names', visible: true, align: 'center',visible: false, valign: 'middle'},
         {title: '产品名称', field: 'productname', visible: true, align: 'center', valign: 'middle'},
         {
             title: '产品类别',
