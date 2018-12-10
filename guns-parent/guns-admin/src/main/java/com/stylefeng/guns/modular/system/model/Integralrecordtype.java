@@ -32,7 +32,7 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     /**
      * 产品类别(0礼品类、1积分兑换类、2销售类、3积分+金额类)
      */
-    private String producttype;
+    private Integer producttype;
     /**
      * 产品规格
      */
@@ -40,7 +40,7 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     /**
      * 产品数量
      */
-    private String productnum;
+    private Integer productnum;
     /**
      * 产品结余
      */
@@ -92,11 +92,11 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
         this.productname = productname;
     }
 
-    public String getProducttype() {
+    public Integer getProducttype() {
         return producttype;
     }
 
-    public void setProducttype(String producttype) {
+    public void setProducttype(Integer producttype) {
         this.producttype = producttype;
     }
 
@@ -108,11 +108,11 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
         this.productspecification = productspecification;
     }
 
-    public String getProductnum() {
+    public Integer getProductnum() {
         return productnum;
     }
 
-    public void setProductnum(String productnum) {
+    public void setProductnum(Integer productnum) {
         this.productnum = productnum;
     }
 
