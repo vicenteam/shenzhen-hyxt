@@ -67,10 +67,15 @@ public class IntegralrecordtypeController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition,Integer producttype) {
+    public Object list(String condition,Integer producttype,Integer id) {
         Page<Integralrecordtype> page = new PageFactory<Integralrecordtype>().defaultPage();
         BaseEntityWrapper<Integralrecordtype> baseEntityWrapper = new BaseEntityWrapper<>();
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("productname",condition);
+        if(id!=null){
+            baseEntityWrapper.eq("id",id);
+        }else {
+            if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("productname",condition);
+        }
+
         if(producttype!=null) baseEntityWrapper.eq("producttype",producttype);
         baseEntityWrapper.eq("status",0);
         Page<Integralrecordtype> result = integralrecordtypeService.selectPage(page, baseEntityWrapper);

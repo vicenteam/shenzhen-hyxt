@@ -1,13 +1,14 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.base.tips.SuccessTip;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
-import com.stylefeng.guns.modular.system.model.Integralrecordtype;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
-import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.main.service.IProductReturnChangeService;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.InventoryManagement;
 import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
 
 import java.util.Date;
@@ -50,6 +50,8 @@ public class InventoryManagementController extends BaseController {
     private IUserService userService;
     @Autowired
     private IMembermanagementService membermanagementService;
+    @Autowired
+    private IProductReturnChangeService productReturnChangeService;
 
     /**
      * 跳转到商品库存首页
@@ -153,12 +155,36 @@ public class InventoryManagementController extends BaseController {
     }
 
     /**
-     * 删除商品库存
+     * 申请退换货
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer inventoryManagementId) {
-        inventoryManagementService.deleteById(inventoryManagementId);
+    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type) throws Exception {
+        EntityWrapper<ProductReturnChange> productReturnChangeEntityWrapper = new EntityWrapper<>();
+        productReturnChangeEntityWrapper.eq("inventoryManagementId",inventoryManagementId);
+        int i = productReturnChangeService.selectCount(productReturnChangeEntityWrapper);
+        if(i>0){
+           throw new Exception("该记录已执行退换货操作!");
+        }
+        InventoryManagement inventoryManagement = inventoryManagementService.selectById(inventoryManagementId);
+        ProductReturnChange productReturnChange = new ProductReturnChange();
+        productReturnChange.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        productReturnChange.setCreateuserid(ShiroKit.getUser().getId()+"");
+        productReturnChange.setDeptId(ShiroKit.getUser().getDeptId()+"");
+        productReturnChange.setMemberId(Integer.parseInt(inventoryManagement.getMemberid()));
+        productReturnChange.setMemberName(inventoryManagement.getMemberName());
+        productReturnChange.setProductId(inventoryManagement.getIntegralrecordtypeid());
+        Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(inventoryManagement.getIntegralrecordtypeid());
+        if(integralrecordtype!=null)productReturnChange.setProductName(integralrecordtype.getProductname());
+        productReturnChange.setReturnchangeType(type);
+        productReturnChange.setReturnchangeproductId(inventoryManagement.getIntegralrecordtypeid());
+        productReturnChange.setReturnchangeproductName(integralrecordtype.getProductname());
+        productReturnChange.setReturnchangeNum(inventoryManagement.getConsumptionNum());
+        productReturnChange.setStatus(type);
+        productReturnChange.setInventoryManagementId(inventoryManagementId);
+        //设置积分表id
+//        productReturnChange.setIntegralrecodeId();
+        productReturnChangeService.insert(productReturnChange);
         return SUCCESS_TIP;
     }
 

@@ -40,6 +40,7 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private String name;
     private String memberName;
 
+
     public String getMemberName() {
         return memberName;
     }

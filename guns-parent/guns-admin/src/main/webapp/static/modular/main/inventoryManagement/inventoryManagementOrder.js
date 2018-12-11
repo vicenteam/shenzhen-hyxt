@@ -119,21 +119,50 @@ InventoryManagement.openInventoryManagementDetail = function () {
 };
 
 /**
- * 删除商品库存
+ * 申请退换货
  */
 InventoryManagement.delete = function () {
     if (this.check()) {
-        var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/delete", function (data) {
-            Feng.success("删除成功!");
-            InventoryManagement.table.refresh();
-        }, function (data) {
-            Feng.error("删除失败!" + data.responseJSON.message + "!");
+        if(this.seItem.producttype!=2){
+            Feng.error("非销售类商品不能执行该操作!");
+            return;
+        }
+        var selectid=this.seItem.id;
+        layer.confirm('您确定要将本条数据申请退货吗？', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/delete", function (data) {
+                Feng.success("申请成功!");
+                InventoryManagement.table.refresh();
+            }, function (data) {
+                Feng.error("申请失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("inventoryManagementId", selectid);
+            ajax.set("type", 0);
+            ajax.start();
         });
-        ajax.set("inventoryManagementId", this.seItem.id);
-        ajax.start();
     }
 };
-
+InventoryManagement.delete1 = function () {
+    if (this.check()) {
+        if(this.seItem.producttype!=2){
+            Feng.error("非销售类商品不能执行该操作!");
+            return;
+        }
+        var selectid=this.seItem.id;
+        layer.confirm('您确定要将本条数据申请换货吗？', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/delete", function (data) {
+                Feng.success("申请成功!");
+                InventoryManagement.table.refresh();
+            }, function (data) {
+                Feng.error("申请失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("inventoryManagementId", selectid);
+            ajax.set("type", 1);
+            ajax.start();
+        });
+    }
+};
 /**
  * 查询商品库存列表
  */
