@@ -6,8 +6,10 @@ import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
+import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
+import com.stylefeng.guns.modular.system.model.InventoryManagement;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -49,6 +51,9 @@ public class IntegralrecordController extends BaseController {
     private MembermanagementController membermanagementController;
     @Autowired
     private IIntegralrecordtypeService integralrecordtypeService;
+    @Autowired
+    private IInventoryManagementService inventoryManagementService;
+
 
     /**
      * 跳转到新增积分首页
@@ -100,14 +105,34 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer typeId, Integer memberId) {
-        System.out.println(integral+"     "+typeId+"     "+memberId);
-        List<Membermanagement> membermanagements = new ArrayList<>();
-        Membermanagement membermanagement = new Membermanagement();
-        membermanagement.setId(memberId);
-        membermanagements.add(membermanagement);
+    public Object add(Double integral, Integer productname, Integer memberId) throws Exception {
+        BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+        mWrapper.eq("id",memberId);
+        List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
+
+        BaseEntityWrapper<Integralrecordtype> iWrapper = new BaseEntityWrapper<>();
+        iWrapper.eq("id",productname);
+        Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
+
         //积分添加操作
-        insertIntegral(integral,typeId,membermanagements);
+        insertIntegral(integral,integralrecordtype.getProducttype(),membermanagements);
+
+        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-1);//更新库存
+        integralrecordtype.setUpdatetime(DateUtil.getTime());
+        integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());
+        integralrecordtypeService.updateById(integralrecordtype);
+
+        InventoryManagement inventoryManagement = new InventoryManagement();
+        inventoryManagement.setCreatetime(DateUtil.getTime());
+        inventoryManagement.setCreateuserid(ShiroKit.getUser().getId().toString());
+        inventoryManagement.setDeptid(ShiroKit.getUser().getDeptId().toString());
+        inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
+        inventoryManagement.setStatus("1");
+        inventoryManagement.setMemberid(memberId.toString());
+        inventoryManagement.setConsumptionNum(1);
+        inventoryManagement.setName(integralrecordtype.getProductname());
+        inventoryManagement.setMemberName(membermanagements.get(0).getName());
+        inventoryManagementService.insert(inventoryManagement);
         return SUCCESS_TIP;
     }
 
@@ -117,7 +142,7 @@ public class IntegralrecordController extends BaseController {
      * @param type
      * @param mList
      */
-    public void insertIntegral(double integral, Integer type, List<Membermanagement> mList){
+    public void insertIntegral(double integral, Integer type, List<Membermanagement> mList) throws Exception {
         Membermanagement membermanagement = new Membermanagement();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
@@ -132,11 +157,15 @@ public class IntegralrecordController extends BaseController {
                 nowCountPrice = mInfo.getCountPrice();
             }
             membermanagement.setId(memberId.getId());
-            if(type != 13){ // 判断是否为兑换
+            if(type == 2){ // 判断是否为消费获得积分
                 membermanagement.setIntegral(nowIntegral+integral); //可用积分数 + 新增积分数
                 membermanagement.setCountPrice(nowCountPrice+integral); //总积分数 + 新增积分数
             }else {  //扣除积分
-                membermanagement.setIntegral(nowIntegral-integral);//可用积分数 - 兑换积分数
+                if((nowIntegral+integral) < 0){
+                    throw new Exception("积分不足！");
+                }else {
+                    membermanagement.setIntegral(nowIntegral+integral);//可用积分数 - 兑换积分数
+                }
             }
             //更新会员总积分和实际积分
             membermanagementService.updateById(membermanagement);

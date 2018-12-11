@@ -63,7 +63,7 @@ public class IntegralGiftController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(double integral) {
+    public Object add(double integral) throws Exception {
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作

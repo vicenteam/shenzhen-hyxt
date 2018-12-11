@@ -60,6 +60,7 @@ IntegralrecordInfoDlg.close = function() {
 IntegralrecordInfoDlg.collectData = function() {
     this
     .set('integral')
+    .set('productname')
     .set('typeId')
     .set('memberId');
 }
