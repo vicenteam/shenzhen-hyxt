@@ -262,7 +262,7 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/lingqu")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object lingqu(String activityId, String memberId) {
+    public Object lingqu(String activityId, String memberId) throws Exception {
         Activity activity = activityService.selectById(activityId);
         Integer ruleexpression = activity.getRuleexpression();
         if (ruleexpression == 2) {//积分操作 积分兑换

@@ -18,9 +18,10 @@
                             <div class="col-sm-2">
                                 <#SelectCon name="积分类型" id="typeId" underline="true">
                                     <option value="-1">全部</option>
-                                    @for(item in type){
-                                    <option value="${item.id}" >${item.names}</option>
-                                    @}
+                                    <option value="0">礼品类</option>
+                                    <option value="1">积分兑换类</option>
+                                    <option value="2">销售类</option>
+                                    <option value="3">积分+金额类</option>
                                 </#SelectCon>
                             </div>
                             <div class="col-sm-2">

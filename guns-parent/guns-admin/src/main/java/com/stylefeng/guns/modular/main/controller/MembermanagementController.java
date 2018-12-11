@@ -1,5 +1,8 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -12,10 +15,16 @@ import com.stylefeng.guns.modular.main.service.IBaMedicalService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.system.utils.MemberExcel;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -30,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -712,5 +722,55 @@ public class MembermanagementController extends BaseController {
             memberExcels.clear();
             outputStream.close();
         }
+    }
+
+    @RequestMapping("import_excel")
+    public String importExcelViews() {
+        return PREFIX + "excel_import.html";
+    }
+
+    @BussinessLog(value = "会员客户资料导入", key = "importE")
+    @RequestMapping("/importE")
+    @ResponseBody
+    public Object importExcel(@RequestParam MultipartFile file, HttpServletRequest request) throws Exception {
+        ImportParams params = new ImportParams();
+        params.setTitleRows(0);
+        params.setHeadRows(1);
+        String message = "";
+        Integer total = 0;
+        Integer nowNum = 0;
+        JSONObject resJson = new JSONObject();
+        try {
+            List<MemberExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(),MemberExcel.class,params);
+            Membermanagement membermanagement = new Membermanagement();
+            BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+            for (MemberExcel excelParams : excelUpload) {
+                membermanagement.setName(excelParams.getmName());
+                membermanagement.setCadID(excelParams.getmCadID());
+                membermanagement.setSex(excelParams.getmSex());
+                membermanagement.setPhone(excelParams.getmPhone());
+                membermanagement.setIntegral(excelParams.getmIntegral());
+                membermanagement.setLevelID(excelParams.getmLevel());
+                membermanagement.setCreateTime(DateUtil.getTime());
+                membermanagement.setIsoldsociety(excelParams.getmIsoldsociety());
+                membermanagement.setAddress(excelParams.getmAddress());
+                membermanagement.setCountPrice(excelParams.getmCountPrice());
+                membermanagementService.insert(membermanagement);
+                total += 1;
+            }
+            if(total == excelUpload.size()){
+                message = "导入成功,共"+total+"条";
+            }else if(total == -1){
+                message = "客户编号已存在,在第"+(nowNum+1)+"条错误,导入失败！";
+            }else{
+                message = "导入失败，第"+(total+1)+"条错误!";
+            }
+            resJson.put("msg",message);
+        } catch (Exception e) {
+            message = "导入失败，第"+(total+1)+"条错误!";
+            resJson.put("msg",message);
+            e.printStackTrace();
+        }
+        return resJson;
     }
 }
