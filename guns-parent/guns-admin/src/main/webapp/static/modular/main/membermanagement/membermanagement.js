@@ -210,3 +210,15 @@ $(function () {
 Membermanagement.exportExcel = function () {
     window.location.href=Feng.ctxPath +"/membermanagement/export_excel";
 };
+
+Membermanagement.importExcel = function () {
+    var index = layer.open({
+        type: 2,
+        title: '导入会员客户资料',
+        area: ['800px', '420px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/import_excel'
+    });
+    this.layerIndex = index;
+};

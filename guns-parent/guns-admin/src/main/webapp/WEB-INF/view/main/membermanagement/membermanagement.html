@@ -70,6 +70,9 @@
                             @if(shiro.hasPermission("/membermanagement/export")){
                                 <#button name="Excel导出" icon="fa-download" clickFun="Membermanagement.exportExcel()" space="true"/>
                             @}
+                            @if(shiro.hasPermission("/membermanagement/import")){
+                                <#button name="Excel导入" icon="fa-upload" clickFun="Membermanagement.importExcel()" space="true"/>
+                            @}
                         </div>
                         <#table id="MembermanagementTable"/>
                     </div>
