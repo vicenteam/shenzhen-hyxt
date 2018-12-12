@@ -131,6 +131,22 @@ public class InventoryManagement extends Model<InventoryManagement> {
         this.consumptionNum = consumptionNum;
     }
 
+    public Integer getIntegralid() {
+        return integralid;
+    }
+
+    public void setIntegralid(Integer integralid) {
+        this.integralid = integralid;
+    }
+
+    public Integer getClearid() {
+        return clearid;
+    }
+
+    public void setClearid(Integer clearid) {
+        this.clearid = clearid;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.id;
