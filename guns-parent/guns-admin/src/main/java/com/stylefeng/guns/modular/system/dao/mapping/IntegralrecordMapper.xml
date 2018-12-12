@@ -24,16 +24,13 @@
      SELECT
 	b.productname,
 	b.productnum,
-  b.producttype,
+    b.producttype,
 	COUNT(a.typeId) AS count,
-
 <if test="monthTime1 != null and monthTime1 != '' and monthTime2 != null and monthTime2 != ''">
-
 	(
 	select count(1) from main_integralrecord where typeId=b.id  and (createTime between CONCAT(#{monthTime1},' 00:00:00') and CONCAT(#{monthTime2},' 23:59:59'))
 	) month,
 </if>
-
 <if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
 	(
 	select count(1) from main_integralrecord where typeId=b.id and (createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
@@ -59,39 +56,19 @@ GROUP BY
 	limit #{pageNum},#{pageSize}
     </select>
 
-	<select id="productSalesRankingCount" resultType="map">
+	<select id="productSalesRankingCount" resultType="java.lang.Integer">
+		select count(1) from
+		(
 		SELECT
-		count(1)
-		<if test="monthTime1 != null and monthTime1 != '' and monthTime2 != null and monthTime2 != ''">
-
-			(
-			select count(1) from main_integralrecord where typeId=b.id  and (createTime between CONCAT(#{monthTime1},' 00:00:00') and CONCAT(#{monthTime2},' 23:59:59'))
-			) month,
-		</if>
-
-		<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
-			(
-			select count(1) from main_integralrecord where typeId=b.id and (createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
-			) time_to_end,
-		</if>
-		b.deptid
+		count(*)
 		FROM
 		main_integralrecord a
 		INNER JOIN main_integralrecordtype b ON b.id = a.typeId
 		WHERE a.deptid=#{deptId}
 		GROUP BY
 		a.typeId
-		<choose>
-			<when test="orderBy !=null and orderBy != ''">
-				ORDER BY
-				#{orderBy} #{desc}
-			</when>
-			<otherwise>
-				ORDER BY
-				count DESC
-			</otherwise>
-		</choose>
 		limit #{pageNum},#{pageSize}
+		) as a
 	</select>
 
 </mapper>

@@ -4,6 +4,7 @@ import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.baomidou.mybatisplus.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,15 +17,15 @@ import java.util.Map;
  */
 public interface IIntegralrecordService extends IService<Integralrecord> {
 
-    Map<String,Object> productSalesRanking(Integer pagetNum,
-                                           Integer pageSize,
-                                           Integer deptId,
-                                           String monthTime1,
-                                           String monthTime2,
-                                           String periodTime1,
-                                           String periodTime2,
-                                           String orderBy,
-                                           String desc);
+    List<Map<String,Object>> productSalesRanking(Integer pagetNum,
+                                                 Integer pageSize,
+                                                 Integer deptId,
+                                                 String monthTime1,
+                                                 String monthTime2,
+                                                 String periodTime1,
+                                                 String periodTime2,
+                                                 String orderBy,
+                                                 String desc);
 
    int productSalesRankingintCount(Integer pagetNum,
                                            Integer pageSize,

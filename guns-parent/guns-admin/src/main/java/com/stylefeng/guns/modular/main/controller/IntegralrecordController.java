@@ -29,6 +29,7 @@ import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 
 import java.sql.Wrapper;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,11 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping("")
     public String index() {
         return PREFIX + "integralrecord.html";
+    }
+
+    @RequestMapping("productSalesRankingPage")
+    public String productSalesRankingPage() {
+        return PREFIX + "productSalesRankingPage.html";
     }
 
     /**
@@ -101,8 +107,6 @@ public class IntegralrecordController extends BaseController {
 
     /**
      * 商品销量排名
-     * @param pagetNum
-     * @param pageSize
      * @param deptId
      * @param monthTime1
      * @param monthTime2
@@ -114,8 +118,8 @@ public class IntegralrecordController extends BaseController {
      */
     @RequestMapping(value = "/productSalesRanking")
     @ResponseBody
-    public Object productSalesRanking(Integer pagetNum,
-                                      Integer pageSize,
+    public Object productSalesRanking(Integer offset,
+                                      Integer limit,
                                       Integer deptId,
                                       String monthTime1,
                                       String monthTime2,
@@ -123,8 +127,13 @@ public class IntegralrecordController extends BaseController {
                                       String periodTime2,
                                       String orderBy,
                                       String desc) {
+        String format = DateUtil.format(new Date(), "yyyy-MM-dd");
+        monthTime1=monthTime2=format;
         Page<Map<String,Object>> page = new PageFactory<Map<String,Object>>().defaultPage();
-
+        int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        page.setTotal(i);
+        List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        page.setRecords(mapList);
         return super.packForBT(page);
     }
     /**

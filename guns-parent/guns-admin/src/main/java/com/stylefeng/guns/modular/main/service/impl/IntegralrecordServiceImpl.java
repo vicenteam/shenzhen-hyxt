@@ -6,6 +6,7 @@ import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Map;
 public class IntegralrecordServiceImpl extends ServiceImpl<IntegralrecordMapper, Integralrecord> implements IIntegralrecordService {
 
     @Override
-    public Map<String, Object> productSalesRanking(Integer pagetNum, Integer pageSize, Integer deptId, String monthTime1, String monthTime2, String periodTime1, String periodTime2, String orderBy, String desc) {
+    public List<Map<String, Object>> productSalesRanking(Integer pagetNum, Integer pageSize, Integer deptId, String monthTime1, String monthTime2, String periodTime1, String periodTime2, String orderBy, String desc) {
         return this.baseMapper.productSalesRanking(pagetNum,pageSize,deptId,monthTime1,monthTime2,periodTime1,periodTime2,orderBy,desc);
     }
 

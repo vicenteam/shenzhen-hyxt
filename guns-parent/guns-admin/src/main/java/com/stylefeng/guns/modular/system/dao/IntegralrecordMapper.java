@@ -4,6 +4,7 @@ import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,15 +17,15 @@ import java.util.Map;
  */
 public interface IntegralrecordMapper extends BaseMapper<Integralrecord> {
 
-    Map<String,Object> productSalesRanking(@Param("pageNum")Integer pagetNum,
-                                           @Param("pageSize")Integer pageSize,
-                                           @Param("deptId")Integer deptId,
-                                           @Param("monthTime1")String monthTime1,
-                                           @Param("monthTime2")String monthTime2,
-                                           @Param("periodTime1")String periodTime1,
-                                           @Param("periodTime2")String periodTime2,
-                                           @Param("orderBy")String orderBy,
-                                           @Param("desc")String desc);
+    List<Map<String,Object>> productSalesRanking(@Param("pageNum")Integer pagetNum,
+                                                 @Param("pageSize")Integer pageSize,
+                                                 @Param("deptId")Integer deptId,
+                                                 @Param("monthTime1")String monthTime1,
+                                                 @Param("monthTime2")String monthTime2,
+                                                 @Param("periodTime1")String periodTime1,
+                                                 @Param("periodTime2")String periodTime2,
+                                                 @Param("orderBy")String orderBy,
+                                                 @Param("desc")String desc);
     int productSalesRankingCount(@Param("pageNum")Integer pagetNum,
                                            @Param("pageSize")Integer pageSize,
                                            @Param("deptId")Integer deptId,
