@@ -128,6 +128,7 @@ public class IntegralrecordController extends BaseController {
         inventoryManagement.setDeptid(ShiroKit.getUser().getDeptId().toString());
         inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
         inventoryManagement.setStatus("1");
+        inventoryManagement.setMemberPhone(membermanagements.get(0).getPhone());
         inventoryManagement.setMemberid(memberId.toString());
         inventoryManagement.setConsumptionNum(1);
         inventoryManagement.setName(integralrecordtype.getProductname());
