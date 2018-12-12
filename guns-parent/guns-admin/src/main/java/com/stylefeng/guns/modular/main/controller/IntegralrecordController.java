@@ -30,6 +30,7 @@ import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 新增积分控制器
@@ -98,6 +99,34 @@ public class IntegralrecordController extends BaseController {
         return super.packForBT(result);
     }
 
+    /**
+     * 商品销量排名
+     * @param pagetNum
+     * @param pageSize
+     * @param deptId
+     * @param monthTime1
+     * @param monthTime2
+     * @param periodTime1
+     * @param periodTime2
+     * @param orderBy
+     * @param desc
+     * @return
+     */
+    @RequestMapping(value = "/productSalesRanking")
+    @ResponseBody
+    public Object productSalesRanking(Integer pagetNum,
+                                      Integer pageSize,
+                                      Integer deptId,
+                                      String monthTime1,
+                                      String monthTime2,
+                                      String periodTime1,
+                                      String periodTime2,
+                                      String orderBy,
+                                      String desc) {
+        Page<Map<String,Object>> page = new PageFactory<Map<String,Object>>().defaultPage();
+
+        return super.packForBT(page);
+    }
     /**
      * 新增积分
      */
