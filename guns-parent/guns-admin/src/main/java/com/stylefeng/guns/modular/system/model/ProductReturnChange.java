@@ -73,6 +73,16 @@ public class ProductReturnChange extends Model<ProductReturnChange> {
      */
     private Integer isInsert;
 
+    private String memberPhone;
+
+    public String getMemberPhone() {
+        return memberPhone;
+    }
+
+    public void setMemberPhone(String memberPhone) {
+        this.memberPhone = memberPhone;
+    }
+
     public Integer getIsInsert() {
         return isInsert;
     }

@@ -143,6 +143,9 @@ ProductReturnChange.delete = function () {
 ProductReturnChange.search = function () {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
+    queryData['productName'] = $("#productName").val();
+    queryData['returnchangeType'] = $("#returnchangeType").val();
+    queryData['status'] = $("#status").val();
     ProductReturnChange.table.refresh({query: queryData});
 };
 

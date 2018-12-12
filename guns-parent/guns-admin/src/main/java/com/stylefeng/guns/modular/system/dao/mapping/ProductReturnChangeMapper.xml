@@ -20,11 +20,12 @@
         <result column="integralrecodeId" property="integralrecodeId" />
         <result column="inventoryManagementId" property="inventoryManagementId" />
         <result column="isInsert" property="isInsert" />
+        <result column="memberPhone" property="memberPhone" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, memberName, memberId, createtime, deptId, createuserid, productId, productName, returnchangeType, returnchangeproductId, returnchangeproductName, returnchangeNum, status, integralrecodeId, inventoryManagementId, isInsert
+        id, memberName, memberId, createtime, deptId, createuserid, productId, productName, returnchangeType, returnchangeproductId, returnchangeproductName, returnchangeNum, status, integralrecodeId, inventoryManagementId, isInsert, memberPhone
     </sql>
 
 </mapper>

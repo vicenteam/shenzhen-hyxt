@@ -17,6 +17,7 @@ import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -82,28 +83,35 @@ public class ProductReturnChangeController extends BaseController {
         LogObjectHolder.me().set(productReturnChange);
         return PREFIX + "productReturnChange_edit.html";
     }
+
     @RequestMapping("/productReturnChange_update2/{productReturnChangeId}")
     public String productReturnChangeUpdate2(@PathVariable Integer productReturnChangeId, Model model) {
         EntityWrapper<ProductReturnChange> productReturnChangeEntityWrapper = new EntityWrapper<>();
-        productReturnChangeEntityWrapper.eq("id",productReturnChangeId);
+        productReturnChangeEntityWrapper.eq("id", productReturnChangeId);
         Map<String, Object> stringObjectMap = productReturnChangeService.selectMap(productReturnChangeEntityWrapper);
-        stringObjectMap.put("createuserid",userService.selectById(stringObjectMap.get("createuserid")+"").getName());
-        if("0".equals(stringObjectMap.get("isInsert")+"")){
-            stringObjectMap.put("isInsert","不入库");
-        }else {
-            stringObjectMap.put("isInsert","入库");
+        stringObjectMap.put("createuserid", userService.selectById(stringObjectMap.get("createuserid") + "").getName());
+        if ("0".equals(stringObjectMap.get("isInsert") + "")) {
+            stringObjectMap.put("isInsert", "不入库");
+        } else {
+            stringObjectMap.put("isInsert", "入库");
         }
         model.addAttribute("item", stringObjectMap);
         return PREFIX + "productReturnChange_edit1.html";
     }
+
     /**
      * 获取商品退换货列表
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String condition, String productName, Integer returnchangeType, Integer status) {
         Page<ProductReturnChange> page = new PageFactory<ProductReturnChange>().defaultPage();
         BaseEntityWrapper<ProductReturnChange> baseEntityWrapper = new BaseEntityWrapper<>();
+        if (!StringUtils.isEmpty(condition))
+            baseEntityWrapper.like("memberName", condition).or().like("memberPhone", condition);
+        if (!StringUtils.isEmpty(productName)) baseEntityWrapper.like("productName", productName);
+        if (returnchangeType != null) baseEntityWrapper.eq("returnchangeType", returnchangeType);
+        if (status != null) baseEntityWrapper.eq("status", status);
         baseEntityWrapper.orderBy("createtime", false);
         Page<ProductReturnChange> result = productReturnChangeService.selectPage(page, baseEntityWrapper);
         List<ProductReturnChange> records = result.getRecords();
@@ -161,13 +169,13 @@ public class ProductReturnChangeController extends BaseController {
             iIntegralrecordtypeService.updateById(integralrecordtype1);
             InventoryManagement inventoryManagement = new InventoryManagement();
             inventoryManagement.setConsumptionNum(returnchangeNum);
-            controlleradd(inventoryManagement,productReturnChange.getProductId());
+            controlleradd(inventoryManagement, productReturnChange.getProductId());
         }
         //判断是退货还是换货 如果是换货即选择商品库存减少
         if (productReturnChange != null && productReturnChange.getReturnchangeType() == 1) {
             integralrecordtype.setProductnum((integralrecordtype.getProductnum() - returnchangeNum));
             iIntegralrecordtypeService.updateById(integralrecordtype);
-        }else {
+        } else {
             //更改用户积分 (积分回滚)
             String productjifen = integralrecordtype.getProductjifen();
             Integer memberId = productReturnChange.getMemberId();
@@ -175,8 +183,8 @@ public class ProductReturnChangeController extends BaseController {
             Double countPrice = membermanagement.getCountPrice();
             Double integral = membermanagement.getIntegral();
             double v = Double.parseDouble(productjifen);
-            membermanagement.setCountPrice((countPrice-v));
-            membermanagement.setIntegral((integral-v));
+            membermanagement.setCountPrice((countPrice - v));
+            membermanagement.setIntegral((integral - v));
             membermanagementService.updateById(membermanagement);
             //删除积分记录
         }

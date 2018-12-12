@@ -68,7 +68,7 @@ InventoryManagement.initColumn = function () {
                 }
             }
         },
-        {title: '记录时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+        {title: '记录时间', field: 'createtime', visible: true, align: 'center', valign: 'middle',},
         {title: '操作人', field: 'createuserid', visible: true, align: 'center', valign: 'middle'},
         // {title: '消耗库存人id(meimberid)', field: 'memberid', visible: true, align: 'center', valign: 'middle'},
 
@@ -143,6 +143,7 @@ InventoryManagement.delete = function () {
 InventoryManagement.search = function () {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
+    queryData['status'] = $("#status").val();
     InventoryManagement.table.refresh({query: queryData});
 };
 

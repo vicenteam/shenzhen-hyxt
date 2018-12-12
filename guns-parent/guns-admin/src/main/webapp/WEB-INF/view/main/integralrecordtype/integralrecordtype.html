@@ -9,9 +9,20 @@
                 <div class="row row-lg">
                     <div class="col-sm-12">
                         <div class="row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <#NameCon id="condition" name="名称" />
+
                             </div>
+                            <div class="col-sm-2">
+                                <#SelectCon name="商品类别" id="producttype" >
+                                    <option value="">全部</option>
+                                    <option value="0">礼品类</option>
+                                    <option value="1">积分兑换类</option>
+                                    <option value="2">销售类</option>
+                                    <option value="3">积分+金额类</option>
+                                </#SelectCon>
+                            </div>
+
                             <div class="col-sm-3">
                                 <#button name="搜索" icon="fa-search" clickFun="Integralrecordtype.search()"/>
                             </div>

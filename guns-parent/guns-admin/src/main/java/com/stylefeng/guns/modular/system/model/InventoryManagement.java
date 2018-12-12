@@ -39,7 +39,15 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private Integer consumptionNum;
     private String name;
     private String memberName;
+    private String memberPhone;
 
+    public String getMemberPhone() {
+        return memberPhone;
+    }
+
+    public void setMemberPhone(String memberPhone) {
+        this.memberPhone = memberPhone;
+    }
 
     public String getMemberName() {
         return memberName;

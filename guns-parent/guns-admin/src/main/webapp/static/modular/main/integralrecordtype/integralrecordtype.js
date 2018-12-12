@@ -16,15 +16,15 @@ Integralrecordtype.initColumn = function () {
         {field: 'selectItem', radio: true},
         {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
         {title: '积分类型', field: 'names', visible: true, align: 'center',visible: false, valign: 'middle'},
-        {title: '产品名称', field: 'productname', visible: true, align: 'center', valign: 'middle'},
+        {title: '商品名称', field: 'productname', visible: true, align: 'center', valign: 'middle'},
         {
-            title: '产品类别',
+            title: '商品类别',
             field: 'producttype',
             visible: true,
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) {
-                    if(value==0&&value.length>0){
+                    if(value==0){
                         return "礼品类";
                     }else if(value==1){
                         return "积分兑换类";
@@ -39,10 +39,10 @@ Integralrecordtype.initColumn = function () {
                     }
             }
         },
-        {title: '产品规格', field: 'productspecification', visible: true, align: 'center', valign: 'middle'},
-        {title: '产品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
-        {title: '产品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
-        {title: '产品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
+        {title: '商品规格', field: 'productspecification', visible: true, align: 'center', valign: 'middle'},
+        {title: '商品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
+        {title: '商品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
+        {title: '商品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
         {title: '食用剂量', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'deptid', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
@@ -120,6 +120,7 @@ Integralrecordtype.delete = function () {
 Integralrecordtype.search = function () {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
+    queryData['producttype'] = $("#producttype").val();
     Integralrecordtype.table.refresh({query: queryData});
 };
 

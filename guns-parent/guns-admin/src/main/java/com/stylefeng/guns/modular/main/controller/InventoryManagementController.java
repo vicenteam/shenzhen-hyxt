@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.base.tips.SuccessTip;
@@ -10,6 +11,7 @@ import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IProductReturnChangeService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import org.beetl.ext.fn.Json;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -88,10 +90,11 @@ public class InventoryManagementController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String condition,Integer status) {
         Page<InventoryManagement> page = new PageFactory<InventoryManagement>().defaultPage();
         BaseEntityWrapper<InventoryManagement> baseEntityWrapper = new BaseEntityWrapper<>();
         if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("name",condition);
+        if(status!=null)baseEntityWrapper.eq("status",status);
         baseEntityWrapper.orderBy("createtime",false);
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = page1.getRecords();
@@ -115,6 +118,7 @@ public class InventoryManagementController extends BaseController {
         Page<InventoryManagement> page = new PageFactory<InventoryManagement>().defaultPage();
         BaseEntityWrapper<InventoryManagement> baseEntityWrapper = new BaseEntityWrapper<>();
         if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("memberName",condition);
+        if(!StringUtils.isEmpty(condition))baseEntityWrapper.or().like("memberPhone",condition);
         baseEntityWrapper.eq("status",1);
         baseEntityWrapper.orderBy("createtime",false);
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
@@ -173,6 +177,7 @@ public class InventoryManagementController extends BaseController {
         productReturnChange.setDeptId(ShiroKit.getUser().getDeptId()+"");
         productReturnChange.setMemberId(Integer.parseInt(inventoryManagement.getMemberid()));
         productReturnChange.setMemberName(inventoryManagement.getMemberName());
+        productReturnChange.setMemberPhone(inventoryManagement.getMemberPhone());
         productReturnChange.setProductId(inventoryManagement.getIntegralrecordtypeid());
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(inventoryManagement.getIntegralrecordtypeid());
         if(integralrecordtype!=null)productReturnChange.setProductName(integralrecordtype.getProductname());
