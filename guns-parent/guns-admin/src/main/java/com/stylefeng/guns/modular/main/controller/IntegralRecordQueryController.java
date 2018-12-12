@@ -100,7 +100,7 @@ public class IntegralRecordQueryController extends BaseController {
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
         if (serverPage.getRecords().size() >= 0){
             for(Map<String, Object> map : serverPage.getRecords()){
-                map.put("typeName",integralrecordtypeService.selectById(map.get("typeId").toString()).getNames()); //获取积分类型名称
+//                map.put("typeName",integralrecordtypeService.selectById(map.get("typeId").toString()).getProducttype()); //获取积分类型
                 if(map.get("memberid") != null){
                     Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
                     map.put("memberName",membermanagement.getName());

@@ -26,7 +26,23 @@ Integralrecord.initColumn = function () {
                      }
                 }},
             {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},
-            {title: '积分类型', field: 'typeName', visible: true, align: 'center', valign: 'middle'},
+            {title: '积分类型', field: 'typeId', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    if(value==0&&value.length>0){
+                        return "礼品类";
+                    }else if(value==1){
+                        return "积分兑换类";
+                    }else if(value==2){
+                        return "销售类";
+                    }else if(value==3){
+                        return "积分+金额类";
+                    }else if(value==10){
+                        return "签到类";
+                    }else if(value==11){
+                        return "推荐新人";
+                    }else {
+                        return "";
+                    }
+                }},
             {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},
             {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'}

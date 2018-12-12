@@ -115,7 +115,7 @@ public class IntegralrecordController extends BaseController {
         Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
 
         //积分添加操作
-        insertIntegral(integral,integralrecordtype.getProducttype(),membermanagements);
+        List<Integralrecord> integralrecords = insertIntegral(integral,integralrecordtype.getProducttype(),membermanagements);
 
         integralrecordtype.setProductnum(integralrecordtype.getProductnum()-1);//更新库存
         integralrecordtype.setUpdatetime(DateUtil.getTime());
@@ -132,6 +132,7 @@ public class IntegralrecordController extends BaseController {
         inventoryManagement.setConsumptionNum(1);
         inventoryManagement.setName(integralrecordtype.getProductname());
         inventoryManagement.setMemberName(membermanagements.get(0).getName());
+        inventoryManagement.setIntegralid(integralrecords.get(0).getId());
         inventoryManagementService.insert(inventoryManagement);
         return SUCCESS_TIP;
     }
@@ -142,7 +143,8 @@ public class IntegralrecordController extends BaseController {
      * @param type
      * @param mList
      */
-    public void insertIntegral(double integral, Integer type, List<Membermanagement> mList) throws Exception {
+    public List<Integralrecord> insertIntegral(double integral, Integer type, List<Membermanagement> mList) throws Exception {
+        List<Integralrecord> integralrecords = new ArrayList<>();
         Membermanagement membermanagement = new Membermanagement();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
@@ -178,8 +180,9 @@ public class IntegralrecordController extends BaseController {
             integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
             integralrecord.setStaffid(ShiroKit.getUser().getId());
             integralrecordService.insert(integralrecord);
+            integralrecords.add(integralrecord);
         }
-
+        return integralrecords;
     }
 
     /**

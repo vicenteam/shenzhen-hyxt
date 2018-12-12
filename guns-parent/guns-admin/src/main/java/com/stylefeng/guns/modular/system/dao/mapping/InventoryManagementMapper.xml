@@ -14,11 +14,13 @@
         <result column="consumptionNum" property="consumptionNum" />
         <result column="name" property="name" />
         <result column="memberName" property="memberName" />
+        <result column="integralid" property="integralid" />
+        <result column="clearid" property="clearid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName
+        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, integralid, clearid
     </sql>
 
 </mapper>

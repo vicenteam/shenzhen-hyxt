@@ -39,6 +39,8 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private Integer consumptionNum;
     private String name;
     private String memberName;
+    private Integer integralid;
+    private Integer clearid;
 
 
     public String getMemberName() {
@@ -119,6 +121,23 @@ public class InventoryManagement extends Model<InventoryManagement> {
 
     public void setConsumptionNum(Integer consumptionNum) {
         this.consumptionNum = consumptionNum;
+    }
+
+
+    public Integer getIntegralid() {
+        return integralid;
+    }
+
+    public void setIntegralid(Integer integralid) {
+        this.integralid = integralid;
+    }
+
+    public Integer getClearid() {
+        return clearid;
+    }
+
+    public void setClearid(Integer clearid) {
+        this.clearid = clearid;
     }
 
     @Override
