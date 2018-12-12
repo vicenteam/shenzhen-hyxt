@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
-import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.main.service.IProductReturnChangeService;
 
 import java.util.Date;
 import java.util.List;
@@ -55,6 +52,8 @@ public class ProductReturnChangeController extends BaseController {
     private InventoryManagementController inventoryManagementController;
     @Autowired
     private IInventoryManagementService inventoryManagementService;
+    @Autowired
+    private IIntegralrecordService iIntegralrecordService;
 
     /**
      * 跳转到商品退换货首页
@@ -187,6 +186,7 @@ public class ProductReturnChangeController extends BaseController {
             membermanagement.setIntegral((integral - v));
             membermanagementService.updateById(membermanagement);
             //删除积分记录
+            iIntegralrecordService.deleteById(productReturnChange.getIntegralrecodeId());
         }
         productReturnChange.updateById();
 
