@@ -2,7 +2,36 @@
  * 初始化商品类型维护详情对话框
  */
 var IntegralrecordtypeInfoDlg = {
-    integralrecordtypeInfoData : {}
+    integralrecordtypeInfoData : {},
+    validateFields: {
+        productname: {
+            validators: {
+                notEmpty: {
+                    message: '商品名称不能为空'
+                }
+            }
+        },
+        productjifen: {
+            validators: {
+                notEmpty: {
+                    message: '商品积分不能为空'
+                },
+                numeric:{
+                    message: '只能为数字'
+                }
+            }
+        } ,
+        productnum: {
+            validators: {
+                notEmpty: {
+                    message: '"商品数量不能为空'
+                },
+                numeric:{
+                    message: '只能为数字'
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -39,7 +68,11 @@ IntegralrecordtypeInfoDlg.get = function(key) {
 IntegralrecordtypeInfoDlg.close = function() {
     parent.layer.close(window.parent.Integralrecordtype.layerIndex);
 }
-
+IntegralrecordtypeInfoDlg.validate = function() {
+    $('#activityId').data("bootstrapValidator").resetForm();
+    $('#activityId').bootstrapValidator('validate');
+    return $("#activityId").data('bootstrapValidator').isValid();
+}
 /**
  * 收集数据
  */
@@ -68,7 +101,9 @@ IntegralrecordtypeInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if (!this.validate()) {
+        return;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/add", function(data){
         Feng.success("添加成功!");
@@ -88,7 +123,9 @@ IntegralrecordtypeInfoDlg.editSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if (!this.validate()) {
+        return;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/update", function(data){
         Feng.success("修改成功!");
@@ -102,5 +139,5 @@ IntegralrecordtypeInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
+    Feng.initValidator("activityId", IntegralrecordtypeInfoDlg.validateFields);
 });
