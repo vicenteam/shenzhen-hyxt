@@ -163,9 +163,6 @@ public class ProductReturnChangeController extends BaseController {
 
         //判断是否入库
         if (isInsert != null && isInsert == 1) {
-            Integralrecordtype integralrecordtype1 = iIntegralrecordtypeService.selectById(productReturnChange.getProductId());
-            integralrecordtype1.setProductnum((integralrecordtype1.getProductnum() + returnchangeNum));
-            iIntegralrecordtypeService.updateById(integralrecordtype1);
             InventoryManagement inventoryManagement = new InventoryManagement();
             inventoryManagement.setConsumptionNum(returnchangeNum);
             controlleradd(inventoryManagement, productReturnChange.getProductId());
@@ -187,6 +184,8 @@ public class ProductReturnChangeController extends BaseController {
             membermanagementService.updateById(membermanagement);
             //删除积分记录
             iIntegralrecordService.deleteById(productReturnChange.getIntegralrecodeId());
+            //删除商品库存管理订单
+            inventoryManagementService.deleteById(productReturnChange.getInventoryManagementId());
         }
         productReturnChange.updateById();
 
