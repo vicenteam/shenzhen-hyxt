@@ -58,7 +58,7 @@ import java.util.*;
 public class MembermanagementController extends BaseController {
 
     private String PREFIX = "/main/membermanagement/";
-    private List<Membermanagement> membermanagements;
+
 
     @Autowired
     private IMembermanagementService membermanagementService;
@@ -231,7 +231,6 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
         if (!StringUtils.isEmpty(townshipid)) baseEntityWrapper.eq("townshipid", townshipid);
         baseEntityWrapper.eq("state", 0);
-        membermanagements = membermanagementService.selectList(baseEntityWrapper);
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = mapPage.getRecords();
         for (Map<String, Object> map : records) {
@@ -649,8 +648,34 @@ public class MembermanagementController extends BaseController {
     }
     @BussinessLog(value = "会员资料导出", key = "export_excel")
     @RequestMapping("export_excel")
-    public void export(HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public void export(HttpServletResponse response, String name, String address, String fstatus, String sex, String idcard, String phone, String stafff
+            , String deptid, String province, String city, String district, String memberid, String townshipid) throws Exception {
         List<Map<String, Object>> memberExcels = new ArrayList<>();
+        EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
+        if (!StringUtils.isEmpty(name)) baseEntityWrapper.eq("name", name);
+        if (!StringUtils.isEmpty(address)) baseEntityWrapper.like("address", address);
+        if (!StringUtils.isEmpty(fstatus)) baseEntityWrapper.eq("familyStatusID", fstatus);
+        if (!StringUtils.isEmpty(sex)) baseEntityWrapper.eq("sex", sex);
+        if (!StringUtils.isEmpty(idcard)) baseEntityWrapper.eq("idcard", idcard);
+        if (!StringUtils.isEmpty(phone)) baseEntityWrapper.like("phone", phone);
+        if (!StringUtils.isEmpty(stafff)) baseEntityWrapper.eq("staffid", stafff);
+        if (!StringUtils.isEmpty(deptid)){
+            baseEntityWrapper.eq("deptid", deptid);
+        }else {
+            if(ShiroKit.getUser().getAccount().equals("admin")){
+
+            }else {
+                baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
+            }
+
+        }
+        if (!StringUtils.isEmpty(province)) baseEntityWrapper.eq("province", province);
+        if (!StringUtils.isEmpty(city)) baseEntityWrapper.eq("city", city);
+        if (!StringUtils.isEmpty(district)) baseEntityWrapper.eq("district", district);
+        if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
+        if (!StringUtils.isEmpty(townshipid)) baseEntityWrapper.eq("townshipid", townshipid);
+//        baseEntityWrapper.eq("state", 0);
+        List<Membermanagement> membermanagements = membermanagementService.selectList(baseEntityWrapper);
         for (Membermanagement m : membermanagements) {
             Map<String, Object> mMap = new LinkedHashMap<>();
             mMap.put("name", m.getName());
@@ -743,18 +768,22 @@ public class MembermanagementController extends BaseController {
         try {
             List<MemberExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(),MemberExcel.class,params);
             Membermanagement membermanagement = new Membermanagement();
-            BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+            BaseEntityWrapper<Membershipcardtype> typeWrapper = new BaseEntityWrapper<>();
+            typeWrapper.eq("deptid",ShiroKit.getUser().getDeptId());
+            typeWrapper.eq("upamount","0");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectOne(typeWrapper);
             for (MemberExcel excelParams : excelUpload) {
                 membermanagement.setName(excelParams.getmName());
                 membermanagement.setCadID(excelParams.getmCadID());
                 membermanagement.setSex(excelParams.getmSex());
                 membermanagement.setPhone(excelParams.getmPhone());
-                membermanagement.setIntegral(excelParams.getmIntegral());
-                membermanagement.setLevelID(excelParams.getmLevel());
+                membermanagement.setAddress(excelParams.getmAddress());
+//                membermanagement.setIntegral(excelParams.getmIntegral());
+                membermanagement.setLevelID(membershipcardtype.getId().toString());
+                membermanagement.setDeptId(ShiroKit.getUser().getDeptId().toString());
                 membermanagement.setCreateTime(DateUtil.getTime());
                 membermanagement.setIsoldsociety(excelParams.getmIsoldsociety());
-                membermanagement.setAddress(excelParams.getmAddress());
-                membermanagement.setCountPrice(excelParams.getmCountPrice());
+//                membermanagement.setCountPrice(excelParams.getmCountPrice());
                 membermanagementService.insert(membermanagement);
                 total += 1;
             }

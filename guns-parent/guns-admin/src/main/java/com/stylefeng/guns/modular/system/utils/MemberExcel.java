@@ -16,16 +16,16 @@ public class MemberExcel {
     private String mPhone;
     @Excel(name = "联系地址",orderNum = "9")
     private String mAddress;
-    @Excel(name = "可用积分",orderNum = "5")
-    private double mIntegral;
-    @Excel(name = "总积分",orderNum = "10")
-    private double mCountPrice;
+//    @Excel(name = "可用积分",orderNum = "5")
+//    private double mIntegral;
+//    @Excel(name = "总积分",orderNum = "10")
+//    private double mCountPrice;
     @Excel(name = "是否老年协会会员",orderNum = "8")
     private Integer mIsoldsociety;
-    @Excel(name = "卡片等级",orderNum = "6")
-    private String mLevel;
-    @Excel(name = "开卡时间",orderNum = "7")
-    private String mCreateDt;
+//    @Excel(name = "卡片等级",orderNum = "6")
+//    private String mLevel;
+//    @Excel(name = "开卡时间",orderNum = "7")
+//    private String mCreateDt;
 
 
 
@@ -54,30 +54,6 @@ public class MemberExcel {
         this.mPhone = mPhone;
     }
 
-    public double getmIntegral() {
-        return mIntegral;
-    }
-
-    public void setmIntegral(double mIntegral) {
-        this.mIntegral = mIntegral;
-    }
-
-    public String getmLevel() {
-        return mLevel;
-    }
-
-    public void setmLevel(String mLevel) {
-        this.mLevel = mLevel;
-    }
-
-    public String getmCreateDt() {
-        return mCreateDt;
-    }
-
-    public void setmCreateDt(String mCreateDt) {
-        this.mCreateDt = mCreateDt;
-    }
-
     public Integer getmIsoldsociety() {
         return mIsoldsociety;
     }
@@ -92,14 +68,6 @@ public class MemberExcel {
 
     public void setmAddress(String mAddress) {
         this.mAddress = mAddress;
-    }
-
-    public double getmCountPrice() {
-        return mCountPrice;
-    }
-
-    public void setmCountPrice(double mCountPrice) {
-        this.mCountPrice = mCountPrice;
     }
 
     public String getmCadID() {

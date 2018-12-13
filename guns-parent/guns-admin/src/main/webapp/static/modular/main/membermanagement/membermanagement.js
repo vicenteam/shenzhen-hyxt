@@ -208,7 +208,20 @@ $(function () {
 });
 
 Membermanagement.exportExcel = function () {
-    window.location.href=Feng.ctxPath +"/membermanagement/export_excel";
+    window.location.href=Feng.ctxPath +"/membermanagement/export_excel?" +
+        "address="+ $("#address").val() +
+        "&city="+ $("#city").val() +
+        "&deptid="+ $("#deptid").val() +
+        "&fstatus="+ $("#fstatus").val() +
+        "&idcard="+ $("#idcard").val() +
+        // "&memberid="+ $("#memberid").val() +
+        // "&townshipid="+ $("#townshipid").val() +
+        "&name="+ $("#name").val() +
+        "&district="+ $("#district").val() +
+        "&phone="+ $("#phone").val() +
+        "&province="+ $("#province").val() +
+        "&sex="+ $("#sex").val() +
+        "&stafff="+ $("#stafff").val();
 };
 
 Membermanagement.importExcel = function () {
