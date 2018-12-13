@@ -40,9 +40,18 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed">
-                        <!--<#dictSelector id="sex" name ="sex" code="quickjf"  label="快捷积分"  underline="true"  />-->
                     </div>
                     <#input id="play" name="支付金额"  display="none" underline="true" divId="divplay"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">购买数量</label>
+                        <div class="col-sm-9">
+                            <li class="fa fa-chevron-circle-left" style="width: 20px;font-size: 20px;color: #00B83F;cursor:pointer" id="less"></li>
+                                <input class="form-control" type="text" style="text-align: center;width: 50px" value="1" id="consumptionNum" name="consumptionNum" disabled="disabled">
+                            <li class="fa fa-chevron-circle-right" style=" width: 20px;font-size: 20px;color: #00B83F;cursor:pointer" id="more"></li>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed">
+                    </div>
                     <#input id="integral" name="获得积分的值" disabled="disabled" underline="true"/>
 
                 </div>
@@ -190,6 +199,10 @@
 <script src="${ctxPath}/static/modular/main/integralrecord/integralrecord_info.js"></script>
 <script src="${ctxPath}/static/device/device.js"></script>
 <script>
+    var temp_integral=parseInt($("#integral").val());
+    $(function () {
+        temp_integral=parseInt($("#integral").val());
+    })
     $("#read").click(function () {
         getUserInfo();
         var memberId = $("#introducerId").val();
@@ -210,5 +223,30 @@
             }
         });
     });
+    $("#less").click(function () {
+
+        var num=$("#consumptionNum").val();
+        if(!isNaN(num)){
+            num=(parseInt(num)-1)<=0?1:parseInt(num)-1;
+            $("#consumptionNum").val(num);
+            $("#integral").val(num*temp_integral)
+        }else {
+            $("#consumptionNum").val(1)
+            $("#integral").val(temp_integral)
+        }
+
+    })
+    $("#more").click(function () {
+        var num=$("#consumptionNum").val();
+        if(!isNaN(num)){
+            num=(parseInt(num)+1)<=0?1:parseInt(num)+1;
+            $("#consumptionNum").val(parseInt(num));
+            $("#integral").val(num*temp_integral)
+        }else {
+            $("#consumptionNum").val(1)
+            $("#integral").val(num*temp_integral)
+        }
+    })
+
 </script>
 @}

@@ -157,7 +157,7 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId) throws Exception {
+    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum) throws Exception {
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id",memberId);
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
@@ -186,6 +186,7 @@ public class IntegralrecordController extends BaseController {
         inventoryManagement.setName(integralrecordtype.getProductname());
         inventoryManagement.setMemberName(membermanagements.get(0).getName());
         inventoryManagement.setIntegralid(integralrecords.get(0).getId());
+        inventoryManagement.setConsumptionNum(consumptionNum);
         inventoryManagementService.insert(inventoryManagement);
         return SUCCESS_TIP;
     }

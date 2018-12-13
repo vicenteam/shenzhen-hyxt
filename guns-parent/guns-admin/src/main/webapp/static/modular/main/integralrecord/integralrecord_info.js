@@ -61,6 +61,7 @@ IntegralrecordInfoDlg.collectData = function() {
     this
     .set('integral')
     .set('productname')
+    .set('consumptionNum')
     .set('typeId')
     .set('memberId');
 }
@@ -196,6 +197,8 @@ function findbyid() {
     var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/detail/"+ $("#productname").val(), function (data) {
        console.log(data)
         $("#integral").val(data.productjifen);
+        temp_integral=data.productjifen;
+        $("#consumptionNum").val(1)
         if(data.producttype==2||data.producttype==3){
             $("#divplay").css("display","");
         }else {
