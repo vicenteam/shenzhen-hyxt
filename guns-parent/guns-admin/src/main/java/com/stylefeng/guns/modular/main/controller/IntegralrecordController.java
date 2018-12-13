@@ -169,7 +169,7 @@ public class IntegralrecordController extends BaseController {
         //积分添加操作
         List<Integralrecord> integralrecords = insertIntegral(integral,integralrecordtype.getProducttype(),membermanagements);
 
-        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-1);//更新库存
+        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-consumptionNum);//更新库存
         integralrecordtype.setUpdatetime(DateUtil.getTime());
         integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());
         integralrecordtypeService.updateById(integralrecordtype);

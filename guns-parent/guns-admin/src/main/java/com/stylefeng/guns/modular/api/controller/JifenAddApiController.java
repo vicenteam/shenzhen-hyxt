@@ -91,11 +91,12 @@ public class JifenAddApiController extends BaseController {
             @ApiImplicitParam(required = true, name = "jifenAddUserId", value = "卡片用户id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "nowPice", value = "新增积分", paramType = "query"),
             @ApiImplicitParam(required = true, name = "jifenType", value = "积分类型", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "consumptionNum", value = "购买数量", paramType = "query"),
     })
-    public ResponseData addJifen(RequstData requstData,Integer jifenAddUserId,Double nowPice,Integer jifenType) throws Exception {
+    public ResponseData addJifen(RequstData requstData,Integer jifenAddUserId,Double nowPice,Integer jifenType,Integer consumptionNum) throws Exception {
         ResponseData responseData = new ResponseData();
         try {
-            integralrecordController.add(nowPice,jifenType,jifenAddUserId);
+            integralrecordController.add(nowPice,jifenType,jifenAddUserId,consumptionNum);
         }catch (Exception e){
             throw new Exception("新增失败 请联系管理员!");
         }
