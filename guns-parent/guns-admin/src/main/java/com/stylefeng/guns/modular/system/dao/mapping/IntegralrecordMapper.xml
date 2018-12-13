@@ -45,8 +45,7 @@ GROUP BY
 	a.typeId
 <choose>
 	<when test="orderBy !=null and orderBy != ''">
-		ORDER BY
-		#{orderBy} #{desc}
+		  ORDER BY ${orderBy} ${desc}
 	</when>
 	<otherwise>
 		ORDER BY

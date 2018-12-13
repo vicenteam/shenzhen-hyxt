@@ -13,13 +13,13 @@ var Integralrecord = {
  */
 Integralrecord.initColumn = function () {
     return [
-        {field: 'selectItem', radio: true},
+        {field: 'selectItem', radio: true,visible: false,},
             {title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '商品名称', field: 'productname', visible: true, align: 'center', valign: 'middle'},
-            {title: '商品库存', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
-            {title: '总销售量', field: 'count', visible: true, align: 'center', valign: 'middle'},
-            {title: '月销售量', field: 'MONTH', visible: true, align: 'center', valign: 'middle'},
-            {title: '时间段销售量', field: 'time_to_end', visible: true, align: 'center', valign: 'middle'}
+            {title: '商品库存', field: 'productnum', visible: true, align: 'center', valign: 'middle',sortable: true},
+            {title: '总销售量', field: 'count', visible: true, align: 'center', valign: 'middle',sortable: true},
+            {title: '月销售量', field: 'month', visible: true, align: 'center', valign: 'middle',sortable: true},
+            {title: '时间段销售量', field: 'time_to_end', visible: true, align: 'center', valign: 'middle',sortable: true}
     ];
 };
 
@@ -91,6 +91,8 @@ Integralrecord.delete = function () {
 Integralrecord.search = function () {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
+    queryData['periodTime1'] = $("#periodTime1").val();
+    queryData['periodTime2'] = $("#periodTime2").val();
     Integralrecord.table.refresh({query: queryData});
 };
 

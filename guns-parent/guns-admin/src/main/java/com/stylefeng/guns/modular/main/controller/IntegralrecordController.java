@@ -1,9 +1,11 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,9 +130,20 @@ public class IntegralrecordController extends BaseController {
                                       String periodTime2,
                                       String orderBy,
                                       String desc) {
-        String format = DateUtil.format(new Date(), "yyyy-MM-dd");
-        monthTime1=monthTime2=format;
+        String format1 = DateUtil.format(new Date(), "yyyy-MM");
+        String format2 = DateUtil.format(new Date(), "yyyy-MM-dd");
+        monthTime1=format1+"-01";
+        monthTime2=format2;
+
+        HttpServletRequest request = HttpKit.getRequest();
+       try {
+           orderBy = request.getParameter("sort");         //排序字段名称
+           desc = request.getParameter("order");       //asc或desc(升序或降序)
+       }catch (Exception e){
+
+       }
         Page<Map<String,Object>> page = new PageFactory<Map<String,Object>>().defaultPage();
+        System.out.println(JSON.toJSONString(page));
         int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
         page.setTotal(i);
         List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
