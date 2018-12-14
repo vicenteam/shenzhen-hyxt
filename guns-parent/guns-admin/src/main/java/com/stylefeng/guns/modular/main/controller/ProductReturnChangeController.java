@@ -178,7 +178,7 @@ public class ProductReturnChangeController extends BaseController {
             Membermanagement membermanagement = membermanagementService.selectById(memberId);
             Double countPrice = membermanagement.getCountPrice();
             Double integral = membermanagement.getIntegral();
-            double v = Double.parseDouble(productjifen);
+            double v = (Double.parseDouble(productjifen)*returnchangeNum);
             membermanagement.setCountPrice((countPrice - v));
             membermanagement.setIntegral((integral - v));
             membermanagementService.updateById(membermanagement);
