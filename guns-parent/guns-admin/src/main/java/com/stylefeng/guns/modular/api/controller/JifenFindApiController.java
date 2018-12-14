@@ -65,7 +65,8 @@ public class JifenFindApiController extends BaseController {
         }
 //        Map map1 = JSON.parseObject(JSON.toJSONString(integralRecordQueryController.list("", jf.getStaffId(), jf.getName(), jf.getCardId(), jf.getIntegraltype() + "", jf.getStartTime(), jf.getEndTime(), memberId)), Map.class);
 //        System.out.println(JSON.toJSONString(map1)+"------------");
-        Map<String,Object> map = JSON.parseObject(JSON.toJSONString(integralRecordQueryController.list("", jf.getStaffId(), jf.getName(), jf.getCardId(), jf.getIntegraltype() + "", jf.getStartTime(), jf.getEndTime(), memberId)), Map.class);
+//        Map<String,Object> map = JSON.parseObject(JSON.toJSONString(integralRecordQueryController.list("", jf.getStaffId(), jf.getName(), jf.getCardId(), jf.getIntegraltype() + "", jf.getStartTime(), jf.getEndTime(), memberId)), Map.class);
+        Map<String,Object> map = null;
 //        System.out.println(JSON.toJSONString(map)+"-------");
         List<Object> rows=(List<Object>)map.get("rows");
         Integer total=(int)map.get("total");

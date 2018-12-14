@@ -47,11 +47,39 @@ public class IntegralRecordQueryController extends BaseController {
 
     @RequestMapping("")
     public String index(Model model){
-        List<Integralrecordtype> types = integralrecordtypeService.selectList(new EntityWrapper<Integralrecordtype>());
-        model.addAttribute("type",types);
+        BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
+        iWrapper.groupBy("integralType");
+        List<Integralrecord> types1 = integralrecordService.selectList(iWrapper);
+        model.addAttribute("types1",types1);
         BaseEntityWrapper<User> wrapper = new BaseEntityWrapper<>();
         model.addAttribute("users",userService.selectList(wrapper));
         return PREFIX + "integralRecordQuery.html";
+    }
+
+    @RequestMapping("findIntegralType")
+    @ResponseBody
+    public Object findIntegralType(String type){
+        BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
+        iWrapper.eq("integralType",type);
+        if(type.equals("1")) iWrapper.groupBy("typeId");
+        if(type.equals("2")) iWrapper.groupBy("otherTypeId");
+        List<Map<String,String>> types2 = integralrecordService.selectMaps(iWrapper);
+        types2.forEach(e->{
+            if(type.equals("1")){
+                Integralrecordtype integralrecordtype = new Integralrecordtype();
+                integralrecordtype.setId(Integer.parseInt(e.get("typeId")));
+                e.put("name",integralrecordtypeService.selectById(integralrecordtype).getProductname());
+            }else{
+                if(e.get("otherTypeId").equals("0")){
+                    e.put("name","签到积分");
+                }else if(e.get("otherTypeId").equals("1")){
+                    e.put("name","带新人积分");
+                }else if(e.get("otherTypeId").equals("2")){
+                    e.put("name","活动兑换积分");
+                }
+            }
+        });
+        return types2;
     }
 
     /**
@@ -60,7 +88,7 @@ public class IntegralRecordQueryController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition, String operator, String memberName, String cadId
-                        , String integralType, String begindate, String enddate, String memberId) {
+                        , String type, String integralType, String begindate, String enddate, String memberId) {
 
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         if(memberId != null && ! memberId.equals("")){ //按直接读卡
@@ -88,7 +116,12 @@ public class IntegralRecordQueryController extends BaseController {
         //把 membermanagement 与 user 条件放入 积分记录表实现条件分页查询
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
-        if(! integralType.equals("-1")) iWrapper.eq("typeId",integralType);
+        iWrapper.eq("integralType",type);
+        if(type.equals("1")){
+            iWrapper.eq("typeId",integralType);
+        }else if(type.equals("2")){
+            iWrapper.eq("otherTypeId",integralType);
+        }
         if(mIdArray.length <= 0) mIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
         iWrapper.in("memberid",mIdArray);
         if(uIdArray.length <= 0) uIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
@@ -100,6 +133,20 @@ public class IntegralRecordQueryController extends BaseController {
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
         if (serverPage.getRecords().size() >= 0){
             for(Map<String, Object> map : serverPage.getRecords()){
+                if(type.equals("1")){
+                    Integralrecordtype integralrecordtype = new Integralrecordtype();
+                    integralrecordtype.setId(Integer.parseInt(map.get("typeId").toString()));
+                    map.put("typeId",integralrecordtypeService.selectById(integralrecordtype).getProductname());
+                }
+                if(type.equals("2")){
+                    if(map.get("otherTypeId").equals("0")){
+                        map.put("typeId","签到积分");
+                    }else if(map.get("otherTypeId").equals("1")){
+                        map.put("typeId","带新人积分");
+                    }else if(map.get("otherTypeId").equals("2")){
+                        map.put("typeId","活动兑换积分");
+                    }
+                }
 //                map.put("typeName",integralrecordtypeService.selectById(map.get("typeId").toString()).getProducttype()); //获取积分类型
                 if(map.get("memberid") != null){
                     Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());

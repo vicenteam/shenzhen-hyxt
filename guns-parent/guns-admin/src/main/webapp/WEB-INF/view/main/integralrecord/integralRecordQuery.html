@@ -16,12 +16,19 @@
                                 <#NameCon id="cadId" name="身份证号" />
                             </div>
                             <div class="col-sm-2">
-                                <#SelectCon name="积分类型" id="typeId" underline="true">
-                                    <option value="-1">全部</option>
-                                    <option value="0">礼品类</option>
-                                    <option value="1">积分兑换类</option>
-                                    <option value="2">销售类</option>
-                                    <option value="3">积分+金额类</option>
+                                <#SelectCon name="积分类型" id="type" underline="true">
+                                    @for(item in types1){
+                                        @if(item.integralType == "1"){
+                                            <option value="${item.integralType}" >商品积分</option>
+                                        @}
+                                        @if(item.integralType == "2"){
+                                            <option value="${item.integralType}" >行为积分</option>
+                                        @}
+                                    @}
+                                </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon name="积分明细" id="integralType" underline="true">
                                 </#SelectCon>
                             </div>
                             <div class="col-sm-2">

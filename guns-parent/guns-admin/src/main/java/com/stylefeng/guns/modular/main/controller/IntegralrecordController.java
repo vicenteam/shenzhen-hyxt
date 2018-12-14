@@ -161,19 +161,19 @@ public class IntegralrecordController extends BaseController {
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id",memberId);
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
-
-        BaseEntityWrapper<Integralrecordtype> iWrapper = new BaseEntityWrapper<>();
-        iWrapper.eq("id",productname);
-        Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
-
         //积分添加操作
-        List<Integralrecord> integralrecords = insertIntegral(integral,integralrecordtype.getProducttype(),membermanagements);
+        List<Integralrecord> integralrecords = insertIntegral(integral,1,productname,membermanagements);
 
-        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-consumptionNum);//更新库存
+        //更新库存
+        BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
+        typeWrapper.eq("id",productname);
+        Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
+        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-consumptionNum);//库存减
         integralrecordtype.setUpdatetime(DateUtil.getTime());
         integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());
         integralrecordtypeService.updateById(integralrecordtype);
 
+        //插入商品记录
         InventoryManagement inventoryManagement = new InventoryManagement();
         inventoryManagement.setCreatetime(DateUtil.getTime());
         inventoryManagement.setCreateuserid(ShiroKit.getUser().getId().toString());
@@ -195,40 +195,48 @@ public class IntegralrecordController extends BaseController {
      * 会员积分增加并新增记录
      * @param integral
      * @param type
+     * @param typeId
      * @param mList
+     * @return
+     * @throws Exception
      */
-    public List<Integralrecord> insertIntegral(double integral, Integer type, List<Membermanagement> mList) throws Exception {
+    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList) throws Exception {
         List<Integralrecord> integralrecords = new ArrayList<>();
-        Membermanagement membermanagement = new Membermanagement();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
         double nowCountPrice = 0;
         for(Membermanagement memberId : mList){  //循环当前门店会员列表为
-            if(memberId.getIntegral() != null && memberId.getCountPrice() != null){
-                nowIntegral = memberId.getIntegral();
-                nowCountPrice = memberId.getCountPrice();
-            }else {
-                Membermanagement mInfo = membermanagementService.selectById(memberId.getId());
-                nowIntegral = mInfo.getIntegral();
-                nowCountPrice = mInfo.getCountPrice();
-            }
-            membermanagement.setId(memberId.getId());
-            if(type == 2){ // 判断是否为消费获得积分
-                membermanagement.setIntegral(nowIntegral+integral); //可用积分数 + 新增积分数
-                membermanagement.setCountPrice(nowCountPrice+integral); //总积分数 + 新增积分数
-            }else {  //扣除积分
-                if((nowIntegral+integral) < 0){
-                    throw new Exception("积分不足！");
+            nowIntegral = memberId.getIntegral();
+            nowCountPrice = memberId.getCountPrice();
+            if(type == 1){ //扣除类积分
+                if((nowIntegral + integral) >= 0){
+                    memberId.setIntegral(nowIntegral + integral);
                 }else {
-                    membermanagement.setIntegral(nowIntegral+integral);//可用积分数 - 兑换积分数
+                    throw new Exception("可用积分不足！");
                 }
+            }else if(type == 2 && typeId == 2){ //扣除类积分
+                if((nowIntegral - integral) >= 0){
+                    memberId.setIntegral(nowIntegral - integral);
+                }else {
+                    throw new Exception("可用积分不足！");
+                }
+            }else { //获得积分
+                memberId.setIntegral(integral+nowIntegral);
+                memberId.setCountPrice(integral+nowCountPrice);
             }
             //更新会员总积分和实际积分
-            membermanagementService.updateById(membermanagement);
+            membermanagementService.updateById(memberId);
             membermanagementController.updateMemberLeave(memberId.getId()+"");
+
+            if(type == 1){ // type=1 商品积分
+                integralrecord.setIntegralType(type.toString());
+                integralrecord.setTypeId(typeId.toString());
+            }else if(type == 2){ // type=2 行为积分
+                integralrecord.setIntegralType(type.toString());
+                integralrecord.setOtherTypeId(typeId.toString());
+            }
             //添加积分记录
             integralrecord.setIntegral(integral);
-            integralrecord.setTypeId(type);
             integralrecord.setCreateTime(DateUtil.getTime());
             integralrecord.setMemberid(memberId.getId());
             integralrecord.setDeptid(ShiroKit.getUser().getDeptId());

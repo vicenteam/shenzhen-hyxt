@@ -89,7 +89,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecord/add", function(data){
-        Feng.success("添加成功!");
+        Feng.success("操作成功!");
         $("#introducerName").val("");
         $("#name").val("");
         $("#memberId").val("");
@@ -99,7 +99,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         $("#countPrice").val("");
         $("#levelID").val("");
     },function(data){
-        Feng.error("添加失败!" + data.responseJSON.message + "!");
+        Feng.error("操作成功!" + data.responseJSON.message + "!");
     });
     ajax.set(this.integralrecordInfoData);
     ajax.start();

@@ -273,7 +273,7 @@ public class ActivityController extends BaseController {
             membermanagement.setId(Integer.parseInt(memberId));
             membermanagements.add(membermanagement);
             //调用积分变动方法
-            integralrecordController.insertIntegral(jifen, 13, membermanagements);
+            integralrecordController.insertIntegral(jifen,2, 2, membermanagements);
         }else if (ruleexpression == 3||ruleexpression == 4){
             //清除一条待领取活动信息
             EntityWrapper<MemberInactivity> baseEntityWrapper=new EntityWrapper<MemberInactivity>();
