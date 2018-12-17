@@ -290,4 +290,14 @@ public class CheckinController extends BaseController {
         result.put("timeObj", list1);
         return result;
     }
+
+    /**
+     * 查询当前用户会员卡信息并读取追销信息
+     * @param code
+     * @return
+     */
+    public Object findUserDueToReminds(String code){
+
+        return null;
+    }
 }
