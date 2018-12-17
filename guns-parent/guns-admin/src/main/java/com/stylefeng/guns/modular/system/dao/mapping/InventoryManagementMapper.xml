@@ -17,12 +17,13 @@
         <result column="memberPhone" property="memberPhone" />
         <result column="integralid" property="integralid" />
         <result column="clearid" property="clearid" />
+        <result column="isDueToRemind" property="isDueToRemind" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, memberPhone
-        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, integralid, clearid
+        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, integralid, clearid, isDueToRemind
     </sql>
 
 </mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.DueToRemindMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.DueToRemind">
+        <id column="id" property="id" />
+        <result column="productId" property="productId" />
+        <result column="productName" property="productName" />
+        <result column="dueToRemindDays" property="dueToRemindDays" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+        <result column="createUserId" property="createUserId" />
+        <result column="updateUserId" property="updateUserId" />
+        <result column="dueToRemindContext" property="dueToRemindContext" />
+        <result column="status" property="status" />
+        <result column="deptId" property="deptId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, productId, productName, dueToRemindDays, createTime, updateTime, createUserId, updateUserId, dueToRemindContext, status, deptId
+    </sql>
+
+</mapper>

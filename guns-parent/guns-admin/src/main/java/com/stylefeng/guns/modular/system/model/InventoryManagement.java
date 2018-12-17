@@ -42,6 +42,15 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private Integer integralid;
     private Integer clearid;
     private String memberPhone;
+    private Integer isDueToRemind;
+
+    public Integer getIsDueToRemind() {
+        return isDueToRemind;
+    }
+
+    public void setIsDueToRemind(Integer isDueToRemind) {
+        this.isDueToRemind = isDueToRemind;
+    }
 
     public String getMemberPhone() {
         return memberPhone;
