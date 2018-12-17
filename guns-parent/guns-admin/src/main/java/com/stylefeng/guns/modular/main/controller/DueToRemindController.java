@@ -63,7 +63,7 @@ public class DueToRemindController extends BaseController {
     @RequestMapping("/dueToRemind_update/{dueToRemindId}")
     public String dueToRemindUpdate(@PathVariable Integer dueToRemindId, Model model) {
         DueToRemind dueToRemind = dueToRemindService.selectById(dueToRemindId);
-        model.addAttribute("item",dueToRemind);
+        model.addAttribute("item", dueToRemind);
         LogObjectHolder.me().set(dueToRemind);
         return PREFIX + "dueToRemind_edit.html";
     }
@@ -85,15 +85,15 @@ public class DueToRemindController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(DueToRemind dueToRemind,Integer productname) throws Exception {
+    public Object add(DueToRemind dueToRemind, Integer productname) throws Exception {
         dueToRemind.setProductId(productname);
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(dueToRemind.getProductId());
-        if(StringUtils.isEmpty(integralrecordtype.getProducteatingdose())){
+        if (StringUtils.isEmpty(integralrecordtype.getProducteatingdose())) {
 //            throw new GunsException("");
             throw new GunsException(GunsExceptionEnum.REQUEST_NULLS);
         }
         dueToRemind.setProductName(integralrecordtype.getProductname());
-        dueToRemind.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        dueToRemind.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         dueToRemind.setCreateUserId(ShiroKit.getUser().id);
         dueToRemind.setDeptId(ShiroKit.getUser().getDeptId());
         dueToRemindService.insert(dueToRemind);
@@ -117,25 +117,27 @@ public class DueToRemindController extends BaseController {
     @ResponseBody
     public Object update(DueToRemind dueToRemind) {
 //        dueToRemind= dueToRemindService.selectById(dueToRemind.getId());
-        dueToRemind.setUpdateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        dueToRemind.setUpdateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         dueToRemind.setUpdateUserId(ShiroKit.getUser().id);
         dueToRemindService.updateById(dueToRemind);
         return SUCCESS_TIP;
     }
+
     @RequestMapping(value = "/updateStatus")
     @ResponseBody
     public Object updateStatus(DueToRemind dueToRemind) {
-        dueToRemind= dueToRemindService.selectById(dueToRemind.getId());
+        dueToRemind = dueToRemindService.selectById(dueToRemind.getId());
         dueToRemind.setUpdateUserId(ShiroKit.getUser().id);
-        dueToRemind.setUpdateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-        if(dueToRemind.getStatus()==1){
+        dueToRemind.setUpdateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        if (dueToRemind.getStatus() == 1) {
             dueToRemind.setStatus(0);
-        }else {
+        } else {
             dueToRemind.setStatus(1);
         }
         dueToRemindService.updateById(dueToRemind);
         return SUCCESS_TIP;
     }
+
     /**
      * 商品追销管理详情
      */
@@ -143,5 +145,23 @@ public class DueToRemindController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("dueToRemindId") Integer dueToRemindId) {
         return dueToRemindService.selectById(dueToRemindId);
+    }
+
+    /**
+     * 判断该商品是否需要进行追销
+     *
+     * @param productId
+     * @return
+     */
+    public boolean judgeDueToRemind(Integer productId) {
+        BaseEntityWrapper<DueToRemind> dueToRemindBaseEntityWrapper = new BaseEntityWrapper<>();
+        dueToRemindBaseEntityWrapper.eq("status", 0);
+        dueToRemindBaseEntityWrapper.eq("productId", productId);
+        int i = dueToRemindService.selectCount(dueToRemindBaseEntityWrapper);
+        if (i != 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -58,6 +58,8 @@ public class IntegralrecordController extends BaseController {
     private IIntegralrecordtypeService integralrecordtypeService;
     @Autowired
     private IInventoryManagementService inventoryManagementService;
+    @Autowired
+    private DueToRemindController dueToRemindController;
 
 
     /**
@@ -187,7 +189,13 @@ public class IntegralrecordController extends BaseController {
         inventoryManagement.setMemberName(membermanagements.get(0).getName());
         inventoryManagement.setIntegralid(integralrecords.get(0).getId());
         inventoryManagement.setConsumptionNum(consumptionNum);
+        //判断商品是否需要进行追销
+        if(dueToRemindController.judgeDueToRemind(productname)){
+            inventoryManagement.setIsDueToRemind(1);
+        }
         inventoryManagementService.insert(inventoryManagement);
+
+
         return SUCCESS_TIP;
     }
 
