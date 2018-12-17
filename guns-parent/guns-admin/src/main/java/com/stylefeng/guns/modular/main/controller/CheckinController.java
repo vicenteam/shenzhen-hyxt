@@ -298,6 +298,15 @@ public class CheckinController extends BaseController {
      */
     public Object findUserDueToReminds(String code){
 
+        BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
+        memberCardBaseEntityWrapper.eq("code",code);
+        MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
+        if(memberCard!=null){
+            Membermanagement membermanagement = membermanagementService.selectById(memberCard.getMemberid());
+            if(membermanagement!=null){
+                //过滤追销信息
+            }
+        }
         return null;
     }
 }
