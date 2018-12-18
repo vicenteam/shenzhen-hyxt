@@ -54,6 +54,8 @@ public class ProductReturnChangeController extends BaseController {
     private IInventoryManagementService inventoryManagementService;
     @Autowired
     private IIntegralrecordService iIntegralrecordService;
+    @Autowired
+    private MembermanagementController membermanagementController;
 
     /**
      * 跳转到商品退换货首页
@@ -159,6 +161,8 @@ public class ProductReturnChangeController extends BaseController {
         productReturnChange.setReturnchangeproductId(integralrecordtype.getId());
         productReturnChange.setReturnchangeproductName(integralrecordtype.getProductname());
         productReturnChange.setStatus(1);
+        //更改数量信息
+        productReturnChange.setReturnchangeNum(returnchangeNum);
         productReturnChange.setIsInsert(isInsert);
 
         //判断是否入库
@@ -186,6 +190,8 @@ public class ProductReturnChangeController extends BaseController {
             iIntegralrecordService.deleteById(productReturnChange.getIntegralrecodeId());
             //删除商品库存管理订单
             inventoryManagementService.deleteById(productReturnChange.getInventoryManagementId());
+            //更新会员会员等级
+            membermanagementController.updateMemberLeave(memberId.toString());
         }
         productReturnChange.updateById();
 
