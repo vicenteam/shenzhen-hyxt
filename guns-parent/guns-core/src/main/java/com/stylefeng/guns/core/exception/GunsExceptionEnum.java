@@ -28,12 +28,14 @@ public enum GunsExceptionEnum implements ServiceExceptionEnum {
      * 错误的请求
      */
     REQUEST_NULL(400, "请求有错误"),
+    REQUEST_NULLS(400, "该商品暂未设置产品服用最大时间"),
     SERVER_ERROR(500, "服务器异常");
 
-    GunsExceptionEnum(int code, String message) {
+     GunsExceptionEnum(int code, String message) {
         this.code = code;
         this.message = message;
     }
+
 
     private Integer code;
 
