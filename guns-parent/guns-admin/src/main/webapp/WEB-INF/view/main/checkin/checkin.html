@@ -245,7 +245,7 @@
 </div>
 <div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;display: none">
     <button data-method="offset" data-type="rb" data-id="21" data-date="板蓝根1" data-time="2018-05-33" data-title="已到期" class="layui-btn layui-btn-normal">右下弹出</button>
-    <button data-method="offset" data-type="rb" data-id="21" data-date="板蓝根2" data-time="2018-05-33" data-title="已到期" class="layui-btn layui-btn-normal">右下弹出</button>
+    <button data-method="offset" data-type="rb" data-id="21" data-date="士大夫士大夫郭德纲和哥哥好地方豆腐干豆腐干" data-time="2018-05-33" data-title="已到期" class="layui-btn layui-btn-normal">右下弹出</button>
 </div>
 <script>
     $("body").css("width","100%")
@@ -522,13 +522,13 @@
                         type: 1
                         // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
                         ,offset:  [ //为了演示，随机坐标
-                            ($(window).height()-195)
+                            ($(window).height()-240)
                             ,($(window).width()-width_dom)
                         ] //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
                         ,id: 'layerDemo'+Math.random(9999) //防止重复弹出
                         ,content: '<div style="padding: 20px 70px;" data-id="'+ivMemberId+'">' +
                         '您购买的['+ productName +'] <BR> ' +
-                        '购买时间:'+time+' <BR>' +title+
+                        '购买时间:'+time+' <BR>' +title+'<br><a style="color: red" onclick="biaoji('+ivMemberId+')">标记为不再提醒</a>'+
                         '</div>'
                         ,btn: '关闭全部'
                         ,btnAlign: 'c' //按钮居中
@@ -553,5 +553,17 @@
             }
         });
     }
+    function biaoji(id){
+        var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/updateIsDueToRemind", function (data) {
+            Feng.success("标记成功");
+        }, function (data) {
+            console.log(data)
+            Feng.success("标记失败");
+        });
+        ajax.setData({id:id})
+        ajax.start();
+    }
+    zhuixiaoMessage()
+
 </script>
 @}
