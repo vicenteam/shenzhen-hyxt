@@ -1,10 +1,12 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.system.dao.InventoryManagementMapper;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
@@ -49,6 +51,8 @@ public class CheckinController extends BaseController {
     private IQiandaoCheckinService qiandaoCheckinService;
     @Autowired
     private IDeptService deptService;
+    @Autowired
+    private InventoryManagementMapper inventoryManagementMapper;
 
     /**
      * 跳转到签到场次首页
@@ -216,9 +220,10 @@ public class CheckinController extends BaseController {
                     map.put("qiandao", 2);
                 }
             }
-            if(map.get("relation")==null){
-                map.put("relation","");
-            };
+            if (map.get("relation") == null) {
+                map.put("relation", "");
+            }
+            ;
             return map;
         }
         return null;
@@ -293,20 +298,34 @@ public class CheckinController extends BaseController {
 
     /**
      * 查询当前用户会员卡信息并读取追销信息
+     *
      * @param code
      * @return
      */
-    public Object findUserDueToReminds(String code){
-
+    @RequestMapping(value = "/findUserDueToReminds")
+    @ResponseBody
+    public Object findUserDueToReminds(String code) {
+        List<Map<String, Object>> afterPinListMap = new ArrayList<>();
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code",code);
+        memberCardBaseEntityWrapper.eq("code", code);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
-        if(memberCard!=null){
+        if (memberCard != null) {
             Membermanagement membermanagement = membermanagementService.selectById(memberCard.getMemberid());
-            if(membermanagement!=null){
+            if (membermanagement != null) {
                 //过滤追销信息
+                afterPinListMap = inventoryManagementMapper.findAfterPinListMap(membermanagement.getId());
+                for (Map<String, Object> map : afterPinListMap) {
+                    System.out.println(JSON.toJSONString(map));
+                    int poorDays = (int) Double.parseDouble(map.get("poorDays").toString());
+                    if (poorDays >= 0) {
+                        map.put("poorDays", "还剩" + poorDays + "天用量");
+                    } else {
+                        map.put("poorDays", "已用完");
+                    }
+
+                }
             }
         }
-        return null;
+        return afterPinListMap;
     }
 }

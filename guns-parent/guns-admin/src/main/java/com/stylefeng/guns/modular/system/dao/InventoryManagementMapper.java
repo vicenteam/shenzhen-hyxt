@@ -2,6 +2,10 @@ package com.stylefeng.guns.modular.system.dao;
 
 import com.stylefeng.guns.modular.system.model.InventoryManagement;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +16,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2018-12-10
  */
 public interface InventoryManagementMapper extends BaseMapper<InventoryManagement> {
+    List<Map<String,Object>> findAfterPinListMap(@Param("memberId") Integer memberId);
 
 }

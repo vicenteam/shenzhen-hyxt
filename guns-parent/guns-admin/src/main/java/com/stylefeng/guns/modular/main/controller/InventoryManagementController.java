@@ -204,6 +204,19 @@ public class InventoryManagementController extends BaseController {
     }
 
     /**
+     * 更改是否进行追销
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateIsDueToRemind")
+    @ResponseBody
+    public Object updateIsDueToRemind(Integer id) {
+        InventoryManagement inventoryManagement = inventoryManagementService.selectById(id);
+        inventoryManagement.setIsDueToRemind(0);
+        inventoryManagementService.updateById(inventoryManagement);
+        return SUCCESS_TIP;
+    }
+    /**
      * 商品库存详情
      */
     @RequestMapping(value = "/detail/{inventoryManagementId}")

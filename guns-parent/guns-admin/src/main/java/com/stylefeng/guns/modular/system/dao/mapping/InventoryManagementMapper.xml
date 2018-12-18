@@ -22,8 +22,21 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, memberPhone
-        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, integralid, clearid, isDueToRemind
+        id, createtime, createuserid, deptid, integralrecordtypeid, status, memberid, consumptionNum, name, memberName, memberPhone, integralid, clearid, isDueToRemind
     </sql>
-
+<!--追销查询-->
+    <select id="findAfterPinListMap" resultType="java.util.Map">
+        SELECT
+        DATEDIFF(now(), a.createtime)  dlff, (a.consumptionNum*c.producteatingdose) sumday,((a.consumptionNum*c.producteatingdose)-DATEDIFF(now(), a.createtime)) poorDays,
+        a.*
+        FROM
+        main_inventory_management a
+        INNER JOIN main_due_to_remind b ON b.productId = a.integralrecordtypeid
+        INNER JOIN main_integralrecordtype c on c.id=b.productId
+        WHERE
+        b.`status` = 0
+        AND a.isDueToRemind = 1
+        and a.memberid=#{memberId}
+        and ((a.consumptionNum*c.producteatingdose)-DATEDIFF(now(), a.createtime))<![CDATA[ <= ]]> b.dueToRemindDays
+    </select>
 </mapper>

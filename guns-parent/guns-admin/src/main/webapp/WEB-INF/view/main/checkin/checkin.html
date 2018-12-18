@@ -1,4 +1,6 @@
 @layout("/common/_container.html"){
+<link href="${ctxPath}/static/layui/css/layui.css" rel="stylesheet"/>
+<script src="${ctxPath}/static/layui/layui.js"></script>
 <div class="layer"  style=" position: fixed;
   top: 30%;
   left: 50%;
@@ -241,6 +243,10 @@
         <button onclick="writeData()">写入数据</button>:<input id="writeData" type="text" maxlength="3000" size="60" placeholder="长度为32位 字符规则(0-9|a-f)">
     </div>
 </div>
+<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;display: none">
+    <button data-method="offset" data-type="rb" data-id="21" data-date="板蓝根1" data-time="2018-05-33" data-title="已到期" class="layui-btn layui-btn-normal">右下弹出</button>
+    <button data-method="offset" data-type="rb" data-id="21" data-date="板蓝根2" data-time="2018-05-33" data-title="已到期" class="layui-btn layui-btn-normal">右下弹出</button>
+</div>
 <script>
     $("body").css("width","100%")
     $("body").css("height","100%")
@@ -368,6 +374,22 @@
             // ajax.setData({value:$("#readData").val(),checkid:$("#checkid").val()})
             ajax.setData({value:$("#readDeviceCard").val(),checkid:$("#checkid").val()})
             ajax.start();
+        //    查询追销信息
+            var ajax = new $ax(Feng.ctxPath + "/checkin/findUserDueToReminds", function (data) {
+                console.log(data)
+                $("#layerDemo").empty();
+                var dom="";
+                for(var i=0;i<data.length;i++){
+                    dom+=' <button data-method="offset" data-type="rb" data-id="'+data[i].id+'" data-date="'+data[i].name+'" data-time="'+data[i].createtime+'" data-title="'+data[i].poorDays+'" class="layui-btn layui-btn-normal">右下弹出</button>';
+                }
+                $("#layerDemo").append(dom)
+                zhuixiaoMessage()
+            }, function (data) {
+                console.log(data)
+            });
+            ajax.setData({code:$("#readDeviceCard").val()})
+            ajax.start();
+        //    end 查询追销信息
         }else {
             Feng.error("请先创建签到场次!");
         }
@@ -416,4 +438,120 @@
     }
 </script>
 <script src="${ctxPath}/static/device/device.js"></script>
+
+
+<!--追销-->
+<script>
+    var offset_x=300;
+    var offset_x_index=0;
+    var top_active=null;
+    function zhuixiaoMessage() {
+        layui.use('layer', function(){ //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+            //触发事件
+            var active = {
+                setTop: function(){
+                    var that = this;
+                    //多窗口模式，层叠置顶
+                    layer.open({
+                        type: 2 //此处以iframe举例
+                        ,title: '当你选择该窗体时，即会在最顶端'
+                        ,area: ['390px', '260px']
+                        ,shade: 0
+                        ,offset: [ //为了演示，随机坐标
+                            ($(window).height()-260)
+                            ,($(window).width()-offset_x)
+                        ]
+                        ,content: '<div style="padding: 20px 100px;">\'+ 666 +\'</div>'
+                        ,btn: ['继续弹出', '全部关闭'] //只是为了演示
+                        ,yes: function(){
+                            offset_x_index++;
+                            offset_x=offset_x+(offset_x_index*30);
+                            $(that).click();
+                        }
+                        ,btn2: function(){
+                            layer.closeAll();
+                        }
+
+                        ,zIndex: layer.zIndex //重点1
+                        ,success: function(layero){
+                            layer.setTop(layero); //重点2
+                        }
+                    });
+                }
+                ,confirmTrans: function(){
+                    //配置一个透明的询问框
+                    layer.msg('大部分参数都是可以公用的<br>合理搭配，展示不一样的风格', {
+                        time: 20000, //20s后自动关闭
+                        btn: ['明白了', '知道了', '哦']
+                    });
+                }
+                ,notice: function(){
+                    //示范一个公告层
+                    layer.open({
+                        type: 1
+                        ,title: false //不显示标题栏
+                        ,closeBtn: false
+                        ,area: '300px;'
+                        ,shade: 0.8
+                        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        ,btn: ['火速围观', '残忍拒绝']
+                        ,btnAlign: 'c'
+                        ,moveType: 1 //拖拽模式，0或者1
+                        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br>layer ≠ layui<br><br>layer只是作为Layui的一个弹层模块，由于其用户基数较大，所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块，但仍然会作为一个独立组件全力维护、升级。<br><br>我们此后的征途是星辰大海 ^_^</div>'
+                        ,success: function(layero){
+                            var btn = layero.find('.layui-layer-btn');
+                            btn.find('.layui-layer-btn0').attr({
+                                href: 'http://www.layui.com/'
+                                ,target: '_blank'
+                            });
+                        }
+                    });
+                }
+                ,offset: function(othis){
+                    console.log(othis)
+                    var type = othis.data('type')
+                        ,text = othis.text();
+                    var productName=othis.data('date');
+                    var ivMemberId=othis.data('id');
+                    var time=othis.data('time');
+                    var title=othis.data('title');
+                    var width_dom=offset_x+(offset_x_index*30);
+                    layer.open({
+                        type: 1
+                        // ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        ,offset:  [ //为了演示，随机坐标
+                            ($(window).height()-195)
+                            ,($(window).width()-width_dom)
+                        ] //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        ,id: 'layerDemo'+Math.random(9999) //防止重复弹出
+                        ,content: '<div style="padding: 20px 70px;" data-id="'+ivMemberId+'">' +
+                        '您购买的['+ productName +'] <BR> ' +
+                        '购买时间:'+time+' <BR>' +title+
+                        '</div>'
+                        ,btn: '关闭全部'
+                        ,btnAlign: 'c' //按钮居中
+                        ,shade: 0 //不显示遮罩
+                        ,yes: function(){
+                            layer.closeAll();
+                        }
+                    });
+                    offset_x_index++;
+                }
+            };
+            $('#layerDemo .layui-btn').on('click', function(){
+                var othis = $(this), method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+
+            var dom=$("#layerDemo").children();
+            for(var i=0;i<dom.length;i++){
+                console.log($(dom[i]).data())
+                var othis = $(dom[i]), method = $(dom[i]).data('method');
+                active[method] ? active[method].call($(dom[i]), othis) : '';
+            }
+        });
+    }
+</script>
 @}
