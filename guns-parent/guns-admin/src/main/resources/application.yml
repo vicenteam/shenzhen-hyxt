@@ -4,7 +4,7 @@ server:
 guns:
   swagger-open: true              #是否开启swagger (true/false)
   kaptcha-open: false             #是否开启登录时验证码 (true/false)
-  file-upload-path: /hyxt/img       #文件上传目录(不配置的话为java.io.tmpdir目录)
+  file-upload-path: D:/hyxt/img       #文件上传目录(不配置的话为java.io.tmpdir目录)
 #  file-upload-path: d:/tmp       #文件上传目录(不配置的话为java.io.tmpdir目录)
   spring-session-open: false      #是否开启spring session,如果是多机环境需要开启(true/false)
   session-invalidate-time: 1800     #session失效时间(只在单机环境下生效，多机环境在SpringSessionConfig类中配置) 单位：秒
@@ -17,8 +17,6 @@ spring:
     static-path-pattern: /static/**
     view:
       prefix: /WEB-INF/view
-  resources:
-#    static-locations: classpath:/static/**,classpath:/.well-known/**
   devtools:
     restart:
       enabled: false
@@ -33,16 +31,16 @@ mybatis-plus:
   typeAliasesPackage: com.stylefeng.guns.modular.system.model
 
 log:
-  path: /hyxt/app/logfile
+  path: D:/hyxt/app/logfile
 
 ---
 
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://192.168.0.101:3306/shenzhen_guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://39.98.40.220:3306/shenzhen_guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    username: jksq
+    password: akmn123
     db-name: shenzhen_guns #用来搜集数据库的所有表
     filters: wall,mergeStat
 
@@ -62,10 +60,10 @@ guns:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
-    db-name: guns_5 #用来搜集数据库的所有表
+    url: jdbc:mysql://39.98.40.220:3306/shenzhen_guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    username: jksq
+    password: akmn123
+    db-name: shenzhen_guns #用来搜集数据库的所有表
     filters: wall,mergeStat
 
 ---
@@ -90,6 +88,6 @@ spring:
       filters: wall,mergeStat
 
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  mina.jar > catalina.out  2>&1 &
-     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar > catalina.out  2>&1 &
+     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  guns-admin-1.0.0.jar > catalina.out  2>&1 &
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar   2>&1 &     netstat -tunlp|grep 8086
 
