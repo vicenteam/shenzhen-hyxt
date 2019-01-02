@@ -43,7 +43,7 @@ Integralrecordtype.initColumn = function () {
         {title: '商品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
         {title: '商品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
         {title: '商品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
-        {title: '食用剂量', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
+        {title: '食用剂量(天数)', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'deptid', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'updatetime', visible: true, align: 'center', valign: 'middle'},
