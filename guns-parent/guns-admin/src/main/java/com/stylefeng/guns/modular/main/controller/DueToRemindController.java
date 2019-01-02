@@ -23,6 +23,7 @@ import com.stylefeng.guns.modular.system.model.DueToRemind;
 import com.stylefeng.guns.modular.main.service.IDueToRemindService;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 商品追销管理控制器
@@ -76,7 +77,28 @@ public class DueToRemindController extends BaseController {
     public Object list(String condition) {
         Page<DueToRemind> page = new PageFactory<DueToRemind>().defaultPage();
         BaseEntityWrapper<DueToRemind> baseEntityWrapper = new BaseEntityWrapper<>();
+        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("productName",condition);
         Page<DueToRemind> result = dueToRemindService.selectPage(page, baseEntityWrapper);
+        List<DueToRemind> list=result.getRecords();
+        list.forEach(a->{
+            Integralrecordtype integralrecordtype= iIntegralrecordtypeService.selectById(a.getProductId());
+            if(integralrecordtype!=null&&integralrecordtype.getProducttype()!=null){
+                switch (integralrecordtype.getProducttype()){
+                    case 0:
+                        a.setCreateTime("礼品类");
+                        break;
+                    case 1:
+                        a.setCreateTime("积分兑换类");
+                        break;
+                    case 2:
+                        a.setCreateTime("销售类");
+                        break;
+                    case 3:
+                        a.setCreateTime("积分+金额类");
+                        break;
+                }
+            }
+        });
         return super.packForBT(result);
     }
 

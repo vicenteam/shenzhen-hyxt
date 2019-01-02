@@ -17,7 +17,7 @@ DueToRemind.initColumn = function () {
             {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
             // {title: '商品id', field: 'productId', visible: true, align: 'center', valign: 'middle'},
             {title: '商品名称', field: 'productName',width:'400px', visible: true, align: 'center', valign: 'middle'},
-            {title: '商品类型', field: 'productType', visible: true, align: 'center', valign: 'middle'},
+            {title: '商品类型', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
         {title: '提示信息', field: 'dueToRemindContext',width:'600px', visible: true, align: 'center', valign: 'middle'},
             {title: '到期提醒天数', field: 'dueToRemindDays', visible: true, align: 'center', valign: 'middle'},
             // {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
