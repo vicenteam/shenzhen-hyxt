@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.main.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
@@ -9,6 +10,7 @@ import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.modular.main.service.IMemberCardService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
+import com.stylefeng.guns.modular.system.controller.DeptController;
 import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
@@ -42,6 +44,8 @@ public class BarRankingController extends BaseController {
     private IMembershipcardtypeService membershipcardtypeService;
     @Autowired
     private IMemberCardService memberCardService;
+    @Autowired
+    private DeptController deptController;
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -52,9 +56,16 @@ public class BarRankingController extends BaseController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public Object list(){
+    public Object list(String deptId){
+        List<Map<String, Object>> list=( List<Map<String, Object>>) deptController.findDeptLists(deptId.toString());
+        String deptIds="";
+        for(Map<String, Object> map:list){
+            deptIds+=map.get("id")+",";
+        }
+        deptIds=deptIds.substring(0,deptIds.length()-1);
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
-        BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+       EntityWrapper<Membermanagement> mWrapper = new EntityWrapper<>();
+        mWrapper.in("deptId",deptIds);
         mWrapper.orderBy("integral",false);
         List<Membermanagement> mList =new ArrayList<>();// membermanagementService.selectList(mWrapper);
         Page<Map<String,Object>> pagemap=membermanagementService.selectMapsPage(page,mWrapper);
