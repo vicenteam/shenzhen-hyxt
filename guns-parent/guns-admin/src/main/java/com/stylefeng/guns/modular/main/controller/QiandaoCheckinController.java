@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class QiandaoCheckinController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IntegralrecordController integralrecordController;
 
     /**
      * 跳转到复签记录首页
@@ -120,6 +123,26 @@ public class QiandaoCheckinController extends BaseController {
         qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
         qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
         qiandaoCheckinService.insert(qiandaoCheckin);
+        //进行复签
+        update(memberId,chechId);
+        //修改签到记录
+        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+        if(membermanagement!=null){
+//            List<Membermanagement> membermanagements = new ArrayList<>(); //会员打卡获得积分
+//            Membershipcardtype membershipcardtype1 = membershipcardtypeService.selectById(membermanagement.getLevelID());
+//            membermanagements.add(membermanagement);
+//            integralrecordController.insertIntegral(membershipcardtype1.getSignin(),2,0,membermanagements);
+//            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
+//                List<Membermanagement> introducers = new ArrayList<>();
+//                Membermanagement introducer = membermanagementService.selectById(membermanagement.getIntroducerId());
+//                Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(introducer.getLevelID());
+//                introducers.add(introducer);
+//                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,3,introducers);
+//            }
+            membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            membermanagement.setIsvisit(0);
+            membermanagementService.updateById(membermanagement);
+        }
         return SUCCESS_TIP;
     }
 
@@ -138,7 +161,7 @@ public class QiandaoCheckinController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(String memberId, String chechId) throws Exception {
         //判断签到场次是否被结束
         if (!StringUtils.isEmpty(chechId)) {
