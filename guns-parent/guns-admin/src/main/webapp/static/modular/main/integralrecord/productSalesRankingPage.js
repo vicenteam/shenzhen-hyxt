@@ -90,7 +90,7 @@ Integralrecord.delete = function () {
  */
 Integralrecord.search = function () {
     var queryData = {};
-    queryData['condition'] = $("#condition").val();
+    queryData['deptId'] = $("#deptId").val();
     queryData['periodTime1'] = $("#periodTime1").val();
     queryData['periodTime2'] = $("#periodTime2").val();
     Integralrecord.table.refresh({query: queryData});
@@ -101,5 +101,6 @@ $(function () {
     var table = new BSTable(Integralrecord.id, "/integralrecord/productSalesRanking", defaultColunms);
     //table.setPaginationType("client");
     table.setPaginationType("server");
+    table.setQueryParams({deptId:$("#deptId").val()})
     Integralrecord.table = table.init();
 });
