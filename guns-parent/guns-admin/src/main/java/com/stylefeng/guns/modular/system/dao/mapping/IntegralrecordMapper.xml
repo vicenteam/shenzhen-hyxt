@@ -21,54 +21,58 @@
     <sql id="Base_Column_List">
         id, integral, target, typeId, otherTypeId, integralType, memberid, createTime, deptid, clearid,staffid
     </sql>
-<!--商品销量排名分页查询-->
-    <select id="productSalesRanking" resultType="map">
-     SELECT
-	b.productname,
-	b.productnum,
-    b.producttype,
-	sum(a.consumptionNum) AS count,
-<if test="monthTime1 != null and monthTime1 != '' and monthTime2 != null and monthTime2 != ''">
-	(
-	select 	sum(consumptionNum)
-	FROM
-	main_inventory_management
-	WHERE
-	1=1
-	and status= 1 and deptid =#{deptId} and
-	integralrecordtypeid = b.id and (createTime between CONCAT(#{monthTime1},' 00:00:00') and CONCAT(#{monthTime2},' 23:59:59'))
-	) month,
-</if>
-<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
-	(
-	select 	sum(consumptionNum)
-	FROM
-	main_inventory_management
-	WHERE
-	1=1
-	and status= 1 and deptid =#{deptId} and
-	integralrecordtypeid = b.id and (createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
-	) time_to_end,
-</if>
-b.deptid
-FROM
+	<!--商品销量排名分页查询-->
+	<select id="productSalesRanking" resultType="map">
+		select asd.productname ,asd.productnum,asd.producttype ,sum(asd.count) count, sum(asd.month) month, <if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">sum(asd.time_to_end) time_to_end,</if>asd.deptid FROM
+		(
+		SELECT
+		b.productname,
+		b.productnum,
+		b.producttype,
+		sum(a.consumptionNum) AS count,
+		<if test="monthTime1 != null and monthTime1 != '' and monthTime2 != null and monthTime2 != ''">
+			(
+			select 	sum(consumptionNum)
+			FROM
+			main_inventory_management
+			WHERE
+			1=1
+			and status= 1 and deptid in(${deptId}) and memberId!='' and
+			integralrecordtypeid = b.id and (createTime between CONCAT(#{monthTime1},' 00:00:00') and CONCAT(#{monthTime2},' 23:59:59'))
+			) month,
+		</if>
+		<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
+			(
+			select 	sum(consumptionNum)
+			FROM
+			main_inventory_management
+			WHERE
+			1=1
+			and status= 1 and deptid in(${deptId}) and  memberId!=''and
+			integralrecordtypeid = b.id and (createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
+			) time_to_end,
+		</if>
+		b.deptid
+		FROM
 		main_inventory_management a
 		INNER JOIN main_integralrecordtype b ON b.id = a.integralrecordtypeid
 		WHERE
-		a.deptid =#{deptId} and a.status=1
+		a.deptid in(${deptId}) and a.status=1 and a.memberId!=''
 		GROUP BY
 		a.integralrecordtypeid
-<choose>
-	<when test="orderBy !=null and orderBy != ''">
-		  ORDER BY ${orderBy} ${desc}
-	</when>
-	<otherwise>
-		ORDER BY
-		count DESC
-	</otherwise>
-</choose>
-	limit #{pageNum},#{pageSize}
-    </select>
+		) asd
+		GROUP BY asd.productname
+		<choose>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy} ${desc}
+			</when>
+			<otherwise>
+				ORDER BY
+				count DESC
+			</otherwise>
+		</choose>
+		limit #{pageNum},#{pageSize}
+	</select>
 
 	<select id="productSalesRankingCount" resultType="java.lang.Integer">
 		select count(1) from
@@ -79,7 +83,7 @@ FROM
 		main_inventory_management a
 INNER JOIN main_integralrecordtype b ON b.id = a.integralrecordtypeid
 WHERE
-	a.deptid =#{deptId} and a.status=1
+	a.deptid in(${deptId}) and a.status=1 and a.memberId!=''
 GROUP BY
 	a.integralrecordtypeid
 		limit #{pageNum},#{pageSize}

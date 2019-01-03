@@ -17,24 +17,24 @@ import java.util.Map;
  */
 public interface IIntegralrecordService extends IService<Integralrecord> {
 
-    List<Map<String,Object>> productSalesRanking(Integer pagetNum,
-                                                 Integer pageSize,
-                                                 Integer deptId,
-                                                 String monthTime1,
-                                                 String monthTime2,
-                                                 String periodTime1,
-                                                 String periodTime2,
-                                                 String orderBy,
-                                                 String desc);
+    List<Map<String, Object>> productSalesRanking(Integer pagetNum,
+                                                  Integer pageSize,
+                                                  String deptId,
+                                                  String monthTime1,
+                                                  String monthTime2,
+                                                  String periodTime1,
+                                                  String periodTime2,
+                                                  String orderBy,
+                                                  String desc);
 
-   int productSalesRankingintCount(Integer pagetNum,
-                                           Integer pageSize,
-                                           Integer deptId,
-                                           String monthTime1,
-                                           String monthTime2,
-                                           String periodTime1,
-                                           String periodTime2,
-                                           String orderBy,
-                                           String desc);
+    int productSalesRankingintCount(Integer pagetNum,
+                                    Integer pageSize,
+                                    String deptId,
+                                    String monthTime1,
+                                    String monthTime2,
+                                    String periodTime1,
+                                    String periodTime2,
+                                    String orderBy,
+                                    String desc);
 
 }

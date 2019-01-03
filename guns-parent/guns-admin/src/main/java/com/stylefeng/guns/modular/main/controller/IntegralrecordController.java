@@ -10,6 +10,7 @@ import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.system.controller.DeptController;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.system.model.InventoryManagement;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
@@ -60,6 +61,8 @@ public class IntegralrecordController extends BaseController {
     private IInventoryManagementService inventoryManagementService;
     @Autowired
     private DueToRemindController dueToRemindController;
+    @Autowired
+    private DeptController deptController;
 
 
     /**
@@ -144,11 +147,17 @@ public class IntegralrecordController extends BaseController {
        }catch (Exception e){
 
        }
+        //获取deptids
+        List<Map<String, Object>> list=( List<Map<String, Object>>) deptController.findDeptLists(deptId.toString());
+        String deptIds="";
+        for(Map<String, Object> map:list){
+            deptIds+=map.get("id")+",";
+        }
+        deptIds=deptIds.substring(0,deptIds.length()-1);
         Page<Map<String,Object>> page = new PageFactory<Map<String,Object>>().defaultPage();
-        System.out.println(JSON.toJSONString(page));
-        int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), deptIds.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
         page.setTotal(i);
-        List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), ShiroKit.getUser().getDeptId(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), deptIds.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
         page.setRecords(mapList);
         return super.packForBT(page);
     }
