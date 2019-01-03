@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.main.service.IMemberCardService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.system.controller.DeptController;
+import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,8 @@ public class BarRankingController extends BaseController {
     private IMemberCardService memberCardService;
     @Autowired
     private DeptController deptController;
+    @Autowired
+    private IDeptService deptService;
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -116,20 +121,39 @@ public class BarRankingController extends BaseController {
 
     @RequestMapping(value = "/countData")
     @ResponseBody
-    public Object countData(String startDate) throws Exception{
-        Integer[] num = new Integer[7];
-        for (int i=0; i<num.length; i++){
-            Date date = simpleDateFormat.parse(startDate);
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(date);
-            calendar.add(calendar.DATE, i);//把日期往后增加一天.整数往后推,负数往前移动
-            date = calendar.getTime(); //获得比较前一天时间
-            BaseEntityWrapper<MemberCard> cWrapper = new BaseEntityWrapper<>();
-            cWrapper.like("createtime",simpleDateFormat.format(date));
-            Integer cards = memberCardService.selectCount(cWrapper);
-            num[i] = cards;
+    public Object countData(Integer deptId, String begindate, String enddate) throws Exception{
+        if(deptId == null){
+            deptId = ShiroKit.getUser().getDeptId();
         }
-        return num;
+        List<Dept> deptList = new ArrayList<>();
+        List<Dept> depts = getTreeMenuList(deptList, deptId);
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for (Dept dept : depts) {
+            EntityWrapper<Membermanagement> entityWrapper = new EntityWrapper();
+            entityWrapper.eq("deptId",dept.getId());
+            if(! StringUtils.isEmpty(begindate)) entityWrapper.gt("createTime",begindate);
+            if(! StringUtils.isEmpty(enddate)) entityWrapper.lt("createTime",enddate);
+            List<Membermanagement> membermanagements = membermanagementService.selectList(entityWrapper);
+            Map<String,Object> map = new HashMap<>();
+            map.put("deptName",dept.getFullname());
+            map.put("number",membermanagements.size());
+            resultList.add(map);
+        }
+        resultList.remove(0);
+        return resultList;
     }
-
+    public List<Dept> getTreeMenuList(List<Dept> domainList, Integer pid) {
+        //加入它本身
+        Dept dept = new Dept();
+        dept.setId(pid);
+        domainList.add(deptService.selectById(dept));
+        //加入子集
+        EntityWrapper<Dept> dWrapper = new EntityWrapper<>();
+        dWrapper.eq("pid", pid);
+        List<Dept> depts = deptService.selectList(dWrapper);
+        for (Dept type : depts) {
+            getTreeMenuList(domainList, type.getId());
+        }
+        return domainList;
+    }
 }
