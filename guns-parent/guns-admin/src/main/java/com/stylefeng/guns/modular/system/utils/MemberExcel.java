@@ -6,12 +6,13 @@ import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 @ExcelTarget("barRankingExcel")
 public class MemberExcel {
 
-    @Excel(name = "会员名称",orderNum = "1")
+    @Excel(name = "客户名称",orderNum = "1")
     private String mName;
-    @Excel(name = "会员卡号",orderNum = "2")
-    private String mCadID;
-    @Excel(name = "性别",replace = { "男_1", "女_2" },orderNum = "3")
+
+    @Excel(name = "性别",replace = { "男_1", "女_2" },orderNum = "2")
     private Integer mSex;
+    @Excel(name = "卡号",orderNum = "3")
+    private String mCadID;
     @Excel(name = "联系电话",orderNum = "4")
     private String mPhone;
     @Excel(name = "联系地址",orderNum = "9")

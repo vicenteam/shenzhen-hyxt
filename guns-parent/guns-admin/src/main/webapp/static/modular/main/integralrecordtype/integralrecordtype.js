@@ -41,7 +41,7 @@ Integralrecordtype.initColumn = function () {
         },
         {title: '商品规格', field: 'productspecification', visible: true, align: 'center', valign: 'middle'},
         {title: '商品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
-        {title: '商品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
+        // {title: '商品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
         {title: '商品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
         {title: '食用剂量(天数)', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
         // {title: '', field: 'deptid', visible: true, align: 'center', valign: 'middle'},
@@ -103,14 +103,19 @@ Integralrecordtype.openIntegralrecordtypeDetail = function () {
  */
 Integralrecordtype.delete = function () {
     if (this.check()) {
-        var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/delete", function (data) {
-            Feng.success("删除成功!");
-            Integralrecordtype.table.refresh();
-        }, function (data) {
-            Feng.error("删除失败!" + data.responseJSON.message + "!");
-        });
-        ajax.set("integralrecordtypeId", this.seItem.id);
-        ajax.start();
+
+        var operation = function(){
+            var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/delete", function (data) {
+                Feng.success("删除成功!");
+                Integralrecordtype.table.refresh();
+            }, function (data) {
+                Feng.error("删除失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("integralrecordtypeId", Integralrecordtype.seItem.id);
+            ajax.start();
+        };
+
+        Feng.confirm("是否删除商品 " + this.seItem.productname + "?",operation);
     }
 };
 
