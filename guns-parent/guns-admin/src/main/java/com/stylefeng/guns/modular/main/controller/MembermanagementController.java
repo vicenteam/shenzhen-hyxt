@@ -699,7 +699,7 @@ public class MembermanagementController extends BaseController {
         }
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
         SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
-        Map<String, Object> mapTile = memberExcels.get(0);
+        Map<String, Object> mapTile = memberExcels.size()!=0?memberExcels.get(0):new HashMap<>();
         //创建excel 数据列名
         SXSSFRow rowTitle = sxssfSheet.createRow(0);
         Integer j = 0;

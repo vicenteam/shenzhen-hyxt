@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.system.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.base.tips.Tip;
@@ -223,7 +224,6 @@ public class UserMgrController extends BaseController {
         }
 
         User oldUser = userService.selectById(user.getId());
-
         if (ShiroKit.hasRole(Const.ADMIN_NAME)) {
             this.userService.updateById(UserFactory.editUser(user, oldUser));
             //更改密码
@@ -232,6 +232,9 @@ public class UserMgrController extends BaseController {
                     User userPass = this.userService.selectById(user.getId());
                     userPass.setSalt(oldUser.getSalt());
                     userPass.setPassword(ShiroKit.md5(user.getPassword(),oldUser.getSalt()));
+                    if(userPass.getAccount().equals("admin")){
+                        throw new GunsException(BizExceptionEnum.NO_PERMITION);
+                    }
                     this.userService.updateById(userPass);
                 }
             }
