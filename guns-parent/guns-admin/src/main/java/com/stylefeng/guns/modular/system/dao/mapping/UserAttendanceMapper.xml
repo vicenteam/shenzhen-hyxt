@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.UserAttendanceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.UserAttendance">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="checkYearMonth" property="checkYearMonth" />
+        <result column="checkTime1" property="checkTime1" />
+        <result column="checkTime2" property="checkTime2" />
+        <result column="deptId" property="deptId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, checkYearMonth, checkTime1, checkTime2, deptId
+    </sql>
+
+
+    <select id="findUserAttendanceData" resultType="java.util.HashMap">
+        select
+        b.name,
+        a.checkYearMonth,
+        a.checkTime1,
+        a.checkTime2,
+        a.userId,
+        c.fullname
+        from main_user_attendance a,sys_user b,sys_dept c
+        where
+        a.userId = b.id
+        and a.deptId = c.id
+        and a.deptId
+        <foreach collection="deptList" item="deptList" open="in(" close=")" separator=",">
+            #{deptList.id}
+        </foreach>
+        <if test="name != null and name != ''">
+            and b.name like concat('%',#{name},'#')
+        </if>
+        <if test="begindate != null and begindate != ''">
+            and a.checkYearMonth &gt; #{begindate}
+        </if>
+        <if test="enddate != null and enddate != ''">
+            and a.checkYearMonth &lt; #{enddate}
+        </if>
+        <choose>
+            <when test="type == 1">
+                and a.checkTime1 is not null and a.checkTime1 &lt;&gt; ''
+                and a.checkTime2 is not null and a.checkTime2 &lt;&gt; ''
+            </when>
+            <when test="type == 2">
+                and a.checkTime1 is not null and a.checkTime1 &lt;&gt; ''
+            </when>
+            <when test="type == 3">
+                and a.checkTime2 is not null and a.checkTime2 &lt;&gt; ''
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        order by  a.id desc
+        limit #{pageNum},#{pageSize}
+    </select>
+</mapper>

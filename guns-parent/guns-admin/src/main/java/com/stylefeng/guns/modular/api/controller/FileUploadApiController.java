@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/fileuploadapi")
 @Api(description = "文件上传")
@@ -25,10 +27,10 @@ public class FileUploadApiController {
             @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
     })
-    public ResponseData photoUpload(@RequestPart("file") MultipartFile picture) throws Exception {
+    public ResponseData photoUpload(@RequestPart("file") MultipartFile picture, HttpServletRequest request) throws Exception {
         ResponseData responseData=new ResponseData();
         try {
-           String pictureName= userMgrController.upload(picture);
+           String pictureName= userMgrController.upload(picture,request);
             responseData.setDataCollection(pictureName);
         }catch (Exception e){
             e.printStackTrace();

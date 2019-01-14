@@ -9,7 +9,11 @@ guns:
   spring-session-open: false      #是否开启spring session,如果是多机环境需要开启(true/false)
   session-invalidate-time: 1800     #session失效时间(只在单机环境下生效，多机环境在SpringSessionConfig类中配置) 单位：秒
   session-validation-interval: 900  #多久检测一次失效的session(只在单机环境下生效) 单位：秒
-
+#百度人脸识别api配置
+baidu:
+  face-appid: 15414039
+  face-api-key: GuP699w9v0pdcu10gqX8wKZI
+  face-secret-key: 8ljaybSpaGZyEPofwR812mGDGZmWi7Td
 spring:
   profiles:
     active: @spring.active@
