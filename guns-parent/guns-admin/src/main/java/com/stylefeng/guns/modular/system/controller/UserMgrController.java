@@ -255,25 +255,27 @@ public class UserMgrController extends BaseController {
         User oldUser = userService.selectById(user.getId());
 
         if (ShiroKit.hasRole(Const.ADMIN_NAME)) {
-            this.userService.updateById(UserFactory.editUser(user, oldUser));
+
             //更新人脸库
-            new Runnable() {
-                @Override
-                public void run() {
+//            new Runnable() {
+//                @Override
+//                public void run() {
                     String userBase64ImgData = (String) request.getSession().getAttribute("userBase64ImgData");
                     log.info("base64->" + userBase64ImgData);
                     if (!StringUtils.isEmpty(userBase64ImgData)) {
                         AipFace client = new AipFace(FaceUtil.APP_ID, FaceUtil.API_KEY, FaceUtil.SECRET_KEY);
                         System.out.println(FaceUtil.APP_ID+"---");
-                        if (StringUtils.isEmpty(user.getAvatar())) {//新增
+                        System.out.println(oldUser.getAvatar());
+                        if (StringUtils.isEmpty(oldUser.getAvatar())) {//新增
                             new FaceUtil().userRegister(client, JSON.toJSONString(user), userBase64ImgData, user.getDeptid() + "", user.getId() + "");
                         } else {//更新
                             new FaceUtil().faceUpdate(client, user.getId() + "", userBase64ImgData, JSON.toJSONString(user), user.getDeptid() + "");
 
                         }
                     }
-                }
-            }.run();
+//                }
+//            }.run();
+            this.userService.updateById(UserFactory.editUser(user, oldUser));
             //更改密码
             if (user.getPassword() != null) {
                 if (!user.getPassword().equals(oldUser.getPassword())) {
