@@ -189,6 +189,7 @@ public class InventoryManagementController extends BaseController {
         productReturnChange.setInventoryManagementId(inventoryManagementId);
         //设置积分表id
         productReturnChange.setIntegralrecodeId(inventoryManagement.getIntegralid());
+        productReturnChange.setContent(content);
         productReturnChangeService.insert(productReturnChange);
         return SUCCESS_TIP;
     }

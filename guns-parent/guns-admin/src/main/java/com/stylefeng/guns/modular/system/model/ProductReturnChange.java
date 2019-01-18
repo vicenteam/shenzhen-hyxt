@@ -74,6 +74,18 @@ public class ProductReturnChange extends Model<ProductReturnChange> {
     private Integer isInsert;
 
     private String memberPhone;
+    /**
+     * 申请理由
+     */
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getMemberPhone() {
         return memberPhone;

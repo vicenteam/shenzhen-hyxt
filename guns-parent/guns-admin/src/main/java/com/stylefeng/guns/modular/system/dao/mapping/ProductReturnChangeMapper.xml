@@ -21,6 +21,7 @@
         <result column="inventoryManagementId" property="inventoryManagementId" />
         <result column="isInsert" property="isInsert" />
         <result column="memberPhone" property="memberPhone" />
+        <result column="content" property="content"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
