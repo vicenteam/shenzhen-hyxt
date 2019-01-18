@@ -163,7 +163,7 @@ public class InventoryManagementController extends BaseController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type) throws Exception {
+    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type,String content) throws Exception {
         EntityWrapper<ProductReturnChange> productReturnChangeEntityWrapper = new EntityWrapper<>();
         productReturnChangeEntityWrapper.eq("inventoryManagementId",inventoryManagementId);
         int i = productReturnChangeService.selectCount(productReturnChangeEntityWrapper);

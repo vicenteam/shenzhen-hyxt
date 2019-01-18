@@ -128,7 +128,7 @@ InventoryManagement.delete = function () {
             return;
         }
         var selectid=this.seItem.id;
-        layer.confirm('您确定要将本条数据申请退货吗？', {btn: ['确定', '取消']}, function () {
+        layer.confirm('<p style="color: red">请输入退货理由</p><input type="text" class="form-control" id="content">', {btn: ['确定', '取消']}, function () {
             layer.closeAll('dialog');
             var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/delete", function (data) {
                 Feng.success("申请成功!");
@@ -138,6 +138,7 @@ InventoryManagement.delete = function () {
             });
             ajax.set("inventoryManagementId", selectid);
             ajax.set("type", 0);
+            ajax.set("content", $("#content").val());
             ajax.start();
         });
     }
@@ -149,7 +150,7 @@ InventoryManagement.delete1 = function () {
             return;
         }
         var selectid=this.seItem.id;
-        layer.confirm('您确定要将本条数据申请换货吗？', {btn: ['确定', '取消']}, function () {
+        layer.confirm('<p style="color: red">请输入换货理由</p><input type="text" class="form-control" id="content">', {btn: ['确定', '取消']}, function () {
             layer.closeAll('dialog');
             var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/delete", function (data) {
                 Feng.success("申请成功!");
@@ -159,6 +160,7 @@ InventoryManagement.delete1 = function () {
             });
             ajax.set("inventoryManagementId", selectid);
             ajax.set("type", 1);
+            ajax.set("content", $("#content").val());
             ajax.start();
         });
     }
