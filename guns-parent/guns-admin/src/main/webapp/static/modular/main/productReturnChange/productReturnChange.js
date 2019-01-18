@@ -17,7 +17,7 @@ ProductReturnChange.initColumn = function () {
         {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
         {title: '退换货人姓名', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
         // {title: '退换货人id', field: 'memberId', visible: true, align: 'center', valign: 'middle'},
-        {title: '创建时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+        {title: '创建时间', field: 'createtime',width:'160px', visible: true, align: 'center', valign: 'middle'},
         {title: '提交申请人', field: 'createuserid', visible: true, align: 'center', valign: 'middle'},
         {title: '商品名称', field: 'productName',width:"300px",visible: true, align: 'center', valign: 'middle'},
         {
@@ -36,6 +36,7 @@ ProductReturnChange.initColumn = function () {
         },
         {title: '退换货商品id', field: 'returnchangeproductId', visible: false, align: 'center', valign: 'middle'},
         {title: '退换货商品名称', field: 'returnchangeproductName',width:"300px", visible: true, align: 'center', valign: 'middle'},
+        {title: '退换货理由', field: 'content',width:"300px", visible: true, align: 'center', valign: 'middle'},
         {title: '退换货数量', field: 'returnchangeNum', visible: true, align: 'center', valign: 'middle'},
         {
             title: '状态',
