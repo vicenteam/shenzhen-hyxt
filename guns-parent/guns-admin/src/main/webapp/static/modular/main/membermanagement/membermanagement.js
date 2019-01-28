@@ -45,6 +45,7 @@ Membermanagement.initColumn = function () {
                     return '<span style="font-size: 10px">'+value+'</span>';
                 }},
             {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
+        {title: '余额', field: 'money', visible: true, align: 'center', valign: 'middle'},
             {title: '操作', field: 'id', visible: true, align: 'center', width:'380px', valign: 'middle',formatter: function (value, row, index) {
 
                     return '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +

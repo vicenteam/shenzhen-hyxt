@@ -130,6 +130,18 @@ public class Membermanagement extends Model<Membermanagement> {
      * 是否回访(0过滤 1需回访 2已回访)
      */
     private Integer isvisit;
+    /**
+     * 账户余额
+     */
+    private Double money;
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
 
     public Integer getIsvisit() {
         return isvisit;
