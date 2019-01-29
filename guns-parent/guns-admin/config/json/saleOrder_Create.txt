@@ -1,0 +1,33 @@
+{
+
+    dto:{
+
+        VoucherDate:"2014-09-30",
+
+        ExternalCode:"1",
+
+        Customer:{Code: "001"}, 
+
+        Address:"xx省xx市",
+
+        LinkMan:"张三",
+
+        ContactPhone:"13611111111",
+
+        Memo:"测试OpenAPI",
+
+        SaleOrderDetails:[{
+
+            Inventory:{Code:"001"},
+
+            Unit:{Name:"个"},
+
+            Quantity:5,
+
+            OrigPrice:6.4
+
+        }]
+
+    } 
+
+}

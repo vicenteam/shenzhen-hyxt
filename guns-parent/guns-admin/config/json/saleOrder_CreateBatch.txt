@@ -1,0 +1,35 @@
+{
+    dtos: [{
+            VoucherDate: "2015-04-22",
+            ExternalCode: "2",
+            Customer: {Code: "001"},
+            InvoiceType: {Code: "01"},
+            Address: "xx省xx市",
+            LinkMan: "张三",
+            ContactPhone: "13611111111",
+            Memo: "测试OpenAPI",
+            SaleDeliveryDetails: [{
+    Inventory:{Code: "001"},
+                Unit: {Name: "个"},
+                Quantity: 5,
+                OrigPrice: 6.4,
+                OrigTaxAmount: 90
+            }]
+  },{
+            VoucherDate: "2015-04-22",
+            ExternalCode: "3",
+            Customer: {Code: "001"},
+            InvoiceType: {Code: "01"},
+            Address: "xx省xx市",
+            LinkMan: "张三",
+            ContactPhone: "13611111111",
+            Memo: "测试OpenAPI",
+            SaleDeliveryDetails: [{
+    Inventory:{Code: "001"},
+                Unit: {Name: "个"},
+                Quantity: 5,
+                OrigPrice: 6.4,
+                OrigTaxAmount: 90
+            }]
+        }]
+}

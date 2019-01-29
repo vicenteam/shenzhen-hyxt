@@ -1,0 +1,2 @@
+﻿{AppKey:"myAppKey",AppSecret:"myAppSecret",UserName:"demo",Password:"",LoginDate:"2014-09-30",AccountNumber:"1",
+ServerURL:"http://127.0.0.1/TPlus/api/v1/",ServerURLItems:["http://127.0.0.1/TPlus/api/v1/","http://demo.chanjet.com/TPlus116/api/v1/"]}

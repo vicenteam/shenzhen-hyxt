@@ -1,0 +1,36 @@
+﻿{
+	dtos:[{
+		ExternalCode:"2",
+		DocType:{ Name:"记账凭证",Code:"记"}, 
+		VoucherDate:"2014-09-30",
+		Entrys:[{
+			Summary:"提现",
+			Account:{Code:"1001"},
+			Currency:{Code:"RMB"},
+			AmountCr:"100"
+		},{
+			Summary:"提现",
+			Account:{Code:"1002"},
+			Currency:{Code:"RMB"},
+			AmountDr:"100",
+			AuxInfos:[{AuxAccDepartment:{Code:"bm01"}}]
+		}] 
+	},{
+		ExternalCode:"3",
+		DocType:{ Name:"记账凭证",Code:"记"}, 
+		VoucherDate:"2014-09-30",
+		Entrys:[{
+			Summary:"提现",
+			Account:{Code:"1001"},
+			Currency:{Code:"RMB"},
+			AmountCr:"100"
+		},{
+			Summary:"提现",
+			Account:{Code:"1002"},
+			Currency:{Code:"RMB"},
+			AmountDr:"100",
+			AuxInfos:[{AuxAccDepartment:{Code:"bm01"}}]
+		}] 
+	}],
+	param:{}	 
+} 

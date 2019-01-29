@@ -1,0 +1,17 @@
+﻿{
+	param:{
+		Warehouse: [{Code:"001" },{Code:"002" }],
+		InvBarCode: "",
+		BeginInventoryCode: "",
+		EndInventoryCode: "",
+		InventoryName: "",
+		Specification: "",
+		Brand: "", 
+		GroupInfo: {
+			Warehouse: true,
+			Inventory:  true,
+			Brand:  true,
+			InvProperty:  true
+		}
+	}
+}

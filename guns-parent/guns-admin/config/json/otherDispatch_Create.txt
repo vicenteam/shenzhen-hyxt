@@ -1,0 +1,15 @@
+﻿{
+	dto:{
+		ExternalCode: "st0001",
+		VoucherType: {Code: "ST1024"},
+		VoucherDate: "2014-09-30",
+		BusiType: {Code: "13"},
+		Warehouse: {Code: "001"},
+		Memo: "测试",
+		RDRecordDetails: [{
+			InvBarCode: "",
+			Inventory: {Code: "001"},
+			BaseQuantity: 1.00
+		}]
+	}
+}
