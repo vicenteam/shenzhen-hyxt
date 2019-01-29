@@ -49,7 +49,6 @@ PrepaidRecordInfoDlg.collectData = function() {
     .set('prepaidRecordTime')
     .set('prepaidRecordMoney')
     .set('prepaidRecordMemberId')
-    .set('deptid')
     .set('prepaidRecordMemberName')
     .set('prepaidRecordMemberPhone');
 }
@@ -58,17 +57,20 @@ PrepaidRecordInfoDlg.collectData = function() {
  * 提交添加
  */
 PrepaidRecordInfoDlg.addSubmit = function() {
-
+    if (isNaN($("#prepaidRecordMoney").val())) {
+        Feng.error("金额必须是数字!");
+        return;
+    }
     this.clearData();
     this.collectData();
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/prepaidRecord/add", function(data){
-        Feng.success("添加成功!");
+        Feng.success("充值成功!");
         window.parent.PrepaidRecord.table.refresh();
         PrepaidRecordInfoDlg.close();
     },function(data){
-        Feng.error("添加失败!" + data.responseJSON.message + "!");
+        Feng.error("充值失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.prepaidRecordInfoData);
     ajax.start();

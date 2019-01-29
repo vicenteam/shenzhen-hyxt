@@ -1,6 +1,10 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.system.model.Membermanagement;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -14,6 +18,8 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.PrepaidRecord;
 import com.stylefeng.guns.modular.main.service.IPrepaidRecordService;
+
+import java.util.Date;
 
 /**
  * 充值记录控制器
@@ -29,6 +35,8 @@ public class PrepaidRecordController extends BaseController {
 
     @Autowired
     private IPrepaidRecordService prepaidRecordService;
+    @Autowired
+    private IMembermanagementService membermanagementService;
 
     /**
      * 跳转到充值记录首页
@@ -65,6 +73,9 @@ public class PrepaidRecordController extends BaseController {
     public Object list(String condition) {
         Page<PrepaidRecord> page = new PageFactory<PrepaidRecord>().defaultPage();
         BaseEntityWrapper<PrepaidRecord> baseEntityWrapper = new BaseEntityWrapper<>();
+        baseEntityWrapper.like("prepaidRecordMemberName",condition);
+        baseEntityWrapper.or().like("prepaidRecordMemberPhone",condition);
+        baseEntityWrapper.orderBy("prepaidRecordTime",false);
         Page<PrepaidRecord> result = prepaidRecordService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
@@ -75,7 +86,13 @@ public class PrepaidRecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(PrepaidRecord prepaidRecord) {
+        prepaidRecord.setPrepaidRecordTime(DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        prepaidRecord.setDeptid(ShiroKit.getUser().deptId);
         prepaidRecordService.insert(prepaidRecord);
+        //更新会员剩余可用金额
+        Membermanagement membermanagement = membermanagementService.selectById(prepaidRecord.getPrepaidRecordMemberId());
+        membermanagement.setMoney((membermanagement.getMoney()+prepaidRecord.getPrepaidRecordMoney()));
+        membermanagementService.updateById(membermanagement);
         return SUCCESS_TIP;
     }
 

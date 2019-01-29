@@ -4,11 +4,12 @@
         <div class="form-horizontal">
             <input type="hidden" id="introducerId" name="introducerId"/>
             <input type="hidden" id="cardCode" name="cardCode"/>
+            <input type="hidden" id="prepaidRecordMemberId">
             <div class="row">
                 <div class="col-sm-6 b-r">
 
-                    <#input id="prepaidRecordMemberName" name="姓名" underline="true"/>
-                    <#input id="prepaidRecordMemberPhone" name="电话号码" underline="true"/>
+                    <#input id="prepaidRecordMemberName" name="姓名" underline="true" placeholder="placeholder"/>
+                    <#input id="prepaidRecordMemberPhone" name="电话号码" underline="true" placeholder="placeholder"/>
                 </div>
 
                 <div class="col-sm-6">
@@ -175,6 +176,7 @@
             type: 'POST',
             async: false,
             success: function (data) {
+                $("#prepaidRecordMemberId").val(data.id)
                 $("#prepaidRecordMemberName").val(data.name)
                 $("#prepaidRecordMemberPhone").val(data.phone)
             }
