@@ -1,10 +1,13 @@
 package yongyou.util;
 
+import com.alibaba.fastjson.JSON;
 import yongyou.openAPI.openAPI;
 
 public class YongYouAPIUtils {
     public static final String user = "冯芳";
     public static final String pwd="";
+//    public static final String user = "demo";
+//    public static final String pwd="ak123456";
     public static final String account= "1";
 
     //授权信息
@@ -12,6 +15,24 @@ public class YongYouAPIUtils {
     private static String appSecret="bjc4b5";
 
     /**
+     * 获取PartnerEntityDTO对象
+     * {"param":{}}
+     */
+    private final static String PARTNER_QUERY="partner/Query";
+    /**
+     * 仓库查询
+     */
+    private final static String WAREHOUSE_QUERY="warehouse/Query";
+    /**
+     * 门店查询
+     */
+    private final static String STORE_QUERY="store/Query";
+    /**
+     * 存货编码查询
+     */
+    private final static String INVENTORY_QUERY="inventory/Query";
+
+  /**
      * 获取商品
      */
     private final static String CURRENTSTOCK_QUERY="currentStock/Query";
@@ -41,5 +62,14 @@ public class YongYouAPIUtils {
         jsonStr = api.Login(user, pwd, account);
         jsonStr = api.getData(url, json);
         return jsonStr;
+    }
+
+    public static void main(String[] args) throws Exception {
+        //获取仓库信息
+        String s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
+        System.out.println(s);
+        //获取商品信息
+         s = postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
+        System.out.println(s);
     }
 }
