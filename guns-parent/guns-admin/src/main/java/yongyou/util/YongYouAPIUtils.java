@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSON;
 import yongyou.openAPI.openAPI;
 
 public class YongYouAPIUtils {
-    public static final String user = "冯芳";
-    public static final String pwd="";
-//    public static final String user = "demo";
-//    public static final String pwd="ak123456";
+//    public static final String user = "冯芳";
+//    public static final String pwd="";
+    public static final String user = "demo";
+    public static final String pwd="ak123456";
     public static final String account= "1";
 
     //授权信息
@@ -58,18 +58,21 @@ public class YongYouAPIUtils {
     public  static String postUrl(String url,String json) throws Exception {
         String jsonStr="";
         openAPI api = new openAPI("http://47.107.224.140:8080/TPlus/api/v1/", appKey, appSecret);
-//		jsonStr = api.get("Authorization/Logout"); //登出方法
+        jsonStr = api.get("Authorization/Logout"); //登出方法
         jsonStr = api.Login(user, pwd, account);
+        jsonStr= api.ReLogin();
         jsonStr = api.getData(url, json);
         return jsonStr;
     }
 
     public static void main(String[] args) throws Exception {
+//        String s = postUrl("", "{\"param\":{}}");
+
         //获取仓库信息
         String s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
         System.out.println(s);
         //获取商品信息
-         s = postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
-        System.out.println(s);
+//         s = postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
+//        System.out.println(s);
     }
 }
