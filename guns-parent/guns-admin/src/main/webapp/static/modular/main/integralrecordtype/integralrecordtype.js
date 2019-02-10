@@ -118,6 +118,17 @@ Integralrecordtype.delete = function () {
         Feng.confirm("是否删除商品 " + this.seItem.productname + "?",operation);
     }
 };
+Integralrecordtype.tongbuData = function () {
+    //提交信息
+    var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/tongbuData", function(data){
+        Feng.success("同步成功!");
+        window.parent.Integralrecordtype.table.refresh();
+    },function(data){
+        Feng.error("同步失败!" + data.responseJSON.message + "!");
+    });
+    ajax.set(this.integralrecordtypeInfoData);
+    ajax.start();
+};
 
 /**
  * 查询商品类型维护列表

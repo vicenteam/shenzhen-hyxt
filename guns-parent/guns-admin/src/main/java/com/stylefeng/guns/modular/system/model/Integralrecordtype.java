@@ -60,6 +60,56 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private String updateuserid;
     private Integer status;
 
+    private String WarehouseName;
+    private String WarehouseCode;
+    private String InventoryCode;
+    private String InventoryName;
+    private String Specification;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getWarehouseName() {
+        return WarehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        WarehouseName = warehouseName;
+    }
+
+    public String getWarehouseCode() {
+        return WarehouseCode;
+    }
+
+    public void setWarehouseCode(String warehouseCode) {
+        WarehouseCode = warehouseCode;
+    }
+
+    public String getInventoryCode() {
+        return InventoryCode;
+    }
+
+    public void setInventoryCode(String inventoryCode) {
+        InventoryCode = inventoryCode;
+    }
+
+    public String getInventoryName() {
+        return InventoryName;
+    }
+
+    public void setInventoryName(String inventoryName) {
+        InventoryName = inventoryName;
+    }
+
+    public String getSpecification() {
+        return Specification;
+    }
+
+    public void setSpecification(String specification) {
+        Specification = specification;
+    }
+
     public Integer getStatus() {
         return status;
     }

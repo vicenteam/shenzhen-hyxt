@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -17,8 +18,10 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
+import yongyou.util.YongYouAPIUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 积分类型控制器
@@ -127,5 +130,37 @@ public class IntegralrecordtypeController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("integralrecordtypeId") Integer integralrecordtypeId) {
         return integralrecordtypeService.selectById(integralrecordtypeId);
+    }
+
+    /**
+     * 同步数据
+     * @return
+     */
+    @RequestMapping(value = "/tongbuData")
+    @ResponseBody
+    public Object tongbuData()throws Exception{
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
+        System.out.println(s);
+        System.out.println("同步数据。。。");
+        List<Integralrecordtype> integralrecordtypes = JSON.parseArray(s, Integralrecordtype.class);
+        for(Integralrecordtype integralrecordtype:integralrecordtypes){
+            String inventoryCode = integralrecordtype.getInventoryCode();
+            BaseEntityWrapper<Object> objectBaseEntityWrapper = new BaseEntityWrapper<>();
+            objectBaseEntityWrapper.eq("WarehouseCode",inventoryCode);
+            Integralrecordtype integralrecordtype1 = integralrecordtypeService.selectOne(objectBaseEntityWrapper);
+            if(integralrecordtype1==null){
+                integralrecordtype.setNames(integralrecordtype.getInventoryName());
+                integralrecordtype.setProductname(integralrecordtype.getInventoryName());
+                integralrecordtype.setProductnum(0);
+                integralrecordtype.setProductjifen("0");
+                integralrecordtype.setProducttype(2);
+                integralrecordtype.setProductspecification(integralrecordtype.getSpecification());
+                integralrecordtype.setStatus(0);
+                integralrecordtype.setDeptid(ShiroKit.getUser().deptId+"");
+                integralrecordtypeService.insert(integralrecordtype);
+            }
+        }
+        System.out.println("同步数据完成。。。");
+        return null;
     }
 }

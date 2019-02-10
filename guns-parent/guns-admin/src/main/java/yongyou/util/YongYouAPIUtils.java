@@ -18,47 +18,47 @@ public class YongYouAPIUtils {
      * 获取PartnerEntityDTO对象
      * {"param":{}}
      */
-    private final static String PARTNER_QUERY="partner/Query";
+    public final static String PARTNER_QUERY="partner/Query";
     /**
      * 仓库查询
      */
-    private final static String WAREHOUSE_QUERY="warehouse/Query";
+    public final static String WAREHOUSE_QUERY="warehouse/Query";
     /**
      * 门店查询
      */
-    private final static String STORE_QUERY="store/Query";
+    public final static String STORE_QUERY="store/Query";
     /**
      * 存货编码查询
      */
-    private final static String INVENTORY_QUERY="inventory/Query";
+    public final static String INVENTORY_QUERY="inventory/Query";
 
   /**
      * 获取商品
      */
-    private final static String CURRENTSTOCK_QUERY="currentStock/Query";
+    public final static String CURRENTSTOCK_QUERY="currentStock/Query";
     /**
      * 销售出库单
      */
-    private final static String SALEDISPATCH_CREATE="saleDispatch/Create";
+    public final static String SALEDISPATCH_CREATE="saleDispatch/Create";
     /**
      * 其他出库单
      */
-    private final static String OTHERDISPATCH_CREATE="otherDispatch/Create";
+    public final static String OTHERDISPATCH_CREATE="otherDispatch/Create";
     /**
      * 产品入库单
      */
-    private final static String PRODUCTRECEIVE_CREATE="productReceive/Create";
+    public final static String PRODUCTRECEIVE_CREATE="productReceive/Create";
     /**
      * 其他入库单
      */
-    private final static String OTHERRECEIVE_CREATE="otherReceive/Create";
+    public final static String OTHERRECEIVE_CREATE="otherReceive/Create";
 
 
 
     public  static String postUrl(String url,String json) throws Exception {
         String jsonStr="";
         openAPI api = new openAPI("http://47.107.224.140:8080/TPlus/api/v1/", appKey, appSecret);
-        jsonStr = api.get("Authorization/Logout"); //登出方法
+//        jsonStr = api.get("Authorization/Logout"); //登出方法
         jsonStr = api.Login(user, pwd, account);
         jsonStr= api.ReLogin();
         jsonStr = api.getData(url, json);
