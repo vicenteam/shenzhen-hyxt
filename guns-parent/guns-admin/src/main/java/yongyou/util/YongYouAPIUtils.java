@@ -61,6 +61,7 @@ public class YongYouAPIUtils {
 //        jsonStr = api.get("Authorization/Logout"); //登出方法
         jsonStr = api.Login(user, pwd, account);
         jsonStr= api.ReLogin();
+//        Tools.setProper(rstrpara,jsonstr00);
         jsonStr = api.getData(url, json);
         return jsonStr;
     }

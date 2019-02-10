@@ -118,6 +118,7 @@ public class Tools {
 	}
 	
 	public static void setProper(String parastr,String str) { // remove null string
+		System.out.println("parastr:"+parastr+" str:"+str);
 		String path = "";
 		String value = "";
 		try {

@@ -1,5 +1,7 @@
 package yongyou.openAPI;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import yongyou.util.Tools;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.*;
@@ -151,7 +153,11 @@ public class openAPI {
 	        	if (Tools.getProper("access_token").equals(""))
 	    		{
 	        		jsonstr = "你已经退出了，请先登录！！！";
-	    		}	        	
+	    		}else {
+					System.out.println("---"+jsonstr);
+					JSONObject jsonObject = JSON.parseObject(jsonstr);
+					Tools.setProper("access_token",jsonObject.getString("access_token"));
+				}
 	        }
 	        
 		} catch (IOException e) {
