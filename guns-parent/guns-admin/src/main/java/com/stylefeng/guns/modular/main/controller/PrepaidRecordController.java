@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -73,8 +74,10 @@ public class PrepaidRecordController extends BaseController {
     public Object list(String condition) {
         Page<PrepaidRecord> page = new PageFactory<PrepaidRecord>().defaultPage();
         BaseEntityWrapper<PrepaidRecord> baseEntityWrapper = new BaseEntityWrapper<>();
-        baseEntityWrapper.like("prepaidRecordMemberName",condition);
-        baseEntityWrapper.or().like("prepaidRecordMemberPhone",condition);
+        if(!StringUtils.isEmpty(condition)){
+            baseEntityWrapper.like("prepaidRecordMemberName",condition);
+            baseEntityWrapper.or().like("prepaidRecordMemberPhone",condition);
+        }
         baseEntityWrapper.orderBy("prepaidRecordTime",false);
         Page<PrepaidRecord> result = prepaidRecordService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);

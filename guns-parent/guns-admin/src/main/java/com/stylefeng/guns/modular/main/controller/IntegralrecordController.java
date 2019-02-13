@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
@@ -16,6 +17,7 @@ import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -222,10 +224,27 @@ public class IntegralrecordController extends BaseController {
         "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
         "        }\n" +
         "    }";
+        tableJson="{\n" +
+                "\tdto:{\n" +
+                "\t\tExternalCode: \""+radomInt+"\",\n" +
+                "\t\tVoucherType: {Code: \"ST1024\"},\n" +
+                "\t\tVoucherDate: \""+now+"\",\n" +
+                "\t\tBusiType: {Code: \"15\"},\n" +
+                "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
+                "\t\tMemo: \"销售\",\n" +
+                "\t\tRDRecordDetails: [{\n" +
+                "\t\t\tInvBarCode: \"\",\n" +
+                "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
+                "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
+                "\t\t}]\n" +
+                "\t}\n" +
+                "}";
         MainSynchronous mainSynchronous = new MainSynchronous();
         mainSynchronous.setSynchronousJson(tableJson);
         mainSynchronous.setStatus(0);
         mainSynchronousService.insert(mainSynchronous);
+        //
+        synchronousData(mainSynchronous);
         return SUCCESS_TIP;
     }
 
@@ -319,5 +338,25 @@ public class IntegralrecordController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("integralrecordId") Integer integralrecordId) {
         return integralrecordService.selectById(integralrecordId);
+    }
+
+    /**
+     * 提交商品订单到T+
+     * @param mainSynchronous
+     * @return
+     * @throws Exception
+     */
+    public Object  synchronousData(MainSynchronous mainSynchronous) throws Exception {
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDISPATCH_CREATE, mainSynchronous.getSynchronousJson());
+        System.out.println("---"+s);
+        if(!"null".equals(s)){
+            JSONObject jsonObject = JSON.parseObject(s);
+            mainSynchronous.setStatus(2);
+            mainSynchronous.setErrorMssage(jsonObject.getString("message"));
+        }else {
+            mainSynchronous.setStatus(1);
+        }
+        mainSynchronousService.updateById(mainSynchronous);
+        return null;
     }
 }

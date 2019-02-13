@@ -37,6 +37,10 @@ public class YongYouAPIUtils {
      */
     public final static String CURRENTSTOCK_QUERY="currentStock/Query";
     /**
+     * 商品价格查询
+     */
+    public final static String INVENTORYPRICE_QUERYINVENTORYPRICE="inventoryPrice/QueryInventoryPrice";
+    /**
      * 销售出库单
      */
     public final static String SALEDISPATCH_CREATE="saleDispatch/Create";
@@ -79,19 +83,46 @@ public class YongYouAPIUtils {
 //         s = postUrl(YongYouAPIUtils.PARTNER_QUERY, "{\"param\":{}}");
 //        System.out.println(s);
         //新增销售出库单
- s = postUrl(YongYouAPIUtils.SALEDISPATCH_CREATE, "{\n" +
-         "        \"dto\": {\n" +
-         "            \"BusiType\": {\"Code\": \"15\"},\n" +
-         "            \"Warehouse\": {\"Code\": \"002\"},\n" +
-         "            \"VoucherDate\": \"2019-02-13\",\n" +
-         "            \"Customer\": {\"Code\": \"0010001\"},\n" +
-         "            \"RDRecordDetails\": [{\"BaseQuantity\": 1.0, \"Code\": \"2\", \"Inventory\": {\"Code\": \"20180011\"}}],\n" +
-         "            \"Code\": \"980763\",\n" +
-         "            \"Memo\": \"销售\",\n" +
-         "            \"ExternalCode\": \"980763\",\n" +
-         "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" +
-         "        }\n" +
-         "    }");
+// s = postUrl(YongYouAPIUtils.SALEDISPATCH_CREATE,
+// "{\n" +
+//         "\tdto:{\n" +
+//         "\t\tExternalCode: \"st0002\",\n" +
+//         "\t\tVoucherType: {Code: \"ST1024\"},\n" +
+//         "\t\tVoucherDate: \"2019-02-13\",\n" +
+//         "\t\tBusiType: {Code: \"15\"},\n" +
+//         "\t\tWarehouse: {Code: \"003\"},\n" +
+//         "\t\tMemo: \"测试\",\n" +
+//         "\t\tRDRecordDetails: [{\n" +
+//         "\t\t\tInvBarCode: \"\",\n" +
+//         "\t\t\tInventory: {Code: \"20180002\"},\n" +
+//         "\t\t\tBaseQuantity: 1.00\n" +
+//         "\t\t}]\n" +
+//         "\t}\n" +
+//         "}"
+// );
+//
+//        System.out.println(s);
+        s = postUrl(YongYouAPIUtils.INVENTORYPRICE_QUERYINVENTORYPRICE,
+// "{\"param\":[{\"RowID\": 1,\"Partner\": {    \"Code\": \"0010001\"       },\"Inventory\": {  \"Code\": \"20180002\"       }}]}"
+ "{\n" +
+         "    \"param\": [\n" +
+         "\n" +
+         "        {\n" +
+
+         "\n" +
+         "            \"Inventory\": {  \"Code\": \"20180002\"       },\n" +
+         "\n" +
+         "            \"Unit\": {       \"Code\":    8     }\n" +
+         "\n" +
+         "\n" +
+         "        }      \n" +
+         "\n" +
+         "    ]\n" +
+         "\n" +
+         "}"
+//                "{ \"param\" :[Inventory]}"
+ );
+
         System.out.println(s);
     }
 }
