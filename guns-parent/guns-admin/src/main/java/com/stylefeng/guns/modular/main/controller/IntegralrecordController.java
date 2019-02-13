@@ -7,13 +7,9 @@ import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
-import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.controller.DeptController;
-import com.stylefeng.guns.modular.system.model.Integralrecordtype;
-import com.stylefeng.guns.modular.system.model.InventoryManagement;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.model.*;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -27,15 +23,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.Integralrecord;
-import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
+import yongyou.util.YongYouAPIUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Wrapper;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 新增积分控制器
@@ -63,6 +55,8 @@ public class IntegralrecordController extends BaseController {
     private DueToRemindController dueToRemindController;
     @Autowired
     private DeptController deptController;
+    @Autowired
+    private IMainSynchronousService mainSynchronousService;
 
 
     /**
@@ -204,7 +198,34 @@ public class IntegralrecordController extends BaseController {
         }
         inventoryManagementService.insert(inventoryManagement);
 
-
+        //同步数据写入T+库
+        String now = DateUtil.format(new Date(), "yyyy-MM-dd");
+        int radomInt = new Random().nextInt(999999);
+        double baseQuantity =(double)consumptionNum;
+        //PartnerDTO对象
+//        YongYouAPIUtils.postUrl(YongYouAPIUtils.PARTNER_QUERY,"");
+        //获取存货编码信息
+        String InventoryCode=integralrecordtype.getInventoryCode();
+//        YongYouAPIUtils.postUrl(YongYouAPIUtils.INVENTORY_QUERY,"{\"param\":{\"code\":\""+InventoryCode+"\"}}");
+        int i = mainSynchronousService.selectCount(null);
+        String tableJson="{\n" +
+        "        \"dto\": {\n" +
+        "            \"BusiType\": {\"Code\": \"15\"},\n" +       //15 销售出库，16 销售退库
+        "            \"Warehouse\": {\"Code\": \""+integralrecordtype.getWarehouseCode()+"\"},\n" + //仓库信息。传入的仓库编码信息与T+系统编码一致
+        "            \"VoucherDate\": \""+now+"\",\n" +      //单据日期
+        "            \"Customer\": {\"Code\": \"0010001\"},\n" + //客户，PartnerDTO对象，客户信息
+        "            \"RDRecordDetails\": [{\"BaseQuantity\": "+baseQuantity+", \"Code\": \""+(i+1)+"\", \"Inventory\": {\"Code\": \""+InventoryCode+"\"}}],\n" + //单据明细信
+        "            \"Code\": \""+radomInt +"\",\n" + //单据编码
+//        "            \"Partner\": {\"Code\": \"001\"},\n" +
+        "            \"Memo\": \"销售\",\n" + //备注
+        "            \"ExternalCode\": \""+radomInt+"\",\n" + //外部系统数据编号；OpenAPI调用者填写,后台做唯一性检查。用于防止重复提交，和外系统数据对应。
+        "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
+        "        }\n" +
+        "    }";
+        MainSynchronous mainSynchronous = new MainSynchronous();
+        mainSynchronous.setSynchronousJson(tableJson);
+        mainSynchronous.setStatus(0);
+        mainSynchronousService.insert(mainSynchronous);
         return SUCCESS_TIP;
     }
 

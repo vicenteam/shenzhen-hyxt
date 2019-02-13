@@ -68,12 +68,30 @@ public class YongYouAPIUtils {
 
     public static void main(String[] args) throws Exception {
 //        String s = postUrl("", "{\"param\":{}}");
-
+        String s ="";
         //获取仓库信息
-        String s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
-        System.out.println(s);
+//         s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
+//        System.out.println(s);
         //获取商品信息
 //         s = postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
 //        System.out.println(s);
+        //获取PartnerTDO
+//         s = postUrl(YongYouAPIUtils.PARTNER_QUERY, "{\"param\":{}}");
+//        System.out.println(s);
+        //新增销售出库单
+ s = postUrl(YongYouAPIUtils.SALEDISPATCH_CREATE, "{\n" +
+         "        \"dto\": {\n" +
+         "            \"BusiType\": {\"Code\": \"15\"},\n" +
+         "            \"Warehouse\": {\"Code\": \"002\"},\n" +
+         "            \"VoucherDate\": \"2019-02-13\",\n" +
+         "            \"Customer\": {\"Code\": \"0010001\"},\n" +
+         "            \"RDRecordDetails\": [{\"BaseQuantity\": 1.0, \"Code\": \"2\", \"Inventory\": {\"Code\": \"20180011\"}}],\n" +
+         "            \"Code\": \"980763\",\n" +
+         "            \"Memo\": \"销售\",\n" +
+         "            \"ExternalCode\": \"980763\",\n" +
+         "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" +
+         "        }\n" +
+         "    }");
+        System.out.println(s);
     }
 }
