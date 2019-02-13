@@ -79,7 +79,8 @@ public class openAPI {
 		
 		if (Tools.getProper("access_token").equals(""))
 		{
-			rstr = "你已经退出了，请先登录！！！";
+//			rstr = "你已经退出了，请先登录！！！";
+			rstr = get(methodstr);
 		}else{
 			rstr = get(methodstr);
 		}
