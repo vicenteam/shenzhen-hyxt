@@ -146,7 +146,7 @@ public class IntegralrecordtypeController extends BaseController {
         for(Integralrecordtype integralrecordtype:integralrecordtypes){
             String inventoryCode = integralrecordtype.getInventoryCode();
             BaseEntityWrapper<Object> objectBaseEntityWrapper = new BaseEntityWrapper<>();
-            objectBaseEntityWrapper.eq("WarehouseCode",inventoryCode);
+            objectBaseEntityWrapper.eq("InventoryCode",inventoryCode);
             Integralrecordtype integralrecordtype1 = integralrecordtypeService.selectOne(objectBaseEntityWrapper);
             if(integralrecordtype1==null){
                 integralrecordtype.setNames(integralrecordtype.getInventoryName());
