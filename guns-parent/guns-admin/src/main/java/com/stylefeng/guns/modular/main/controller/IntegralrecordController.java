@@ -226,7 +226,7 @@ public class IntegralrecordController extends BaseController {
         "    }";
         tableJson="{\n" +
                 "\tdto:{\n" +
-                "\t\tExternalCode: \""+radomInt+"\",\n" +
+                "\t\tExternalCode: \""+(i+1)+"\",\n" +
                 "\t\tVoucherType: {Code: \"ST1024\"},\n" +
                 "\t\tVoucherDate: \""+now+"\",\n" +
                 "\t\tBusiType: {Code: \"15\"},\n" +

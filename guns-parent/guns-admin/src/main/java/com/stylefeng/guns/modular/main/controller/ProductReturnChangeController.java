@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
+import yongyou.util.YongYouAPIUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -56,6 +57,8 @@ public class ProductReturnChangeController extends BaseController {
     private IIntegralrecordService iIntegralrecordService;
     @Autowired
     private MembermanagementController membermanagementController;
+    @Autowired
+    private IMainSynchronousService mainSynchronousService;
 
     /**
      * 跳转到商品退换货首页
@@ -155,7 +158,7 @@ public class ProductReturnChangeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object update(@RequestParam Integer id, @RequestParam Integer productname, @RequestParam Integer isInsert, @RequestParam Integer returnchangeNum) {
+    public Object update(@RequestParam Integer id, @RequestParam Integer productname, @RequestParam Integer isInsert, @RequestParam Integer returnchangeNum) throws Exception {
         ProductReturnChange productReturnChange = productReturnChangeService.selectById(id);
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(productname);
         productReturnChange.setReturnchangeproductId(integralrecordtype.getId());
@@ -182,7 +185,7 @@ public class ProductReturnChangeController extends BaseController {
             Membermanagement membermanagement = membermanagementService.selectById(memberId);
             Double countPrice = membermanagement.getCountPrice();
             Double integral = membermanagement.getIntegral();
-            double v = (Double.parseDouble(productjifen)*returnchangeNum);
+            double v = (Double.parseDouble(productjifen) * returnchangeNum);
             membermanagement.setCountPrice((countPrice - v));
             membermanagement.setIntegral((integral - v));
             membermanagementService.updateById(membermanagement);
@@ -192,6 +195,7 @@ public class ProductReturnChangeController extends BaseController {
             inventoryManagementService.deleteById(productReturnChange.getInventoryManagementId());
             //更新会员会员等级
             membermanagementController.updateMemberLeave(memberId.toString());
+            productReceiveT(integralrecordtype, "04", (double) returnchangeNum);
         }
         productReturnChange.updateById();
 
@@ -222,5 +226,48 @@ public class ProductReturnChangeController extends BaseController {
         inventoryManagement.setName(integralrecordtype.getProductname());
         inventoryManagementService.insert(inventoryManagement);
         return SUCCESS_TIP;
+    }
+
+    /**
+     * 退换货商品对接T+平台
+     * @param integralrecordtype
+     * @param busiType
+     * @param baseQuantity
+     * @throws Exception
+     */
+    public void productReceiveT(Integralrecordtype integralrecordtype, String busiType, Double baseQuantity) throws Exception {
+        String now = DateUtil.format(new Date(), "yyyy-MM-dd");
+        String InventoryCode = integralrecordtype.getInventoryCode();
+        String tableJson = "{\n" +
+                "\tdto:{\n" +
+                "\t\tExternalCode: \"" + (new Date().getTime()) + "\",\n" +
+                "\t\tVoucherType: {Code: \"ST1004\"},\n" +
+                "\t\tVoucherDate: \"" + now + "\",\n" +
+                "\t\tBusiType: {Code: \"" + busiType + "\"},\n" +
+                "\t\tWarehouse: {Code: \"" + integralrecordtype.getWarehouseCode() + "\"},\n" +
+                "\t\tMemo: \"退换货\",\n" +
+                "\t\tRDRecordDetails: [{\n" +
+                "\t\t\tInvBarCode: \"\",\n" +
+                "\t\t\tInventory: {Code: \"" + InventoryCode + "\"},\n" +
+                "\t\t\tBaseQuantity: " + baseQuantity + "\n" +
+                "\t\t}]\n" +
+                "\t}\n" +
+                "}";
+        MainSynchronous mainSynchronous = new MainSynchronous();
+        mainSynchronous.setSynchronousJson(tableJson);
+        mainSynchronous.setStatus(0);
+        mainSynchronousService.insert(mainSynchronous);
+        //
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.OTHERRECEIVE_CREATE, tableJson);
+        System.out.println("---"+s);
+        if(!"null".equals(s)){
+            JSONObject jsonObject = JSON.parseObject(s);
+            mainSynchronous.setStatus(2);
+            mainSynchronous.setErrorMssage(jsonObject.getString("message"));
+        }else {
+            mainSynchronous.setStatus(1);
+        }
+        mainSynchronousService.updateById(mainSynchronous);
+
     }
 }
