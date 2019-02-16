@@ -224,12 +224,16 @@ public class IntegralrecordController extends BaseController {
         "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
         "        }\n" +
         "    }";
+        String busiType="15";
+        if(integralrecordtype.getProducttype()==0){//赠送出库
+            busiType="08";
+        }
         tableJson="{\n" +
                 "\tdto:{\n" +
                 "\t\tExternalCode: \""+(i+1)+"\",\n" +
                 "\t\tVoucherType: {Code: \"ST1024\"},\n" +
                 "\t\tVoucherDate: \""+now+"\",\n" +
-                "\t\tBusiType: {Code: \"15\"},\n" +
+                "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
                 "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
                 "\t\tMemo: \"销售\",\n" +
                 "\t\tRDRecordDetails: [{\n" +
