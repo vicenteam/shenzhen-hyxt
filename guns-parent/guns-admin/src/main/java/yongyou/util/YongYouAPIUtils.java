@@ -14,7 +14,7 @@ public class YongYouAPIUtils {
     private static String appKey = "a4e5cec6-7070-4858-a802-57e13adbd699";
     private static String appSecret="bjc4b5";
 
-    /**
+    /**{"Code":"20180002","Name":"新疆香妃王葡萄干","Specification":"500g/袋","DefaultBarCode":null}
      * 获取PartnerEntityDTO对象
      * {"param":{}}
      */
@@ -36,6 +36,10 @@ public class YongYouAPIUtils {
      * 获取商品
      */
     public final static String CURRENTSTOCK_QUERY="currentStock/Query";
+    /**{queryParam:{  Warehouse:[{Code:"001" }] }}
+     * 同步仓库商品
+     */
+    public final static String CURRENTSTOCK_QUERYBYTIME="currentStock/QueryByTime";
     /**
      * 商品价格查询
      */
@@ -110,7 +114,7 @@ public class YongYouAPIUtils {
          "        {\n" +
 
          "\n" +
-         "            \"Inventory\": {  \"Code\": \"20180002\"       },\n" +
+         "            \"Inventory\": {  \"Code\": \"20180021\"       },\n" +
          "\n" +
          "            \"Unit\": {       \"Code\":    8     }\n" +
          "\n" +

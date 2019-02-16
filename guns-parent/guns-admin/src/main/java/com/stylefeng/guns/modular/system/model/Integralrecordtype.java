@@ -65,6 +65,16 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private String InventoryCode;
     private String InventoryName;
     private String Specification;
+    //商品可用数量
+    private Double AvailableQuantity;
+
+    public Double getAvailableQuantity() {
+        return AvailableQuantity;
+    }
+
+    public void setAvailableQuantity(Double availableQuantity) {
+        AvailableQuantity = availableQuantity;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

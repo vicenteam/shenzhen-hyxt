@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.modular.system.model.Dept;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -37,6 +39,8 @@ public class IntegralrecordtypeController extends BaseController {
 
     @Autowired
     private IIntegralrecordtypeService integralrecordtypeService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到积分类型首页
@@ -139,7 +143,12 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/tongbuData")
     @ResponseBody
     public Object tongbuData()throws Exception{
-        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
+        Dept dept=deptService.selectById(ShiroKit.getUser().deptId);
+        String Warehouse="";
+        if(dept.gettPlusWarehouseCode()!=null){
+            Warehouse=" Warehouse:[{Code:\""+dept.gettPlusWarehouseCode()+"\" }]";
+        }
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERYBYTIME, "{queryParam:{ "+Warehouse+" }}");
         System.out.println(s);
         System.out.println("同步数据。。。");
         List<Integralrecordtype> integralrecordtypes = JSON.parseArray(s, Integralrecordtype.class);
@@ -157,7 +166,11 @@ public class IntegralrecordtypeController extends BaseController {
                 integralrecordtype.setProductspecification(integralrecordtype.getSpecification());
                 integralrecordtype.setStatus(0);
                 integralrecordtype.setDeptid(ShiroKit.getUser().deptId+"");
+                integralrecordtype.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.insert(integralrecordtype);
+            }else {
+                integralrecordtype1.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
+                integralrecordtypeService.updateById(integralrecordtype1);
             }
         }
         System.out.println("同步数据完成。。。");

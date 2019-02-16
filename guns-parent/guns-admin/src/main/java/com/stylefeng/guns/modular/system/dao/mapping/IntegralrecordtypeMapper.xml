@@ -24,6 +24,7 @@
         <result column="InventoryCode" property="InventoryCode" />
         <result column="InventoryName" property="InventoryName" />
         <result column="Specification" property="Specification" />
+        <result column="AvailableQuantity" property="AvailableQuantity" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
