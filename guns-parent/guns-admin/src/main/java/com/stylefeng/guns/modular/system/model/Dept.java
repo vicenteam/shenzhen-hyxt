@@ -81,6 +81,46 @@ public class Dept extends Model<Dept> {
      */
 	private Integer version;
 
+	private String tPlusDeptName;
+	private String tPlusDeptCode;
+	private String tPlusWarehouseName;
+	private String tPlusWarehouseCode;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String gettPlusDeptName() {
+		return tPlusDeptName;
+	}
+
+	public void settPlusDeptName(String tPlusDeptName) {
+		this.tPlusDeptName = tPlusDeptName;
+	}
+
+	public String gettPlusDeptCode() {
+		return tPlusDeptCode;
+	}
+
+	public void settPlusDeptCode(String tPlusDeptCode) {
+		this.tPlusDeptCode = tPlusDeptCode;
+	}
+
+	public String gettPlusWarehouseName() {
+		return tPlusWarehouseName;
+	}
+
+	public void settPlusWarehouseName(String tPlusWarehouseName) {
+		this.tPlusWarehouseName = tPlusWarehouseName;
+	}
+
+	public String gettPlusWarehouseCode() {
+		return tPlusWarehouseCode;
+	}
+
+	public void settPlusWarehouseCode(String tPlusWarehouseCode) {
+		this.tPlusWarehouseCode = tPlusWarehouseCode;
+	}
 
 	public Integer getId() {
 		return id;

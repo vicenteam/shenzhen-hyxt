@@ -17,10 +17,7 @@ import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.modular.main.service.IActivityService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.main.service.IProvCityDistService;
-import com.stylefeng.guns.modular.system.model.Activity;
-import com.stylefeng.guns.modular.system.model.Dept;
-import com.stylefeng.guns.modular.system.model.Membershipcardtype;
-import com.stylefeng.guns.modular.system.model.ProvCityDist;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.warpper.DeptWarpper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import yongyou.util.YongYouAPIUtils;
 
 import java.util.*;
 
@@ -68,7 +66,14 @@ public class DeptController extends BaseController {
      * 跳转到添加部门
      */
     @RequestMapping("/dept_add")
-    public String deptAdd() {
+    public String deptAdd(Model model) throws Exception {
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{\n" +
+                "dto: {\n" +
+                "       \n" +
+                "}\n" +
+                "}");
+        System.out.println("-----"+s);
+        model.addAttribute("deptCodes",JSON.parseArray(s,HashMap.class));
         return PREFIX + "dept_add.html";
     }
 
@@ -104,7 +109,7 @@ public class DeptController extends BaseController {
     @Permission
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Dept dept, String province, String city, String district) {
+    public Object add(Dept dept, String province, String city, String district,String tPlusDeptCode) throws Exception {
         if (ToolUtil.isOneEmpty(dept, dept.getSimplename())) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
@@ -114,6 +119,26 @@ public class DeptController extends BaseController {
         dept.setCreatedt(DateUtil.getTime());
         //完善pids,根据pid拿到pid的pids
         deptSetPids(dept);
+        //同步tplus仓库
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{dto:{Code: \""+tPlusDeptCode+"\"}}");
+       List<TPlusDept> tPlusDepts=JSON.parseArray(s,TPlusDept.class);
+        System.out.println("---"+JSON.toJSONString(tPlusDepts));
+        System.out.println("---"+tPlusDeptCode);
+       if(tPlusDepts.size()==1){
+           //获取仓库
+           dept.settPlusDeptCode(tPlusDepts.get(0).getCode());
+           dept.settPlusDeptName(tPlusDepts.get(0).getName());
+            s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{param:{}}");
+           List<TPlusDept> house= JSON.parseArray(s,TPlusDept.class);
+           for(TPlusDept a:house){
+               if( a.getName().indexOf(tPlusDepts.get(0).getName())!=-1){
+                   dept.settPlusWarehouseCode(a.getCode());
+                   dept.settPlusWarehouseName(a.getName());
+                    break;
+               }
+           }
+
+       }
         boolean insert = this.deptService.insert(dept);
         //自动初始化会员配置
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();

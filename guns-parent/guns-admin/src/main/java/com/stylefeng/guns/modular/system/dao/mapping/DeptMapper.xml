@@ -22,6 +22,10 @@
         <result column="createdt" property="createdt"/>
         <result column="updatedt" property="updatedt"/>
         <result column="status" property="status"/>
+        <result column="tPlusDeptCode" property="tPlusDeptCode"/>
+        <result column="tPlusDeptName" property="tPlusDeptName"/>
+        <result column="tPlusWarehouseName" property="tPlusWarehouseName"/>
+        <result column="tPlusWarehouseCode" property="tPlusWarehouseCode"/>
     </resultMap>
 
     <select id="tree" resultType="com.stylefeng.guns.core.node.ZTreeNode">
