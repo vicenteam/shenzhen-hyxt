@@ -60,6 +60,11 @@ public class YongYouAPIUtils {
      * 其他入库单
      */
     public final static String OTHERRECEIVE_CREATE="otherReceive/Create";
+    /**
+     * 收入创建
+     */
+    public final static String RECEIVEVOUCHER_CREATE="receiveVoucher/Create";
+
 
 
 
