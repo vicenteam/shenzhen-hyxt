@@ -86,12 +86,12 @@
 
         <!--需要分布式session的话需要放开注释-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.session</groupId>-->
-            <!--<artifactId>spring-session-data-redis</artifactId>-->
+        <!--<groupId>org.springframework.session</groupId>-->
+        <!--<artifactId>spring-session-data-redis</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
         <!--</dependency>-->
 
         <dependency>
@@ -140,6 +140,42 @@
             <groupId>com.baidu.aip</groupId>
             <artifactId>java-sdk</artifactId>
             <version>4.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>3.0.1</version>
+            <scope>system</scope>
+            <systemPath>
+                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-httpclient-3.0.1.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons</groupId>
+            <artifactId>codec</artifactId>
+            <version>1.9</version>
+            <scope>system</scope>
+            <systemPath>
+                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-codec-1.9.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>JDiy</groupId>
+            <artifactId>JDiy</artifactId>
+            <version>2.6</version>
+            <scope>system</scope>
+            <systemPath>
+                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/JDiy-2.6.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>openApi</groupId>
+            <artifactId>openApi</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>
+                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/openApi.jar
+            </systemPath>
         </dependency>
     </dependencies>
 
@@ -190,6 +226,13 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/java/yongyou</directory>
+                <targetPath>BOOT-INF</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
                 </includes>
             </resource>
         </resources>

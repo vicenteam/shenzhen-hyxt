@@ -174,6 +174,6 @@ public class IntegralrecordtypeController extends BaseController {
             }
         }
         System.out.println("同步数据完成。。。");
-        return null;
+        return "success";
     }
 }
