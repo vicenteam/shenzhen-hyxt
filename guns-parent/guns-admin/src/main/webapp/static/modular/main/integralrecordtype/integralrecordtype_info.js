@@ -83,6 +83,7 @@ IntegralrecordtypeInfoDlg.collectData = function() {
     .set('productname')
     .set('producttype')
     .set('productspecification')
+    .set('productpice')
     .set('productnum')
     .set('productbalance')
     .set('productjifen')

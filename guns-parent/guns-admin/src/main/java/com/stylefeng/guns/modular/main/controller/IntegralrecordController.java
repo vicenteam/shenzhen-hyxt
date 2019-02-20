@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.base.tips.SuccessTip;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
+import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -164,91 +167,108 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum) throws Exception {
+    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum,String productIds,String productNums,Double play,Integer playType) throws Exception {
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id",memberId);
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
-        //积分添加操作
-        List<Integralrecord> integralrecords = insertIntegral(integral,1,productname,membermanagements);
 
+        if(playType==0){
+            Double money = membermanagements.get(0).getMoney();
+            if(money<play){
+                throw new GunsException(BizExceptionEnum.MONEY_ERROR);
+            }
+        }
         //更新库存
-        BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
-        typeWrapper.eq("id",productname);
-        Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
-        integralrecordtype.setProductnum(integralrecordtype.getProductnum()-consumptionNum);//库存减
-        integralrecordtype.setUpdatetime(DateUtil.getTime());
-        integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());
-        integralrecordtypeService.updateById(integralrecordtype);
+        String[] split = productIds.split(",");
+        String[] productNumsSplit = productNums.split(",");
+        int index=0;
+        for(String temp:split){
+            int parseIntTemp = Integer.parseInt(temp);
+            int parseIntproductNums = Integer.parseInt(productNumsSplit[index]);
+            //积分添加操作
+            List<Integralrecord> integralrecords = insertIntegral(integral,1,parseIntTemp,membermanagements);
+            BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
+            typeWrapper.eq("id",parseIntTemp);
+            Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
+            integralrecordtype.setProductnum(integralrecordtype.getProductnum()-parseIntproductNums);//库存减
+            integralrecordtype.setUpdatetime(DateUtil.getTime());
+            integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());
+            if(integralrecordtype.getProductnum()<0){
+                throw new GunsException(BizExceptionEnum.PRODUCTNUM_ERROR);
+            }
+            integralrecordtypeService.updateById(integralrecordtype);
 
-        //插入商品记录
-        InventoryManagement inventoryManagement = new InventoryManagement();
-        inventoryManagement.setCreatetime(DateUtil.getTime());
-        inventoryManagement.setCreateuserid(ShiroKit.getUser().getId().toString());
-        inventoryManagement.setDeptid(ShiroKit.getUser().getDeptId().toString());
-        inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
-        inventoryManagement.setStatus("1");
-        inventoryManagement.setMemberPhone(membermanagements.get(0).getPhone());
-        inventoryManagement.setMemberid(memberId.toString());
-        inventoryManagement.setConsumptionNum(1);
-        inventoryManagement.setName(integralrecordtype.getProductname());
-        inventoryManagement.setMemberName(membermanagements.get(0).getName());
-        inventoryManagement.setIntegralid(integralrecords.get(0).getId());
-        inventoryManagement.setConsumptionNum(consumptionNum);
-        //判断商品是否需要进行追销
-        if(dueToRemindController.judgeDueToRemind(productname)){
-            inventoryManagement.setIsDueToRemind(1);
-        }
-        inventoryManagementService.insert(inventoryManagement);
+            //插入商品记录
+            InventoryManagement inventoryManagement = new InventoryManagement();
+            inventoryManagement.setCreatetime(DateUtil.getTime());
+            inventoryManagement.setCreateuserid(ShiroKit.getUser().getId().toString());
+            inventoryManagement.setDeptid(ShiroKit.getUser().getDeptId().toString());
+            inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
+            inventoryManagement.setStatus("1");
+            inventoryManagement.setMemberPhone(membermanagements.get(0).getPhone());
+            inventoryManagement.setMemberid(memberId.toString());
+            inventoryManagement.setConsumptionNum(1);
+            inventoryManagement.setName(integralrecordtype.getProductname());
+            inventoryManagement.setMemberName(membermanagements.get(0).getName());
+            inventoryManagement.setIntegralid(integralrecords.get(0).getId());
+            inventoryManagement.setConsumptionNum(parseIntproductNums);
+            //判断商品是否需要进行追销
+            if(dueToRemindController.judgeDueToRemind(parseIntTemp)){
+                inventoryManagement.setIsDueToRemind(1);
+            }
+            inventoryManagementService.insert(inventoryManagement);
 
-        //同步数据写入T+库
-        String now = DateUtil.format(new Date(), "yyyy-MM-dd");
-        int radomInt = new Random().nextInt(999999);
-        double baseQuantity =(double)consumptionNum;
-        //PartnerDTO对象
+            //同步数据写入T+库
+            String now = DateUtil.format(new Date(), "yyyy-MM-dd");
+            int radomInt = new Random().nextInt(999999);
+            double baseQuantity =(double)parseIntproductNums;
+            //PartnerDTO对象
 //        YongYouAPIUtils.postUrl(YongYouAPIUtils.PARTNER_QUERY,"");
-        //获取存货编码信息
-        String InventoryCode=integralrecordtype.getInventoryCode();
+            //获取存货编码信息
+            String InventoryCode=integralrecordtype.getInventoryCode();
 //        YongYouAPIUtils.postUrl(YongYouAPIUtils.INVENTORY_QUERY,"{\"param\":{\"code\":\""+InventoryCode+"\"}}");
-        int i = mainSynchronousService.selectCount(null);
-        String tableJson="{\n" +
-        "        \"dto\": {\n" +
-        "            \"BusiType\": {\"Code\": \"15\"},\n" +       //15 销售出库，16 销售退库
-        "            \"Warehouse\": {\"Code\": \""+integralrecordtype.getWarehouseCode()+"\"},\n" + //仓库信息。传入的仓库编码信息与T+系统编码一致
-        "            \"VoucherDate\": \""+now+"\",\n" +      //单据日期
-        "            \"Customer\": {\"Code\": \"0010001\"},\n" + //客户，PartnerDTO对象，客户信息
-        "            \"RDRecordDetails\": [{\"BaseQuantity\": "+baseQuantity+", \"Code\": \""+(i+1)+"\", \"Inventory\": {\"Code\": \""+InventoryCode+"\"}}],\n" + //单据明细信
-        "            \"Code\": \""+radomInt +"\",\n" + //单据编码
+            int i = mainSynchronousService.selectCount(null);
+            String tableJson="{\n" +
+                    "        \"dto\": {\n" +
+                    "            \"BusiType\": {\"Code\": \"15\"},\n" +       //15 销售出库，16 销售退库
+                    "            \"Warehouse\": {\"Code\": \""+integralrecordtype.getWarehouseCode()+"\"},\n" + //仓库信息。传入的仓库编码信息与T+系统编码一致
+                    "            \"VoucherDate\": \""+now+"\",\n" +      //单据日期
+                    "            \"Customer\": {\"Code\": \"0010001\"},\n" + //客户，PartnerDTO对象，客户信息
+                    "            \"RDRecordDetails\": [{\"BaseQuantity\": "+baseQuantity+", \"Code\": \""+(i+1)+"\", \"Inventory\": {\"Code\": \""+InventoryCode+"\"}}],\n" + //单据明细信
+                    "            \"Code\": \""+radomInt +"\",\n" + //单据编码
 //        "            \"Partner\": {\"Code\": \"001\"},\n" +
-        "            \"Memo\": \"销售\",\n" + //备注
-        "            \"ExternalCode\": \""+radomInt+"\",\n" + //外部系统数据编号；OpenAPI调用者填写,后台做唯一性检查。用于防止重复提交，和外系统数据对应。
-        "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
-        "        }\n" +
-        "    }";
-        String busiType="15";
-        if(integralrecordtype.getProducttype()==0){//赠送出库
-            busiType="08";
+                    "            \"Memo\": \"销售\",\n" + //备注
+                    "            \"ExternalCode\": \""+radomInt+"\",\n" + //外部系统数据编号；OpenAPI调用者填写,后台做唯一性检查。用于防止重复提交，和外系统数据对应。
+                    "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
+                    "        }\n" +
+                    "    }";
+            String busiType="15";
+            if(integralrecordtype.getProducttype()==0){//赠送出库
+                busiType="08";
+            }
+            tableJson="{\n" +
+                    "\tdto:{\n" +
+                    "\t\tExternalCode: \""+(i+1)+"\",\n" +
+                    "\t\tVoucherType: {Code: \"ST1024\"},\n" +
+                    "\t\tVoucherDate: \""+now+"\",\n" +
+                    "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
+                    "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
+                    "\t\tMemo: \"销售\",\n" +
+                    "\t\tRDRecordDetails: [{\n" +
+                    "\t\t\tInvBarCode: \"\",\n" +
+                    "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
+                    "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
+                    "\t\t}]\n" +
+                    "\t}\n" +
+                    "}";
+            MainSynchronous mainSynchronous = new MainSynchronous();
+            mainSynchronous.setSynchronousJson(tableJson);
+            mainSynchronous.setStatus(0);
+            mainSynchronousService.insert(mainSynchronous);
+            //
+            synchronousData(mainSynchronous);
+            index++;
         }
-        tableJson="{\n" +
-                "\tdto:{\n" +
-                "\t\tExternalCode: \""+(i+1)+"\",\n" +
-                "\t\tVoucherType: {Code: \"ST1024\"},\n" +
-                "\t\tVoucherDate: \""+now+"\",\n" +
-                "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
-                "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-                "\t\tMemo: \"销售\",\n" +
-                "\t\tRDRecordDetails: [{\n" +
-                "\t\t\tInvBarCode: \"\",\n" +
-                "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
-                "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
-                "\t\t}]\n" +
-                "\t}\n" +
-                "}";
-        MainSynchronous mainSynchronous = new MainSynchronous();
-        mainSynchronous.setSynchronousJson(tableJson);
-        mainSynchronous.setStatus(0);
-        mainSynchronousService.insert(mainSynchronous);
-        //
-        synchronousData(mainSynchronous);
         return SUCCESS_TIP;
     }
 

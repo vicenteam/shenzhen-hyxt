@@ -61,6 +61,8 @@ IntegralrecordInfoDlg.collectData = function() {
     this
     .set('integral')
     .set('productname')
+    .set('playType')
+    .set('play')
     .set('consumptionNum')
     .set('typeId')
     .set('memberId');
@@ -98,10 +100,17 @@ IntegralrecordInfoDlg.addSubmit = function() {
         $("#integralSum").val("");
         $("#countPrice").val("");
         $("#levelID").val("");
+        $("#integral").val("");
+        $("#play").val("");
+
+        //清除页面数据
+        products = new Array()
+        loadProduct()
     },function(data){
-        Feng.error("操作成功!" + data.responseJSON.message + "!");
+        Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.integralrecordInfoData);
+    ajax.set({productIds:productIds,productNums:productNums});
     ajax.start();
 }
 

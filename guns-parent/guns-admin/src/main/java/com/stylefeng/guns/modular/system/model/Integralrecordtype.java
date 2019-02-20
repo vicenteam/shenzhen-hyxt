@@ -38,6 +38,10 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
      */
     private String productspecification;
     /**
+     * 产品价格
+     */
+    private Double productpice;
+    /**
      * 产品数量
      */
     private Integer productnum;
@@ -67,6 +71,14 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private String Specification;
     //商品可用数量
     private Double AvailableQuantity;
+
+    public Double getProductpice() {
+        return productpice;
+    }
+
+    public void setProductpice(Double productpice) {
+        this.productpice = productpice;
+    }
 
     public Double getAvailableQuantity() {
         return AvailableQuantity;

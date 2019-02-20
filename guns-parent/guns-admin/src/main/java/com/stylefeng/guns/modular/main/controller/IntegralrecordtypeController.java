@@ -64,7 +64,7 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping("/integralrecordtype_update/{integralrecordtypeId}")
     public String integralrecordtypeUpdate(@PathVariable Integer integralrecordtypeId, Model model) {
         Integralrecordtype integralrecordtype = integralrecordtypeService.selectById(integralrecordtypeId);
-        model.addAttribute("item",integralrecordtype);
+        model.addAttribute("item", integralrecordtype);
         LogObjectHolder.me().set(integralrecordtype);
         return PREFIX + "integralrecordtype_edit.html";
     }
@@ -74,17 +74,17 @@ public class IntegralrecordtypeController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition,Integer producttype,Integer id) {
+    public Object list(String condition, Integer producttype, Integer id) {
         Page<Integralrecordtype> page = new PageFactory<Integralrecordtype>().defaultPage();
         BaseEntityWrapper<Integralrecordtype> baseEntityWrapper = new BaseEntityWrapper<>();
-        if(id!=null){
-            baseEntityWrapper.eq("id",id);
-        }else {
-            if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("productname",condition);
+        if (id != null) {
+            baseEntityWrapper.eq("id", id);
+        } else {
+            if (!StringUtils.isEmpty(condition)) baseEntityWrapper.like("productname", condition);
         }
 
-        if(producttype!=null) baseEntityWrapper.eq("producttype",producttype);
-        baseEntityWrapper.eq("status",0);
+        if (producttype != null) baseEntityWrapper.eq("producttype", producttype);
+        baseEntityWrapper.eq("status", 0);
         Page<Integralrecordtype> result = integralrecordtypeService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
@@ -95,9 +95,9 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Integralrecordtype integralrecordtype) {
-        integralrecordtype.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-        integralrecordtype.setCreateuserid(ShiroKit.getUser().id+"");
-        integralrecordtype.setDeptid(ShiroKit.getUser().getDeptId()+"");
+        integralrecordtype.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        integralrecordtype.setCreateuserid(ShiroKit.getUser().id + "");
+        integralrecordtype.setDeptid(ShiroKit.getUser().getDeptId() + "");
         integralrecordtype.setStatus(0);
         integralrecordtypeService.insert(integralrecordtype);
         return SUCCESS_TIP;
@@ -121,8 +121,8 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Integralrecordtype integralrecordtype) {
-        integralrecordtype.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-        integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId()+"");
+        integralrecordtype.setUpdatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId() + "");
         integralrecordtypeService.updateById(integralrecordtype);
         return SUCCESS_TIP;
     }
@@ -136,28 +136,38 @@ public class IntegralrecordtypeController extends BaseController {
         return integralrecordtypeService.selectById(integralrecordtypeId);
     }
 
+    @RequestMapping(value = "/findCode/{productCode}")
+    @ResponseBody
+    public Object findCode(@PathVariable("productCode") String productCode) {
+        BaseEntityWrapper<Integralrecordtype> integralrecordtypeBaseEntityWrapper = new BaseEntityWrapper<>();
+        integralrecordtypeBaseEntityWrapper.eq("InventoryCode",productCode);
+        Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(integralrecordtypeBaseEntityWrapper);
+        return integralrecordtype==null?"error":integralrecordtype;
+    }
+
     /**
      * 同步数据
+     *
      * @return
      */
     @RequestMapping(value = "/tongbuData")
     @ResponseBody
-    public Object tongbuData()throws Exception{
-        Dept dept=deptService.selectById(ShiroKit.getUser().deptId);
-        String Warehouse="";
-        if(dept.gettPlusWarehouseCode()!=null){
-            Warehouse=" Warehouse:[{Code:\""+dept.gettPlusWarehouseCode()+"\" }]";
+    public Object tongbuData() throws Exception {
+        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+        String Warehouse = "";
+        if (dept.gettPlusWarehouseCode() != null) {
+            Warehouse = " Warehouse:[{Code:\"" + dept.gettPlusWarehouseCode() + "\" }]";
         }
-        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERYBYTIME, "{queryParam:{ "+Warehouse+" }}");
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERYBYTIME, "{queryParam:{ " + Warehouse + " }}");
         System.out.println(s);
         System.out.println("同步数据。。。");
         List<Integralrecordtype> integralrecordtypes = JSON.parseArray(s, Integralrecordtype.class);
-        for(Integralrecordtype integralrecordtype:integralrecordtypes){
+        for (Integralrecordtype integralrecordtype : integralrecordtypes) {
             String inventoryCode = integralrecordtype.getInventoryCode();
             BaseEntityWrapper<Object> objectBaseEntityWrapper = new BaseEntityWrapper<>();
-            objectBaseEntityWrapper.eq("InventoryCode",inventoryCode);
+            objectBaseEntityWrapper.eq("InventoryCode", inventoryCode);
             Integralrecordtype integralrecordtype1 = integralrecordtypeService.selectOne(objectBaseEntityWrapper);
-            if(integralrecordtype1==null){
+            if (integralrecordtype1 == null) {
                 integralrecordtype.setNames(integralrecordtype.getInventoryName());
                 integralrecordtype.setProductname(integralrecordtype.getInventoryName());
                 integralrecordtype.setProductnum(0);
@@ -165,10 +175,10 @@ public class IntegralrecordtypeController extends BaseController {
                 integralrecordtype.setProducttype(2);
                 integralrecordtype.setProductspecification(integralrecordtype.getSpecification());
                 integralrecordtype.setStatus(0);
-                integralrecordtype.setDeptid(ShiroKit.getUser().deptId+"");
+                integralrecordtype.setDeptid(ShiroKit.getUser().deptId + "");
                 integralrecordtype.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.insert(integralrecordtype);
-            }else {
+            } else {
                 integralrecordtype1.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.updateById(integralrecordtype1);
             }
