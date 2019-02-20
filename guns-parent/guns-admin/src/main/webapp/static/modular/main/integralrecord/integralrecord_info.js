@@ -102,6 +102,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         $("#levelID").val("");
         $("#integral").val("");
         $("#play").val("");
+        $("#verificationcode").val("");
 
         //清除页面数据
         products = new Array()
@@ -110,7 +111,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.integralrecordInfoData);
-    ajax.set({productIds:productIds,productNums:productNums});
+    ajax.set({productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val()});
     ajax.start();
 }
 

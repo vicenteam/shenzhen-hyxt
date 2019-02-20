@@ -62,6 +62,8 @@ public class IntegralrecordController extends BaseController {
     private DeptController deptController;
     @Autowired
     private IMainSynchronousService mainSynchronousService;
+    @Autowired
+    private IVerificationCodeService verificationCodeService;
 
 
     /**
@@ -167,12 +169,22 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum,String productIds,String productNums,Double play,Integer playType) throws Exception {
+    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum,String productIds,String productNums,Double play,Integer playType,String verificationcode) throws Exception {
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id",memberId);
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
 
         if(playType==0){
+            //判断验证码是否通过
+            BaseEntityWrapper<VerificationCode> verificationCodeBaseEntityWrapper = new BaseEntityWrapper<>();
+            verificationCodeBaseEntityWrapper.eq("memberid",memberId);
+            VerificationCode verificationCode = verificationCodeService.selectOne(verificationCodeBaseEntityWrapper);
+            if(verificationCode==null||!verificationCode.getVerificationcode().equals(verificationcode)){
+                throw new GunsException(BizExceptionEnum.VERIFICATIONCODE_ERROR);
+            }else {
+                verificationCodeService.deleteById(verificationCode.getId());
+            }
+
             Double money = membermanagements.get(0).getMoney();
             if(money<play){
                 throw new GunsException(BizExceptionEnum.MONEY_ERROR);

@@ -52,6 +52,7 @@
                     <option value="3">微信</option>
                     <option value="4">其他</option>
                 </#select>
+                <div id="hiddenYz"><#input id="verificationcode" name="验证码" underline="true" button="发送" buttonId="sendCode" /></div>
                 <div class="form-group" style="display: none">
                     <label class="col-sm-3 control-label">购买数量</label>
                     <div class="col-sm-9">
@@ -375,6 +376,35 @@
         }
         $("#play").val(play);
         $("#integral").val(productjifen);
+    }
+</script>
+<!--发生验证码-->
+<script>
+    $(function () {
+        yzmBtn();
+    })
+    $("#sendCode").click(function () {
+        if($("#memberId").val().length==0){
+            Feng.error("请先读卡!");
+            return;
+        }
+        var ajax = new $ax(Feng.ctxPath + "/verificationCode/add", function(data){
+            Feng.success("发送成功!");
+        },function(data){
+            Feng.error("发送失败!" + data.responseJSON.message + "!");
+        });
+        ajax.set({memberId:$("#memberId").val()});
+        ajax.start()
+    })
+    $("#playType").change(function () {
+        yzmBtn();
+    })
+    function yzmBtn() {
+        if($("#playType").val()==0){
+            $("#hiddenYz").css("display","block")
+        }else {
+            $("#hiddenYz").css("display","none")
+        }
     }
 </script>
 @}
