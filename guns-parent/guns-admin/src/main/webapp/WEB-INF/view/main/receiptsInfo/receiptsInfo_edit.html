@@ -1,0 +1,21 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row" id="print">
+                <img style='' src='data:image/png;base64,${item.receiptsBase64Img}'>
+
+            </div>
+
+            <div class="row btn-group-m-t" id="hidenDiv">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="打印" id="ensure" icon="fa-check" clickFun="ReceiptsInfoInfoDlg.editSubmit()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/main/receiptsInfo/receiptsInfo_info.js"></script>
+@}

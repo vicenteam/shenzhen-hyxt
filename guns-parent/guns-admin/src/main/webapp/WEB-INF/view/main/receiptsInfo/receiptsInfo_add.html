@@ -1,0 +1,35 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="deptId" name="" underline="true"/>
+                            <#input id="receipts
+Base64Img" name="图片" underline="true"/>
+                            <#input id="memberId" name=""/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="memberPhone" name="购买人电话" underline="true"/>
+                            <#input id="memberName" name="购买人姓名" underline="true"/>
+                            <#input id="playMoney" name="支付金额" underline="true"/>
+                            <#input id="status" name="" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ReceiptsInfoInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="ReceiptsInfoInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/main/receiptsInfo/receiptsInfo_info.js"></script>
+@}

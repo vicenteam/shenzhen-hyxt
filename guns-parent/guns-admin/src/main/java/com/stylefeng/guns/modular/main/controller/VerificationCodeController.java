@@ -89,9 +89,9 @@ public class VerificationCodeController extends BaseController {
         if(membermanagement!=null&&membermanagement.getPhone().length()>0){
             BaseEntityWrapper<VerificationCode> verificationCodeBaseEntityWrapper = new BaseEntityWrapper<>();
             verificationCodeBaseEntityWrapper.eq("memberid",memberId);
-            VerificationCode verificationCode1 = verificationCodeService.selectById(verificationCodeBaseEntityWrapper);
+            VerificationCode verificationCode1 = verificationCodeService.selectOne(verificationCodeBaseEntityWrapper);
             if(verificationCode1!=null){
-                verificationCodeService.deleteById(memberId);
+                verificationCodeService.deleteById(verificationCode1.getId());
             }
             Random random = new Random();
             int x = random.nextInt(9999);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.ReceiptsInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.ReceiptsInfo">
+        <id column="id" property="id" />
+        <result column="createTime" property="createTime" />
+        <result column="deptId" property="deptId" />
+        <result column="receiptsBase64Img" property="receiptsBase64Img" />
+        <result column="memberId" property="memberId" />
+        <result column="memberPhone" property="memberPhone" />
+        <result column="memberName" property="memberName" />
+        <result column="playMoney" property="playMoney" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, createTime, deptId, receiptsBase64Img, memberId, memberPhone, memberName, playMoney, status
+    </sql>
+
+</mapper>

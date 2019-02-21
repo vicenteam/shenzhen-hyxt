@@ -169,7 +169,8 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum,String productIds,String productNums,Double play,Integer playType,String verificationcode) throws Exception {
+    public Object add(Double integral, Integer productname, Integer memberId,Integer consumptionNum,String productIds,String productNums,Double play,Integer playType,String verificationcode,String tableNase64Data) throws Exception {
+       List<MainSynchronous> synchronousList=new ArrayList<>();
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id",memberId);
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
@@ -278,9 +279,23 @@ public class IntegralrecordController extends BaseController {
             mainSynchronous.setStatus(0);
             mainSynchronousService.insert(mainSynchronous);
             //
-            synchronousData(mainSynchronous);
+//            synchronousData(mainSynchronous);
+            synchronousList.add(mainSynchronous);
             index++;
         }
+        for(MainSynchronous a:synchronousList){
+//            synchronousData(a);
+        }
+        //新增购买小票
+        ReceiptsInfo receiptsInfo = new ReceiptsInfo();
+        receiptsInfo.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-HH-dd HH:mm:ss"));
+        receiptsInfo.setDeptId(ShiroKit.getUser().deptId);
+        receiptsInfo.setMemberId(memberId);
+        receiptsInfo.setMemberName(membermanagements.get(0).getName());
+        receiptsInfo.setMemberPhone(membermanagements.get(0).getPhone());
+        receiptsInfo.setPlayMoney(play+"");
+        receiptsInfo.setReceiptsBase64Img(tableNase64Data);
+        receiptsInfo.insert();
         return SUCCESS_TIP;
     }
 

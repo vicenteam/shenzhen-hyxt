@@ -6,6 +6,7 @@
 <script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/i18n/defaults-zh_CN.js"></script>
 <!--<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
 <!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
+
 <script type="text/javascript">
     $(window).on('load', function () {
 
@@ -52,7 +53,7 @@
                     <option value="3">微信</option>
                     <option value="4">其他</option>
                 </#select>
-                <div id="hiddenYz"><#input id="verificationcode" name="验证码" underline="true" button="发送" buttonId="sendCode" /></div>
+                <div id="hiddenYz"><#input id="verificationcode" name="验证码" underline="true" class="fa fa-paper-plane-o" button="发送" buttonId="sendCode" /></div>
                 <div class="form-group" style="display: none">
                     <label class="col-sm-3 control-label">购买数量</label>
                     <div class="col-sm-9">
@@ -71,6 +72,23 @@
 
             <div class="col-sm-4 b-r">
                 <#input id="scannerCode" name="扫码条信息" underline="true" />
+                    <div id="map_canvasInfo">
+                        <table class="table" style="text-align: center;">
+                            <thead>
+                            <tr>
+                                <td style="width: 230px;text-align: center">商品名称</td>
+                                <td>规格</td>
+                                <td>价格</td>
+                                <td>数量</td>
+                            </tr>
+                            </thead>
+                            <tbody id="storeInfo" style="font-size: 12px">
+                            </tbody>
+                        </table>
+                        <hr/>
+                        <label id="show" style="width: 100%;text-align: right"></label>
+                    </div>
+
                 <div id="scannerInfo">
 
                 </div>
@@ -227,6 +245,9 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/integralrecord/integralrecord_info.js"></script>
+<script src="${ctxPath}/static/modular/main/integralrecord/html2canvas.js"></script>
+<script src="${ctxPath}/static/modular/main/integralrecord/bluebird.js"></script>
+
 <script src="${ctxPath}/static/device/device.js"></script>
 <script>
     var temp_integral = parseInt($("#integral").val());
@@ -362,13 +383,14 @@
     }
 
     function loadProduct() {
-        $("#scannerInfo").empty();
+        $("#storeInfo").empty();
         var play = 0;
         productIds = "";
         productNums = "";
         var productjifen=0;
         for (var i = 0; i < products.length; i++) {
-            $("#scannerInfo").prepend("商品名称【" + products[i].val.productname + "】  规格：" + products[i].val.productspecification + " 价格：<span style='color: red'>" + products[i].val.productpice + "</span>  数量："+ products[i].val.consumptionNum+"<br>");
+            // $("#scannerInfo").prepend("商品名称【" + products[i].val.productname + "】  规格：" + products[i].val.productspecification + " 价格：<span style='color: red'>" + products[i].val.productpice + "</span>  数量："+ products[i].val.consumptionNum+"<br>");
+            $("#storeInfo").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.productspecification+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
             play = play + (products[i].val.productpice*products[i].val.consumptionNum)
             productIds += products[i].val.id + ","
             productNums += products[i].val.consumptionNum + ","
@@ -376,10 +398,12 @@
         }
         $("#play").val(play);
         $("#integral").val(productjifen);
+        tableBase64();
     }
 </script>
-<!--发生验证码-->
+<!--发验证码-->
 <script>
+    $("#sendCode i").attr("class","fa fa-paper-plane-o")
     $(function () {
         yzmBtn();
     })
@@ -405,6 +429,34 @@
         }else {
             $("#hiddenYz").css("display","none")
         }
+    }
+</script>
+<!--html转图片base64-->
+<script type="text/javascript">
+    window.onload = function() {
+        var show = document.getElementById("show");
+        setInterval(function() {
+            var time = new Date();   // 程序计时的月从0开始取值后+1
+            var m = time.getMonth() + 1;
+            var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+            show.innerHTML = "购买时间 "+t;
+        }, 1000);
+    };
+</script>
+<script>
+
+var tableNase64Data="";
+    function tableBase64() {
+        html2canvas(
+            document.getElementById('map_canvasInfo')).then(function(canvas) {
+                var imgData = canvas.toDataURL();
+                //将图片转换为Base64
+            tableNase64Data = imgData.substr(22);
+                console.log(tableNase64Data)
+            }
+        );
     }
 </script>
 @}

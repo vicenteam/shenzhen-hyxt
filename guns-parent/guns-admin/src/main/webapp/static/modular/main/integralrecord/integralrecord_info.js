@@ -111,7 +111,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.integralrecordInfoData);
-    ajax.set({productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val()});
+    ajax.set({productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val(),tableNase64Data:tableNase64Data});
     ajax.start();
 }
 
