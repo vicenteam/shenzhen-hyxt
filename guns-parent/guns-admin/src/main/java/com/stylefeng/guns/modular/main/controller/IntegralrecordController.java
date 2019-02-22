@@ -14,6 +14,7 @@ import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.controller.DeptController;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -60,6 +61,8 @@ public class IntegralrecordController extends BaseController {
     private DueToRemindController dueToRemindController;
     @Autowired
     private DeptController deptController;
+    @Autowired
+    private IDeptService deptService;
     @Autowired
     private IMainSynchronousService mainSynchronousService;
     @Autowired
@@ -259,21 +262,49 @@ public class IntegralrecordController extends BaseController {
             if(integralrecordtype.getProducttype()==0){//赠送出库
                 busiType="08";
             }
-            tableJson="{\n" +
-                    "\tdto:{\n" +
-                    "\t\tExternalCode: \""+(i+1)+"\",\n" +
-                    "\t\tVoucherType: {Code: \"ST1024\"},\n" +
-                    "\t\tVoucherDate: \""+now+"\",\n" +
-                    "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
-                    "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-                    "\t\tMemo: \"销售\",\n" +
-                    "\t\tRDRecordDetails: [{\n" +
-                    "\t\t\tInvBarCode: \"\",\n" +
-                    "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
-                    "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
-                    "\t\t}]\n" +
-                    "\t}\n" +
-                    "}";
+//            tableJson="{\n" +
+//                    "\tdto:{\n" +
+//                    "\t\tExternalCode: \""+(i+1)+"\",\n" +
+//                    "\t\tVoucherType: {Code: \"ST1021\"},\n" +
+//                    "\t\tPartner:{Code:\"LS\"},\n"+
+//                    "\t\tVoucherDate: \""+now+"\",\n" +
+//                    "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
+//                    "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
+//                    "\t\tMemo: \"销售\",\n" +
+//                    "\t\tRDRecordDetails: [{\n" +
+//                    "\t\t\tInvBarCode: \"\",\n" +
+//                    "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
+//                    "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
+//                    "\t\t}]\n" +
+//                    "\t}\n" +
+//                    "}";
+            Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+            tableJson=
+                    "{\n" +
+                            "    dto:{\n" +
+                            "       VoucherDate: \""+now+"\",\n" +
+                            "       ExternalCode:\"\"+(i+1)+\"\",\n" +
+                            "       Customer: {Code: \"LS\"}, \n" +
+                            "       InvoiceType: {Code: \"00\"},\n" +
+                            "       Address: \"新协会员管理系统\",\n" +
+                            "       LinkMan: \"新协会员管理系统\",\n" +
+                            "       ContactPhone: \"13611111111\",\n" +
+                            "       Department :{code: \""+dept.gettPlusDeptCode()+"\"},\n" +
+                            "       Memo: \"新协会员管理系统\",\n" +
+                            "       IsAutoGenerateSaleOut:true,\n" +
+                            "       Warehouse:{code:\""+integralrecordtype.getWarehouseCode()+"\"},\n" +
+                            "       \n" +
+                            "       SaleDeliveryDetails: [{\n" +
+                            "           Inventory:{Code: \""+InventoryCode+"\"},\n" +
+                            "           Unit: {Name:\""+integralrecordtype.getUnitName()+"\"},\n" +
+                            "           Quantity: "+baseQuantity+",\n" +
+                            "           OrigPrice: "+integralrecordtype.getProductpice()*baseQuantity+",\n" +
+                            "           OrigTaxAmount: "+integralrecordtype.getProductpice()*baseQuantity+",\n" +
+                            "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
+                            "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
+                            "       }]\n" +
+                            "    } \n" +
+                            "}";
             MainSynchronous mainSynchronous = new MainSynchronous();
             mainSynchronous.setSynchronousJson(tableJson);
             mainSynchronous.setStatus(0);

@@ -71,6 +71,15 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private String Specification;
     //商品可用数量
     private Double AvailableQuantity;
+    private String UnitName;
+
+    public String getUnitName() {
+        return UnitName;
+    }
+
+    public void setUnitName(String unitName) {
+        UnitName = unitName;
+    }
 
     public Double getProductpice() {
         return productpice;

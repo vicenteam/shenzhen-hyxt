@@ -8,6 +8,7 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -59,6 +60,8 @@ public class ProductReturnChangeController extends BaseController {
     private MembermanagementController membermanagementController;
     @Autowired
     private IMainSynchronousService mainSynchronousService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到商品退换货首页
@@ -253,6 +256,32 @@ public class ProductReturnChangeController extends BaseController {
                 "\t\t}]\n" +
                 "\t}\n" +
                 "}";
+        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+        tableJson="{\n" +
+                "    dto:{\n" +
+                "       VoucherDate: \""+now+"\",\n" +
+                "       ExternalCode:\"\"+(i+1)+\"\",\n" +
+                "       Customer: {Code: \"LS\"}, \n" +
+                "       InvoiceType: {Code: \"00\"},\n" +
+                "       Address: \"新协会员管理系统\",\n" +
+                "       LinkMan: \"新协会员管理系统\",\n" +
+                "       ContactPhone: \"13611111111\",\n" +
+                "       Department :{code: \""+dept.gettPlusDeptCode()+"\"},\n" +
+                "       Memo: \"新协会员管理系统\",\n" +
+                "       IsAutoGenerateSaleOut:true,\n" +
+                "       Warehouse:{code:\""+integralrecordtype.getWarehouseCode()+"\"},\n" +
+                "       \n" +
+                "       SaleDeliveryDetails: [{\n" +
+                "           Inventory:{Code: \""+InventoryCode+"\"},\n" +
+                "           Unit: {Name:\""+integralrecordtype.getUnitName()+"\"},\n" +
+                "           Quantity: -"+baseQuantity+",\n" +
+                "           OrigPrice: -"+baseQuantity*integralrecordtype.getProductpice()+",\n" +
+                "           OrigTaxAmount: -"+baseQuantity*integralrecordtype.getProductpice()+",\n" +
+                "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
+                "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
+                "       }]\n" +
+                "    } \n" +
+                "}";;
         MainSynchronous mainSynchronous = new MainSynchronous();
         mainSynchronous.setSynchronousJson(tableJson);
         mainSynchronous.setStatus(0);
