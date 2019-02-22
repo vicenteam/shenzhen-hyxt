@@ -284,7 +284,7 @@ public class IntegralrecordController extends BaseController {
             index++;
         }
         for(MainSynchronous a:synchronousList){
-//            synchronousData(a);
+            synchronousData(a);
         }
         //新增购买小票
         ReceiptsInfo receiptsInfo = new ReceiptsInfo();
