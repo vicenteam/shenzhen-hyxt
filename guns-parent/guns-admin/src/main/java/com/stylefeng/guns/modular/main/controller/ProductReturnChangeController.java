@@ -260,7 +260,7 @@ public class ProductReturnChangeController extends BaseController {
         tableJson="{\n" +
                 "    dto:{\n" +
                 "       VoucherDate: \""+now+"\",\n" +
-                "       ExternalCode:\"\"+(i+1)+\"\",\n" +
+                "       ExternalCode:\""+(new Date().getTime())+"\",\n" +
                 "       Customer: {Code: \"LS\"}, \n" +
                 "       InvoiceType: {Code: \"00\"},\n" +
                 "       Address: \"新协会员管理系统\",\n" +

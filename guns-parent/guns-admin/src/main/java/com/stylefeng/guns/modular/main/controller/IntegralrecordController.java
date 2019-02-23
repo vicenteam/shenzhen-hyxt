@@ -283,7 +283,7 @@ public class IntegralrecordController extends BaseController {
                     "{\n" +
                             "    dto:{\n" +
                             "       VoucherDate: \""+now+"\",\n" +
-                            "       ExternalCode:\"\"+(i+1)+\"\",\n" +
+                            "       ExternalCode:\""+(i+1)+"\",\n" +
                             "       Customer: {Code: \"LS\"}, \n" +
                             "       InvoiceType: {Code: \"00\"},\n" +
                             "       Address: \"新协会员管理系统\",\n" +
