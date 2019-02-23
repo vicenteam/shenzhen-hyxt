@@ -258,9 +258,9 @@ public class IntegralrecordController extends BaseController {
                     "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
                     "        }\n" +
                     "    }";
-            String busiType="15";
+            boolean busiType=false;
             if(integralrecordtype.getProducttype()==0){//赠送出库
-                busiType="08";
+                busiType=true;
             }
 //            tableJson="{\n" +
 //                    "\tdto:{\n" +
@@ -293,7 +293,7 @@ public class IntegralrecordController extends BaseController {
                             "       Memo: \"新协会员管理系统\",\n" +
                             "       IsAutoGenerateSaleOut:true,\n" +
                             "       Warehouse:{code:\""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-                            "       \n" +
+                            "       IsPresent:"+busiType+"\n" +
                             "       SaleDeliveryDetails: [{\n" +
                             "           Inventory:{Code: \""+InventoryCode+"\"},\n" +
                             "           Unit: {Name:\""+integralrecordtype.getUnitName()+"\"},\n" +
