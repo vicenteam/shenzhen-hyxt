@@ -293,7 +293,7 @@ public class IntegralrecordController extends BaseController {
                             "       Memo: \"新协会员管理系统\",\n" +
                             "       IsAutoGenerateSaleOut:true,\n" +
                             "       Warehouse:{code:\""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-                            "       IsPresent:"+busiType+"\n" +
+                            "       IsPresent:"+busiType+",\n" +
                             "       SaleDeliveryDetails: [{\n" +
                             "           Inventory:{Code: \""+InventoryCode+"\"},\n" +
                             "           Unit: {Name:\""+integralrecordtype.getUnitName()+"\"},\n" +
@@ -430,7 +430,7 @@ public class IntegralrecordController extends BaseController {
      * @throws Exception
      */
     public Object  synchronousData(MainSynchronous mainSynchronous) throws Exception {
-        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDISPATCH_CREATE, mainSynchronous.getSynchronousJson());
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDELIVERY_CREATE, mainSynchronous.getSynchronousJson());
         System.out.println("---"+s);
         if(!"null".equals(s)){
             JSONObject jsonObject = JSON.parseObject(s);

@@ -64,6 +64,11 @@ public class YongYouAPIUtils {
      * 收入创建
      */
     public final static String RECEIVEVOUCHER_CREATE="receiveVoucher/Create";
+    /**
+     * 销货单创建
+     */
+    public final static String SALEDELIVERY_CREATE="saleDelivery/Create";
+
 
 
 
