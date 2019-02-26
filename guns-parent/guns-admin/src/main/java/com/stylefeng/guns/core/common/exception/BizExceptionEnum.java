@@ -76,7 +76,8 @@ public enum BizExceptionEnum implements ServiceExceptionEnum {
     MONEY_ERROR(400,"账户余额不足"),
     PHONE_ERROR(400,"该用户电话号为空"),
     VERIFICATIONCODE_ERROR(400,"验证码有误"),
-    JIFEN_ERROR(400,"剩余可用积分不足");
+    JIFEN_ERROR(400,"剩余可用积分不足"),
+    READCARD_ERROR(400,"请进行读卡操作");
 
     BizExceptionEnum(int code, String message) {
         this.code = code;
