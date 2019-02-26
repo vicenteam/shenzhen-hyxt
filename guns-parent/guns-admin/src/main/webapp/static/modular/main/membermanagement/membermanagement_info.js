@@ -151,6 +151,7 @@ if($("#readDeviceCard").val().length==0){
         $("#anotherName").val("")
 
     },function(data){
+        $("#readDeviceCard").val("")
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.membermanagementInfoData);

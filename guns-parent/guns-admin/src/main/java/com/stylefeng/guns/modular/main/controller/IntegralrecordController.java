@@ -194,6 +194,11 @@ public class IntegralrecordController extends BaseController {
                 throw new GunsException(BizExceptionEnum.MONEY_ERROR);
             }
         }
+        if(true){//积分消费
+            if(membermanagements.get(0).getIntegral()+integral<0){
+                throw new GunsException(BizExceptionEnum.JIFEN_ERROR);
+            }
+        }
         //更新库存
         String[] split = productIds.split(",");
         String[] productNumsSplit = productNums.split(",");
@@ -202,10 +207,11 @@ public class IntegralrecordController extends BaseController {
             int parseIntTemp = Integer.parseInt(temp);
             int parseIntproductNums = Integer.parseInt(productNumsSplit[index]);
             //积分添加操作
-            List<Integralrecord> integralrecords = insertIntegral(integral,1,parseIntTemp,membermanagements);
             BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
             typeWrapper.eq("id",parseIntTemp);
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
+            List<Integralrecord> integralrecords = insertIntegral(Double.parseDouble(integralrecordtype.getProductjifen()),1,parseIntTemp,membermanagements);
+
             integralrecordtype.setProductnum(integralrecordtype.getProductnum()-parseIntproductNums);//库存减
             integralrecordtype.setUpdatetime(DateUtil.getTime());
             integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId().toString());

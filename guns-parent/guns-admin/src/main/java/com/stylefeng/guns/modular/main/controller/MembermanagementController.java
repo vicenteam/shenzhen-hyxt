@@ -278,6 +278,15 @@ public class MembermanagementController extends BaseController {
             , String otherMemberId) throws Exception {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
+        EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
+        membermanagementEntityWrapper.eq("cadID",membermanagement.getCadID());
+        if(membermanagementService.selectOne(membermanagementEntityWrapper)!=null){
+            BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
+            memberCardBaseEntityWrapper.eq("code", code);
+            MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
+            memberCardService.deleteById(memberCard.getId());
+            throw new Exception("注册用户已存在开卡门店！");
+        }
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");
@@ -466,6 +475,8 @@ public class MembermanagementController extends BaseController {
                     return "202";
                 }
             }
+        }else if(memberCard!=null&&memberCard.getMemberid()==null){
+            memberCard=null;
         }
         return memberCard;
     }
@@ -479,17 +490,19 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
 //        memberCardBaseEntityWrapper.eq("code", sb.toString());
         memberCardBaseEntityWrapper.eq("code", code);
-        int i = memberCardService.selectCount(memberCardBaseEntityWrapper);
-        if (i != 0) {
+        MemberCard memberCard1 = memberCardService.selectOne(memberCardBaseEntityWrapper);
+        if (memberCard1!=null&&memberCard1.getMemberid()!=null) {
             throw new Exception("失败");
 //            getXieKaValInfo(code);
-        }
-        MemberCard memberCard = new MemberCard();
+        }else if(memberCard1==null){
+            MemberCard memberCard = new MemberCard();
 //        memberCard.setCode(sb.toString());
-        memberCard.setCode(code);
-        memberCard.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        memberCard.setDeptid(ShiroKit.getUser().getDeptId());
-        memberCardService.insert(memberCard);
+            memberCard.setCode(code);
+            memberCard.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            memberCard.setDeptid(ShiroKit.getUser().getDeptId());
+            memberCardService.insert(memberCard);
+        }
+
         return sb.toString();
     }
 
