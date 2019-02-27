@@ -15,7 +15,25 @@
 
 
 </script>
-<div class="ibox float-e-margins">
+<div id="hiddenDiv0" style="display:none;font-size: 10px">
+    <table style="text-align: center">
+        <thead>
+        <tr>
+            <td style="width: 170px" id="a_1">商品名称</td>
+            <td style="width: 70px" id="a_2">商品规格</td>
+            <td style="width: 40px" id="a_3">价格</td>
+            <td style="width: 40px" id="a_4">数量</td>
+        </tr>
+        </thead>
+        <tbody id="storeInfoHidden" style="font-size: 10px">
+        </tbody>
+    </table>
+    <div style="width: 250px;text-align: right">
+        <hr>
+        <label id="showHiden" ></label>
+    </div>
+</div>
+<div class="ibox float-e-margins" id="hiddenDiv1">
     <div class="ibox-content">
         <div class="form-horizontal" id="integralrecordInfoTable">
             <input type="hidden" id="introducerId" name="introducerId"/>
@@ -397,6 +415,7 @@
 
     function loadProduct() {
         $("#storeInfo").empty();
+        $("#storeInfoHidden").empty();
         var play = 0;
         productIds = "";
         productNums = "";
@@ -407,6 +426,8 @@
             // alert(productjifen+Number(products[i].val.productjifen*products[i].val.consumptionNum))
             // $("#scannerInfo").prepend("商品名称【" + products[i].val.productname + "】  规格：" + products[i].val.productspecification + " 价格：<span style='color: red'>" + products[i].val.productpice + "</span>  数量："+ products[i].val.consumptionNum+"<br>");
             $("#storeInfo").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.productspecification+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
+            $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.productspecification+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
+
             play = play + (products[i].val.productpice*products[i].val.consumptionNum)
             productIds += products[i].val.id + ","
             productNums += products[i].val.consumptionNum + ","
@@ -459,6 +480,15 @@
                 + time.getDate() + " " + time.getHours() + ":"
                 + time.getMinutes() + ":" + time.getSeconds();
             show.innerHTML = "购买时间 "+t;
+        }, 1000);
+        var showHiden = document.getElementById("showHiden");
+        setInterval(function() {
+            var time = new Date();   // 程序计时的月从0开始取值后+1
+            var m = time.getMonth() + 1;
+            var t = time.getFullYear() + "-" + m + "-"
+                + time.getDate() + " " + time.getHours() + ":"
+                + time.getMinutes() + ":" + time.getSeconds();
+            showHiden.innerHTML = "购买时间 "+t;
         }, 1000);
     };
 </script>

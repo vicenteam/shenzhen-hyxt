@@ -243,12 +243,16 @@ function changejifen() {
     }
 }
 function hidenBtn() {
-    $("#read").css("display","none")
-    $("#ensure").css("display","none")
-    $("#cancel").css("display","none")
+    // $("#read").css("display","none")
+    // $("#ensure").css("display","none")
+    // $("#cancel").css("display","none")
+    $("#hiddenDiv0").css("display","block")
+    $("#hiddenDiv1").css("display","none")
 }
 function showBtn() {
-    $("#read").css("display","block")
-    $("#ensure").css("display","block")
-    $("#cancel").css("display","block")
+    $("#hiddenDiv0").css("display","none")
+    $("#hiddenDiv1").css("display","block")
+    // $("#read").css("display","block")
+    // $("#ensure").css("display","block")
+    // $("#cancel").css("display","block")
 }
