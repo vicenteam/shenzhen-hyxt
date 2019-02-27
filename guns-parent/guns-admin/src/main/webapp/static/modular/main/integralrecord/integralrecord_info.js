@@ -51,7 +51,7 @@ IntegralrecordInfoDlg.get = function(key) {
  * 关闭此对话框
  */
 IntegralrecordInfoDlg.close = function() {
-    parent.layer.close(window.parent.Integralrecord.layerIndex);
+    document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
 }
 
 /**
@@ -91,6 +91,12 @@ IntegralrecordInfoDlg.addSubmit = function() {
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecord/add", function(data){
+        //隐藏dom
+        hidenBtn()
+        //执行打印
+        document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
+        //显示dom
+        showBtn()
         Feng.success("操作成功!");
         $("#introducerName").val("");
         $("#name").val("");
@@ -107,6 +113,11 @@ IntegralrecordInfoDlg.addSubmit = function() {
         //清除页面数据
         products = new Array()
         loadProduct()
+        //执行打印操作
+        // document.getElementById("WebBrowser").ExecWB(6,2)
+        // var iframe = document.getElementById("iframe_map_canvasInfo")
+        // iframe.contentWindow.getElementById("WebBrowser").ExecWB(6,2)
+        // document.getElementById("iframe_map_canvasInfo").contentWindow
     },function(data){
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
@@ -231,4 +242,13 @@ function changejifen() {
         ajax.start();
     }
 }
-
+function hidenBtn() {
+    $("#read").css("display","none")
+    $("#ensure").css("display","none")
+    $("#cancel").css("display","none")
+}
+function showBtn() {
+    $("#read").css("display","block")
+    $("#ensure").css("display","block")
+    $("#cancel").css("display","block")
+}
