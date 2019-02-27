@@ -9,6 +9,7 @@ import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
@@ -175,6 +176,7 @@ public class IntegralrecordController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Double integral, Integer productname, Integer memberId, Integer consumptionNum, String productIds, String productNums, Double play, Integer playType, String verificationcode, String tableNase64Data) throws Exception {
+        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         List<MainSynchronous> synchronousList = new ArrayList<>();
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         mWrapper.eq("id", memberId);
@@ -196,6 +198,10 @@ public class IntegralrecordController extends BaseController {
             Double money = membermanagements.get(0).getMoney();
             if (money < play) {
                 throw new GunsException(BizExceptionEnum.MONEY_ERROR);
+            } else {//扣除用户余额
+                Membermanagement membermanagement = membermanagements.get(0);
+                membermanagement.setMoney(membermanagement.getMoney() - play);
+                membermanagementService.updateById(membermanagement);
             }
         }
         if (true) {//积分消费
@@ -288,7 +294,7 @@ public class IntegralrecordController extends BaseController {
 //                    "\t\t}]\n" +
 //                    "\t}\n" +
 //                    "}";
-            Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+
             tableJson =
                     "{\n" +
                             "    dto:{\n" +
@@ -337,6 +343,8 @@ public class IntegralrecordController extends BaseController {
         receiptsInfo.setPlayMoney(play + "");
         receiptsInfo.setReceiptsBase64Img(tableNase64Data);
         receiptsInfo.insert();
+        //提交T+收款单
+        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买");
         return SUCCESS_TIP;
     }
 
@@ -453,5 +461,85 @@ public class IntegralrecordController extends BaseController {
         }
         mainSynchronousService.updateById(mainSynchronous);
         return null;
+    }
+
+    /**
+     * 创建收款单到T+
+     *
+     * @param departmentCode
+     * @param origAmount
+     * @param playType
+     */
+    public void receiveVoucherCreate(String departmentCode, Double origAmount, int playType,String text) throws Exception {
+        String SettleStyleCode = "";
+        String SettleStyleBankAccountName = "";
+        switch (playType) {
+            case 0:
+                SettleStyleCode="94";
+                SettleStyleBankAccountName = "现金";
+                break;
+            case 1:
+                SettleStyleCode="1";
+                SettleStyleBankAccountName = "现金";
+                break;
+            case 2:
+                SettleStyleCode="7";
+                SettleStyleBankAccountName = "支付宝";
+                break;
+            case 3:
+                SettleStyleCode="6";
+                SettleStyleBankAccountName = "微信";
+                break;
+            case 4:
+                SettleStyleCode="1";
+                SettleStyleBankAccountName = "现金";
+                break;
+            case 5:
+                SettleStyleCode="99";
+                SettleStyleBankAccountName = "零售抵现";
+                break;
+        }
+
+        String json =
+                "{\n" +
+                        "\tdto: {\n" +
+                        "\t\tExternalCode: \"" + new Date().getTime() + "\",\n" +
+                        "\t\tVoucherDate: \"" + DateUtil.formatDate(new Date(), "yyyy-MM-dd") + "\",\n" +
+                        "\t\tPartner: {\n" +
+                        "\t\t\tCode: \"LS\"\n" +
+                        "\t\t},\n" +
+                        "\t\tDepartment: {\n" +
+                        "\t\t\tCode: \"" + departmentCode + "\"\n" +
+                        "\t\t},\n" +
+                        "\t\tCurrency: {\n" +
+                        "\t\t\tCode: \"RMB\"\n" +
+                        "\t\t},\n" +
+                        "\t\tIsReceiveFlag: true,\n" +
+                        "\t\tExchangeRate: 1,\n" +
+                        "\t\tMemo: \""+text+"\",\n" +
+                        "\t\tArapMultiSettleDetails: [{\n" +
+                        "\t\t\tSettleStyle: {\n" +
+                        "\t\t\t\tCode: \""+SettleStyleCode+"\"\n" +
+                        "\t\t\t},\n" +
+                        "\t\t\tBankAccount: {\n" +
+                        "\t\t\t\tName: \""+SettleStyleBankAccountName+"\"\n" +
+                        "\t\t\t},\n" +
+                        "\t\t\tOrigAmount: " + origAmount + "\n" +
+                        "\t\t}],\n" +
+                        "\t\tDetails: [{\n" +
+                        "\t\t\tVoucherCode: \"SA-2019-02-27-001\",\n" +
+                        "\t\t\tVoucherType: {\n" +
+                        "\t\t\t\tCode: \"SA04\"\n" +
+                        "\t\t\t}\n" +
+                        "\t\t}],\n" +
+                        "\t\tBusiType: {\n" +
+                        "\t\t\tcode: 45\n" +
+                        "\t\t},\n" +
+                        "VoucherState: {Code: \"01\"}"+
+                        "\t}\n" +
+                        "}";
+        System.out.println("收款单："+json);
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.RECEIVEVOUCHER_CREATE, json);
+        System.out.println("---" + s);
     }
 }

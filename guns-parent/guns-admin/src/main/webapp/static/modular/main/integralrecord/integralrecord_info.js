@@ -113,6 +113,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
     ajax.set(this.integralrecordInfoData);
     ajax.set({productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val(),tableNase64Data:tableNase64Data});
     ajax.start();
+    
 }
 
 /**

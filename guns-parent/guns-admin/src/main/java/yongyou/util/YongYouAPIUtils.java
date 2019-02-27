@@ -28,6 +28,10 @@ public class YongYouAPIUtils {
      */
     public final static String STORE_QUERY="store/Query";
     /**
+     * 部门查询
+     */
+    public final static String DEPARTMENT_QUERY ="department/Query ";
+    /**
      * 存货编码查询
      */
     public final static String INVENTORY_QUERY="inventory/Query";

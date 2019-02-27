@@ -270,12 +270,12 @@ public class ProductReturnChangeController extends BaseController {
                 "       Memo: \"新协会员管理系统\",\n" +
                 "       IsAutoGenerateSaleOut:true,\n" +
                 "       Warehouse:{code:\""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-                "       \n" +
+                "       IsPresent:false,\n" +
                 "       SaleDeliveryDetails: [{\n" +
                 "           Inventory:{Code: \""+InventoryCode+"\"},\n" +
                 "           Unit: {Name:\""+integralrecordtype.getUnitName()+"\"},\n" +
                 "           Quantity: -"+baseQuantity+",\n" +
-                "           OrigPrice: -"+baseQuantity*integralrecordtype.getProductpice()+",\n" +
+                "           OrigPrice: \"0\",\n" +
                 "           OrigTaxAmount: -"+baseQuantity*integralrecordtype.getProductpice()+",\n" +
                 "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
                 "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
@@ -287,7 +287,7 @@ public class ProductReturnChangeController extends BaseController {
         mainSynchronous.setStatus(0);
         mainSynchronousService.insert(mainSynchronous);
         //
-        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.OTHERRECEIVE_CREATE, tableJson);
+        String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDELIVERY_CREATE, tableJson);
         System.out.println("---"+s);
         if(!"null".equals(s)){
             JSONObject jsonObject = JSON.parseObject(s);

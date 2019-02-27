@@ -4,7 +4,9 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -38,6 +40,10 @@ public class PrepaidRecordController extends BaseController {
     private IPrepaidRecordService prepaidRecordService;
     @Autowired
     private IMembermanagementService membermanagementService;
+    @Autowired
+    private IntegralrecordController integralrecordController;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到充值记录首页
@@ -88,7 +94,7 @@ public class PrepaidRecordController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(PrepaidRecord prepaidRecord) {
+    public Object add(PrepaidRecord prepaidRecord) throws Exception {
         prepaidRecord.setPrepaidRecordTime(DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
         prepaidRecord.setDeptid(ShiroKit.getUser().deptId);
         prepaidRecordService.insert(prepaidRecord);
@@ -96,6 +102,9 @@ public class PrepaidRecordController extends BaseController {
         Membermanagement membermanagement = membermanagementService.selectById(prepaidRecord.getPrepaidRecordMemberId());
         membermanagement.setMoney((membermanagement.getMoney()+prepaidRecord.getPrepaidRecordMoney()));
         membermanagementService.updateById(membermanagement);
+        //同步T+财务
+        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),prepaidRecord.getPrepaidRecordMoney(),0,"充值业务");
         return SUCCESS_TIP;
     }
 

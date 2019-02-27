@@ -67,7 +67,7 @@ public class DeptController extends BaseController {
      */
     @RequestMapping("/dept_add")
     public String deptAdd(Model model) throws Exception {
-        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{\n" +
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.DEPARTMENT_QUERY, "{\n" +
                 "dto: {\n" +
                 "       \n" +
                 "}\n" +
