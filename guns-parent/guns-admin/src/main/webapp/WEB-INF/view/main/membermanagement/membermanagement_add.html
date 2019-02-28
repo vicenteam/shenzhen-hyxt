@@ -38,7 +38,8 @@
                         <option value="1">是</option>
                         <option value="2">否</option>
                     </#select>
-                             <#input id="birthday" name="生日" underline="true"/>
+                             <!--<#input id="birthday" name="生日" underline="true"/>-->
+                            <#time id="birthday" name="生日" isTime="false" pattern="yyyy-MM-dd HH:mm:ss"  underline="true"/>
                             <#AddressSelect id="province" province="province" name="所属地区"/>
                             <#AddressSelect id="city" city="city" name="所属区域"/>
                             <#AddressSelect id="district" district="district" name="所属区县"/>

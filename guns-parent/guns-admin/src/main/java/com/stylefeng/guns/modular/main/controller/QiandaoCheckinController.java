@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -131,7 +132,18 @@ public class QiandaoCheckinController extends BaseController {
             List<Membermanagement> membermanagements = new ArrayList<>(); //会员打卡获得积分
             Membershipcardtype membershipcardtype1 = membershipcardtypeService.selectById(membermanagement.getLevelID());
             membermanagements.add(membermanagement);
-            integralrecordController.insertIntegral(membershipcardtype1.getSignin(),2,0,membermanagements,0);
+
+            Double integral  = membershipcardtype1.getSignin(); //签到积分
+            if(! StringUtils.isEmpty(membermanagement.getBirthday())){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(membermanagement.getBirthday());
+                Date nowDate = new Date();
+                if(date.getMonth() == nowDate.getMonth() && date.getDay() == nowDate.getDay()){ //判断是否为生日  双倍签到积分
+                    integralrecordController.insertIntegral(integral ,2,3,membermanagements,0); //
+                }
+            }
+            integralrecordController.insertIntegral(integral,2,0,membermanagements,0);
+
 //            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
 //                List<Membermanagement> introducers = new ArrayList<>();
 //

@@ -1,11 +1,15 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.service.IDeptService;
+import com.stylefeng.guns.modular.system.utils.IntegralRecordTypeExcel;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -20,8 +24,10 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
+import org.springframework.web.multipart.MultipartFile;
 import yongyou.util.YongYouAPIUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -186,4 +192,62 @@ public class IntegralrecordtypeController extends BaseController {
         System.out.println("同步数据完成。。。");
         return "success";
     }
+
+    /**
+     * 跳转到excel 导入
+     */
+    @RequestMapping("import_excel")
+    public String importExcel() {
+        return PREFIX + "excel_import.html";
+    }
+
+    @RequestMapping(value = "/importE")
+    @ResponseBody
+    public Object importE(@RequestParam MultipartFile file, HttpServletRequest request) throws Exception {
+        ImportParams params = new ImportParams();
+        params.setTitleRows(0);
+        params.setHeadRows(1);
+        String message = "";
+        Integer total = 0;
+        Integer nowNum = 0;
+        JSONObject resJson = new JSONObject();
+        try {
+            List<IntegralRecordTypeExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(), IntegralRecordTypeExcel.class, params);
+            Integralrecordtype integralrecordtype = new Integralrecordtype();
+            for (IntegralRecordTypeExcel integralRecordTypeExcel : excelUpload) {
+                integralrecordtype.setNames(integralRecordTypeExcel.getInventoryName());
+                integralrecordtype.setProductname(integralRecordTypeExcel.getInventoryName());
+                integralrecordtype.setProducttype(integralRecordTypeExcel.getProducttype());
+                integralrecordtype.setProductspecification(integralRecordTypeExcel.getSpecification());
+                integralrecordtype.setProductnum(integralRecordTypeExcel.getAvailableQuantity().intValue());
+                integralrecordtype.setProductjifen("");
+                integralrecordtype.setDeptid(ShiroKit.getUser().getDeptId()+"");
+                integralrecordtype.setCreatetime(DateUtil.getTime());
+//                integralrecordtype.setUpdateuserid();
+                integralrecordtype.setStatus(0);
+                integralrecordtype.setWarehouseCode(integralRecordTypeExcel.getWarehouseCode());
+                integralrecordtype.setWarehouseName(integralRecordTypeExcel.getWarehouseName());
+                integralrecordtype.setInventoryCode(integralRecordTypeExcel.getInventoryCode());
+                integralrecordtype.setInventoryName(integralRecordTypeExcel.getInventoryName());
+                integralrecordtype.setSpecification(integralRecordTypeExcel.getSpecification());
+                integralrecordtype.setAvailableQuantity(integralRecordTypeExcel.getAvailableQuantity());
+                integralrecordtype.setUnitName(integralRecordTypeExcel.getUnitName());
+                total += 1;
+            }
+            if (total == excelUpload.size()) {
+                message = "导入成功,共" + total + "条";
+            } else if (total == -1) {
+                message = "客户编号已存在,在第" + (nowNum + 1) + "条错误,导入失败！";
+            } else {
+                message = "导入失败，第" + (total + 1) + "条错误!";
+            }
+            resJson.put("msg", message);
+        }catch (Exception e){
+            message = "导入失败，第" + (total + 1) + "条错误!";
+            resJson.put("msg", message);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

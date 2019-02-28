@@ -38,7 +38,13 @@
                                 <#button name="删除" icon="fa-remove" clickFun="Integralrecordtype.delete()" space="true"/>
                             @}
                             @if(shiro.hasPermission("/integralrecordtype/delete")){
-                            <#button name="同步商品数据" icon="fa-spinner" clickFun="Integralrecordtype.tongbuData()" space="true"/>
+                                <#button name="同步商品数据" icon="fa-spinner" clickFun="Integralrecordtype.tongbuData()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/integralrecordtype/export")){
+                                <#button name="Excel导出" icon="fa-download" clickFun="Integralrecordtype.exportExcel()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/integralrecordtype/import")){
+                                <#button name="Excel导入" icon="fa-upload" clickFun="Integralrecordtype.importExcel()" space="true"/>
                             @}
                         </div>
                         <#table id="IntegralrecordtypeTable"/>
