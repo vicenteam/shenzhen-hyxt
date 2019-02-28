@@ -18,6 +18,7 @@
         <result column="updatetime" property="updatetime" />
         <result column="createuserid" property="createuserid" />
         <result column="updateuserid" property="updateuserid" />
+        <result column="retailPrice" property="retailPrice" />
 
         <result column="WarehouseName" property="WarehouseName" />
         <result column="WarehouseCode" property="WarehouseCode" />
@@ -30,7 +31,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, names, productname, producttype, productspecification, productnum, productbalance, productjifen, producteatingdose, deptid, createtime, updatetime, createuserid, updateuserid
+        id, names, productname, producttype, productspecification, productnum, productbalance, productjifen, producteatingdose, deptid, createtime, updatetime, createuserid, updateuserid, retailPrice
     </sql>
 
 </mapper>

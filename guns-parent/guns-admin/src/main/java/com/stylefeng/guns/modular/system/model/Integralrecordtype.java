@@ -73,6 +73,8 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private Double AvailableQuantity;
     private String UnitName;
 
+    private Double retailPrice;
+
     public String getUnitName() {
         return UnitName;
     }
@@ -259,6 +261,14 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
 
     public void setUpdateuserid(String updateuserid) {
         this.updateuserid = updateuserid;
+    }
+
+    public Double getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(Double retailPrice) {
+        this.retailPrice = retailPrice;
     }
 
     @Override
