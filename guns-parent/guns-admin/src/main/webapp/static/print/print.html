@@ -1,0 +1,30 @@
+<html >
+<meta charset="utf-8">
+<div id="hiddenDiv0" style="font-size: 10px">
+    <table style="text-align: center">
+        <thead>
+        <tr>
+            <td width="100px">商品名称</td>
+            <td width="70px">商品规格</td>
+            <td width="40px">价格</td>
+            <td width="40px">数量</td>
+        </tr>
+        </thead>
+        <tbody id="storeInfoHidden" style="font-size: 10px">
+        <tr><td>庄子精品黑加仑醋</td><td>488ml*1*6瓶</td><td>55</td><td>1</td></tr>
+        <tr><td>庄子精品黑加仑醋</td><td>488ml*1*6瓶</td><td>55</td><td>1</td></tr>
+        </tbody>
+
+    </table>
+    <div style="width: 250px;text-align: right">
+        <label id="showHiden" ></label>
+    </div>
+</div>
+<input type="button" value="toPrinter" onclick="directpdfprint('D:\\Temp\\66.pdf')">
+<OBJECT ID='WebBrowser' NAME="WebBrowser" WIDTH=0 HEIGHT=0 CLASSID='CLSID:8856F961-340A-11D0-A96B-00C04FD705A2'></OBJECT>
+</html>
+<script>
+function directpdfprint(dd) {
+    document.getElementById("WebBrowser").ExecWB(6,6)
+}
+</script>
