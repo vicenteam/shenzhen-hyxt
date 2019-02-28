@@ -15,21 +15,26 @@
 
 
 </script>
-<div id="hiddenDiv0" style="display:none;font-size: 10px">
-    <table style="text-align: center">
+<div id="hiddenDiv0" style="display:block;font-size: 10px;text-align: center;width: 260px;">
+    欢迎光临
+    <table style="text-align: center;border: 1px dashed black">
         <thead>
         <tr>
-            <td style="width: 170px" id="a_1">商品名称</td>
-            <td style="width: 70px" id="a_2">商品规格</td>
-            <td style="width: 40px" id="a_3">价格</td>
+            <td style="width: 140px" id="a_1">商品名称</td>
+            <td style="width: 40px" id="a_3">金额</td>
+            <td style="width: 40px" id="">单价</td>
             <td style="width: 40px" id="a_4">数量</td>
         </tr>
         </thead>
         <tbody id="storeInfoHidden" style="font-size: 10px">
         </tbody>
     </table>
+
+    <!--金额-->
+    <div style="border: 1px dashed black;width: 260px;margin-top: 5px;text-align: left" id="hiden_moneyText">
+    </div>
     <div style="width: 250px;text-align: right">
-        <hr>
+
         <label id="showHiden" ></label>
     </div>
 </div>
@@ -108,7 +113,7 @@
                             <thead>
                             <tr>
                                 <td style="width: 230px;text-align: center">商品名称</td>
-                                <td>规格</td>
+                                <td>金额</td>
                                 <td>价格</td>
                                 <td>数量</td>
                             </tr>
@@ -365,6 +370,7 @@
                                     productpice: data.productpice,
                                     productspecification: data.productspecification,
                                     productjifen:data.productjifen,
+                                    retailPrice:data.retailPrice,
                                     consumptionNum:1
                                 }
                             }
@@ -425,8 +431,8 @@
             // alert(Number(products[i].val.productjifen*products[i].val.consumptionNum))
             // alert(productjifen+Number(products[i].val.productjifen*products[i].val.consumptionNum))
             // $("#scannerInfo").prepend("商品名称【" + products[i].val.productname + "】  规格：" + products[i].val.productspecification + " 价格：<span style='color: red'>" + products[i].val.productpice + "</span>  数量："+ products[i].val.consumptionNum+"<br>");
-            $("#storeInfo").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.productspecification+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
-            $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.productspecification+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
+            $("#storeInfo").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
+            $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
 
             play = play + (products[i].val.productpice*products[i].val.consumptionNum)
             productIds += products[i].val.id + ","
@@ -436,7 +442,28 @@
         }
         $("#play").val(play);
         $("#integral").val(productjifen);
+
         tableBase64();
+
+        //计算小票显示金额
+        var j1=play;//总金额
+        var j2=0;//应收金额
+        var j3=0;//实收金额
+        var off=1;
+        //
+        j2=j1*off;
+        var insaHtml=
+            "<div>\n" +
+            "            总金额：\n" +j1+
+            "        </div>\n" +
+            "        <div>\n" +
+            "            优惠金额：\n" +(j1-j2)+
+            "        </div>\n" +
+            "        <div>\n" +
+            "            应收金额：\n" +j2+
+            "        </div>\n" ;
+        $("#hiden_moneyText").empty();
+        $("#hiden_moneyText").append(insaHtml);
     }
 </script>
 <!--发验证码-->
