@@ -66,6 +66,11 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     private Integer checkleavenum;
     private Integer leaves;
 
+    /**
+     * 等级
+     */
+    private String cardlevel;
+
     public Integer getLeaves() {
         return leaves;
     }
@@ -189,6 +194,14 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     @Override
     protected Serializable pkVal() {
         return this.id;
+    }
+
+    public String getCardlevel() {
+        return cardlevel;
+    }
+
+    public void setCardlevel(String cardlevel) {
+        this.cardlevel = cardlevel;
     }
 
     @Override

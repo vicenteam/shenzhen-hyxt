@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import yongyou.util.YongYouAPIUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Member;
 import java.sql.Wrapper;
 import java.util.*;
 
@@ -68,6 +69,8 @@ public class IntegralrecordController extends BaseController {
     private IMainSynchronousService mainSynchronousService;
     @Autowired
     private IVerificationCodeService verificationCodeService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
 
 
     /**
@@ -213,6 +216,11 @@ public class IntegralrecordController extends BaseController {
         String[] split = productIds.split(",");
         String[] productNumsSplit = productNums.split(",");
         int index = 0;
+
+        // 2019-02-27 luo
+        Membershipcardtype lType = membershipcardtypeService.selectById(membermanagements.get(0).getLevelID());
+        Double getIntegral; //
+
         for (String temp : split) {
             int parseIntTemp = Integer.parseInt(temp);
             int parseIntproductNums = Integer.parseInt(productNumsSplit[index]);
@@ -220,7 +228,8 @@ public class IntegralrecordController extends BaseController {
             BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
             typeWrapper.eq("id", parseIntTemp);
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
-            List<Integralrecord> integralrecords = insertIntegral(Double.parseDouble(integralrecordtype.getProductjifen()), 1, parseIntTemp, membermanagements);
+            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
+            List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice());
 
             integralrecordtype.setProductnum(integralrecordtype.getProductnum() - parseIntproductNums);//库存减
             integralrecordtype.setUpdatetime(DateUtil.getTime());
@@ -358,7 +367,7 @@ public class IntegralrecordController extends BaseController {
      * @return
      * @throws Exception
      */
-    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList) throws Exception {
+    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList, double price) throws Exception {
         List<Integralrecord> integralrecords = new ArrayList<>();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
@@ -376,6 +385,7 @@ public class IntegralrecordController extends BaseController {
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
+                    memberId.setPrice(price); //总消费额
                 }
             } else if (type == 2) {
                 if (typeId == 2) { //扣除积分
@@ -387,6 +397,7 @@ public class IntegralrecordController extends BaseController {
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
+                    memberId.setPrice(price); //总消费额
                 }
             }
             //更新会员总积分和实际积分

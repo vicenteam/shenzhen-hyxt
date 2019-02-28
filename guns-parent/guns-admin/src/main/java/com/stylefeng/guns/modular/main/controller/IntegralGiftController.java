@@ -67,7 +67,7 @@ public class IntegralGiftController extends BaseController {
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
-        integralrecordController.insertIntegral(integral,2,10,ms);
+        integralrecordController.insertIntegral(integral,2,10,ms,0);
         return SUCCESS_TIP;
     }
 }

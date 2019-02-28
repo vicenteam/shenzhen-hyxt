@@ -19,11 +19,12 @@
         <result column="updatedt" property="updatedt" />
         <result column="checkleavenum" property="checkleavenum" />
         <result column="leaves" property="leaves" />
+        <result column="cardlevel" property="cardlevel" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, cardname, signin, shopping, newpoints, signinnew, shoppingnew, upamount, deptid, tips, status, createdt, updatedt,leave
+        id, cardname, signin, shopping, newpoints, signinnew, shoppingnew, upamount, deptid, tips, status, createdt, updatedt,leave, cardlevel
     </sql>
 
 </mapper>

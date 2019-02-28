@@ -131,14 +131,15 @@ public class QiandaoCheckinController extends BaseController {
             List<Membermanagement> membermanagements = new ArrayList<>(); //会员打卡获得积分
             Membershipcardtype membershipcardtype1 = membershipcardtypeService.selectById(membermanagement.getLevelID());
             membermanagements.add(membermanagement);
-            integralrecordController.insertIntegral(membershipcardtype1.getSignin(),2,0,membermanagements);
-            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
-                List<Membermanagement> introducers = new ArrayList<>();
-                Membermanagement introducer = membermanagementService.selectById(membermanagement.getIntroducerId());
-                Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(introducer.getLevelID());
-                introducers.add(introducer);
-                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,3,introducers);
-            }
+            integralrecordController.insertIntegral(membershipcardtype1.getSignin(),2,0,membermanagements,0);
+//            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
+//                List<Membermanagement> introducers = new ArrayList<>();
+//
+//                Membermanagement introducer = membermanagementService.selectById(membermanagement.getIntroducerId());
+//                Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(introducer.getLevelID());
+//                introducers.add(introducer);
+//                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,3,introducers);
+//            }
             membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             membermanagement.setIsvisit(0);
             membermanagementService.updateById(membermanagement);

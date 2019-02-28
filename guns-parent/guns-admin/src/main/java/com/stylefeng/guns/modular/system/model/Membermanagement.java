@@ -135,6 +135,11 @@ public class Membermanagement extends Model<Membermanagement> {
      */
     private Double money;
 
+    /**
+     * 消费总额
+     */
+    private Double price;
+
     public Double getMoney() {
         return money;
     }
@@ -427,6 +432,14 @@ public class Membermanagement extends Model<Membermanagement> {
     @Override
     protected Serializable pkVal() {
         return this.id;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     @Override

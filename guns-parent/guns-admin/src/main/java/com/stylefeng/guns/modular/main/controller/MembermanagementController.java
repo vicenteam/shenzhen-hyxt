@@ -652,7 +652,7 @@ public class MembermanagementController extends BaseController {
      */
     public void updateMemberLeave(String memberId) {
         Membermanagement membermanagement = membermanagementService.selectById(memberId);
-        Double countPrice = membermanagement.getCountPrice();
+        Double countPrice = membermanagement.getPrice();
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
