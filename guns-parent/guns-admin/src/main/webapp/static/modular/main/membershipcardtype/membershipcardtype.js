@@ -20,7 +20,13 @@ Membershipcardtype.initColumn = function () {
             {title: '消费积分', field: 'shopping', visible: true, align: 'center', valign: 'middle'},
             {title: '带人积分', field: 'newpoints', visible: true, align: 'center', valign: 'middle'},
             {title: '等级', field: 'cardlevel', visible: true, align: 'center', valign: 'middle'},
-            {title: '消费折扣', field: 'shoppingnew', visible: true, align: 'center', valign: 'middle'},
+            {title: '消费折扣', field: 'shoppingnew', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    if (value == 1){
+                        return "无折扣";
+                    }else if(value != null && value != ""){
+                        return value + "折";
+                    }
+                }},
             {title: '消费金额', field: 'upamount', visible: true, align: 'center', valign: 'middle'},
             {title: '部门id', field: 'deptid', visible: false, align: 'center', valign: 'middle'},
             {title: '备注', field: 'tips', visible: true, align: 'center', valign: 'middle'},
