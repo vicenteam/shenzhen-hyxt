@@ -163,7 +163,7 @@ public class InventoryManagementController extends BaseController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type,String content) throws Exception {
+    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type,String content,String selectNum) throws Exception {
         EntityWrapper<ProductReturnChange> productReturnChangeEntityWrapper = new EntityWrapper<>();
         productReturnChangeEntityWrapper.eq("inventoryManagementId",inventoryManagementId);
         int i = productReturnChangeService.selectCount(productReturnChangeEntityWrapper);
@@ -185,6 +185,9 @@ public class InventoryManagementController extends BaseController {
         productReturnChange.setReturnchangeproductId(inventoryManagement.getIntegralrecordtypeid());
         productReturnChange.setReturnchangeproductName(integralrecordtype.getProductname());
         productReturnChange.setReturnchangeNum(inventoryManagement.getConsumptionNum());
+        if(!StringUtils.isEmpty(selectNum)){
+            productReturnChange.setReturnchangeNum(Integer.parseInt(selectNum));
+        }
         productReturnChange.setStatus(type);
         productReturnChange.setInventoryManagementId(inventoryManagementId);
         //设置积分表id
