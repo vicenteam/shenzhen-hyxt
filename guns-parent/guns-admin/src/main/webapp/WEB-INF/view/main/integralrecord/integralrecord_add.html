@@ -114,9 +114,10 @@
                             <thead>
                             <tr>
                                 <td style="width: 230px;text-align: center">商品名称</td>
-                                <td>零售价</td>
-                                <td>亲民价</td>
+                                <td>规格</td>
                                 <td>数量</td>
+                                <td>单价</td>
+                                <td>金额</td>
                             </tr>
                             </thead>
                             <tbody id="storeInfo" style="font-size: 12px">
@@ -434,7 +435,12 @@
             // alert(Number(products[i].val.productjifen*products[i].val.consumptionNum))
             // alert(productjifen+Number(products[i].val.productjifen*products[i].val.consumptionNum))
             // $("#scannerInfo").prepend("商品名称【" + products[i].val.productname + "】  规格：" + products[i].val.productspecification + " 价格：<span style='color: red'>" + products[i].val.productpice + "</span>  数量："+ products[i].val.consumptionNum+"<br>");
-            $("#storeInfo").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
+            $("#storeInfo").prepend("<tr>" +
+                "<td>"+products[i].val.productname+"</td>" +
+                "<td>"+products[i].val.productspecification+"</td>" +
+                "<td>"+products[i].val.consumptionNum+"</td>" +
+                "<td>"+products[i].val.retailPrice+"</td>" +
+                "<td>"+products[i].val.productpice+"</td>" +"</tr>");
             $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
 
             play = play + (products[i].val.productpice*products[i].val.consumptionNum)
