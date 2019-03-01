@@ -218,6 +218,7 @@ public class IntegralrecordtypeController extends BaseController {
                 if(integralrecordtype != null){ //更新导入价格
                     integralrecordtype.setProductpice(integralRecordTypeExcel.getProductpice());
                     integralrecordtype.setRetailPrice(integralRecordTypeExcel.getRetailPrice());
+                    integralrecordtypeService.updateById(integralrecordtype);
                 }else{
                     resultMessage.append(integralRecordTypeExcel.getInventoryCode()+"、");
                 }
