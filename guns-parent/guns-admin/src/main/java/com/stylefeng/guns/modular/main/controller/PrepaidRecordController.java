@@ -104,7 +104,7 @@ public class PrepaidRecordController extends BaseController {
         membermanagementService.updateById(membermanagement);
         //同步T+财务
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
-        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),prepaidRecord.getPrepaidRecordMoney(),0,"充值业务");
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),prepaidRecord.getPrepaidRecordMoney(),0,"充值业务",true);
         return SUCCESS_TIP;
     }
 

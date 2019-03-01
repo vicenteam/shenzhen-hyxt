@@ -21,8 +21,8 @@
         <thead>
         <tr>
             <td style="width: 140px" id="a_1">商品名称</td>
-            <td style="width: 40px" id="a_3">金额</td>
-            <td style="width: 40px" id="">单价</td>
+            <td style="width: 40px" id="a_3">零售价</td>
+            <td style="width: 40px" id="">亲民价</td>
             <td style="width: 40px" id="a_4">数量</td>
         </tr>
         </thead>
@@ -45,6 +45,7 @@
             <input type="hidden" id="cardCode" name="cardCode"/>
             <div class="row">
                 <div class="col-sm-4 b-r">
+                    <input type="hidden" id="offNum" value="1">
                     <#input id="introducerName" name="身份证号" underline="true" button="读卡" buttonId="read"
                     disabled="disabled"/>
                     <#input id="name" name="会员名称" underline="true" disabled="disabled"/>
@@ -113,8 +114,8 @@
                             <thead>
                             <tr>
                                 <td style="width: 230px;text-align: center">商品名称</td>
-                                <td>金额</td>
-                                <td>价格</td>
+                                <td>零售价</td>
+                                <td>亲民价</td>
                                 <td>数量</td>
                             </tr>
                             </thead>
@@ -307,6 +308,8 @@
                 $("#integralSum").val(data.countPrice);
                 $("#countPrice").val(data.integral);
                 $("#levelID").val(data.levelID);
+                $("#offNum").val(data.offNum);
+
             }
         });
     });
@@ -440,7 +443,7 @@
             productjifen+=Number(products[i].val.productjifen*products[i].val.consumptionNum)
 
         }
-        $("#play").val(play);
+        $("#play").val(play*Number($("#offNum").val()));
         $("#integral").val(productjifen);
 
         tableBase64();
@@ -450,6 +453,7 @@
         var j2=0;//应收金额
         var j3=0;//实收金额
         var off=1;
+        off=Number($("#offNum").val());
         //
         j2=j1*off;
         var insaHtml=

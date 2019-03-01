@@ -524,6 +524,7 @@ public class MembermanagementController extends BaseController {
         memberinfo.put("integral", m.getIntegral());
         memberinfo.put("countPrice", m.getCountPrice());
         memberinfo.put("levelID", ms.getCardname());
+        memberinfo.put("offNum", ms.getShoppingnew());
         return memberinfo;
     }
 
@@ -657,6 +658,8 @@ public class MembermanagementController extends BaseController {
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
         for (Membershipcardtype membershipcardtype : list) {
+            System.out.println(countPrice );
+            System.out.println( membershipcardtype.getUpamount());
             if (countPrice >= membershipcardtype.getUpamount()) {
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
                 membermanagementService.updateById(membermanagement);

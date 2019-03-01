@@ -62,6 +62,8 @@ public class ProductReturnChangeController extends BaseController {
     private IMainSynchronousService mainSynchronousService;
     @Autowired
     private IDeptService deptService;
+    @Autowired
+    private IntegralrecordController integralrecordController;
 
     /**
      * 跳转到商品退换货首页
@@ -297,6 +299,9 @@ public class ProductReturnChangeController extends BaseController {
             mainSynchronous.setStatus(1);
         }
         mainSynchronousService.updateById(mainSynchronous);
+
+        //
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),-(baseQuantity*integralrecordtype.getProductpice()),0,"商品退款",true);
 
     }
 }

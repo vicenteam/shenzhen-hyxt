@@ -353,7 +353,7 @@ public class IntegralrecordController extends BaseController {
         receiptsInfo.setReceiptsBase64Img(tableNase64Data);
         receiptsInfo.insert();
         //提交T+收款单
-        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买");
+        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true);
         return SUCCESS_TIP;
     }
 
@@ -467,6 +467,7 @@ public class IntegralrecordController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(s);
             mainSynchronous.setStatus(2);
             mainSynchronous.setErrorMssage(jsonObject.getString("message"));
+            throw new GunsException(BizExceptionEnum.NUM_ERROR);
         } else {
             mainSynchronous.setStatus(1);
         }
@@ -481,7 +482,7 @@ public class IntegralrecordController extends BaseController {
      * @param origAmount
      * @param playType
      */
-    public void receiveVoucherCreate(String departmentCode, Double origAmount, int playType,String text) throws Exception {
+    public void receiveVoucherCreate(String departmentCode, Double origAmount, int playType,String text,boolean IsReceiveFlag) throws Exception {
         String SettleStyleCode = "";
         String SettleStyleBankAccountName = "";
         switch (playType) {
@@ -517,7 +518,7 @@ public class IntegralrecordController extends BaseController {
                         "\t\tExternalCode: \"" + new Date().getTime() + "\",\n" +
                         "\t\tVoucherDate: \"" + DateUtil.formatDate(new Date(), "yyyy-MM-dd") + "\",\n" +
                         "\t\tPartner: {\n" +
-                        "\t\t\tCode: \"LS\"\n" +
+                        "\t\t\tCode: \""+departmentCode+"\"\n" +
                         "\t\t},\n" +
                         "\t\tDepartment: {\n" +
                         "\t\t\tCode: \"" + departmentCode + "\"\n" +
@@ -525,7 +526,7 @@ public class IntegralrecordController extends BaseController {
                         "\t\tCurrency: {\n" +
                         "\t\t\tCode: \"RMB\"\n" +
                         "\t\t},\n" +
-                        "\t\tIsReceiveFlag: true,\n" +
+                        "\t\tIsReceiveFlag: "+IsReceiveFlag+",\n" +
                         "\t\tExchangeRate: 1,\n" +
                         "\t\tMemo: \""+text+"\",\n" +
                         "\t\tArapMultiSettleDetails: [{\n" +
