@@ -207,44 +207,23 @@ public class IntegralrecordtypeController extends BaseController {
         ImportParams params = new ImportParams();
         params.setTitleRows(0);
         params.setHeadRows(1);
-        String message = "";
-        Integer total = 0;
-        Integer nowNum = 0;
         JSONObject resJson = new JSONObject();
+        StringBuffer resultMessage = new StringBuffer();
         try {
             List<IntegralRecordTypeExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(), IntegralRecordTypeExcel.class, params);
-            Integralrecordtype integralrecordtype = new Integralrecordtype();
             for (IntegralRecordTypeExcel integralRecordTypeExcel : excelUpload) {
-                integralrecordtype.setNames(integralRecordTypeExcel.getInventoryName());
-                integralrecordtype.setProductname(integralRecordTypeExcel.getInventoryName());
-                integralrecordtype.setProducttype(integralRecordTypeExcel.getProducttype());
-                integralrecordtype.setProductspecification(integralRecordTypeExcel.getSpecification());
-                integralrecordtype.setProductnum(integralRecordTypeExcel.getAvailableQuantity().intValue());
-                integralrecordtype.setProductjifen("");
-                integralrecordtype.setDeptid(ShiroKit.getUser().getDeptId()+"");
-                integralrecordtype.setCreatetime(DateUtil.getTime());
-//                integralrecordtype.setUpdateuserid();
-                integralrecordtype.setStatus(0);
-                integralrecordtype.setWarehouseCode(integralRecordTypeExcel.getWarehouseCode());
-                integralrecordtype.setWarehouseName(integralRecordTypeExcel.getWarehouseName());
-                integralrecordtype.setInventoryCode(integralRecordTypeExcel.getInventoryCode());
-                integralrecordtype.setInventoryName(integralRecordTypeExcel.getInventoryName());
-                integralrecordtype.setSpecification(integralRecordTypeExcel.getSpecification());
-                integralrecordtype.setAvailableQuantity(integralRecordTypeExcel.getAvailableQuantity());
-                integralrecordtype.setUnitName(integralRecordTypeExcel.getUnitName());
-                total += 1;
+                BaseEntityWrapper<Integralrecordtype> iWrapper = new BaseEntityWrapper<>();
+                iWrapper.eq("InventoryCode",integralRecordTypeExcel.getInventoryCode());
+                Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
+                if(integralrecordtype != null){ //更新导入价格
+                    integralrecordtype.setProductpice(integralRecordTypeExcel.getProductpice());
+                    integralrecordtype.setRetailPrice(integralRecordTypeExcel.getRetailPrice());
+                }else{
+                    resultMessage.append(integralRecordTypeExcel.getInventoryCode()+"、");
+                }
             }
-            if (total == excelUpload.size()) {
-                message = "导入成功,共" + total + "条";
-            } else if (total == -1) {
-                message = "客户编号已存在,在第" + (nowNum + 1) + "条错误,导入失败！";
-            } else {
-                message = "导入失败，第" + (total + 1) + "条错误!";
-            }
-            resJson.put("msg", message);
+            resJson.put("msg", "导入成功，"+resultMessage == null ? "": "未找到商品："+resultMessage.toString());
         }catch (Exception e){
-            message = "导入失败，第" + (total + 1) + "条错误!";
-            resJson.put("msg", message);
             e.printStackTrace();
         }
         return null;
