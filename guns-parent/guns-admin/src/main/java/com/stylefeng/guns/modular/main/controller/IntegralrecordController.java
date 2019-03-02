@@ -178,7 +178,7 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId, Integer consumptionNum, String productIds, String productNums, Double play, Integer playType, String verificationcode, String tableNase64Data) throws Exception {
+    public Object add(Double integral, Integer productname, Integer memberId, Integer consumptionNum,String productMianFeiNums, String productIds, String productNums, Double play, Integer playType, String verificationcode, String tableNase64Data,String scannerTypeContent) throws Exception {
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         List<MainSynchronous> synchronousList = new ArrayList<>();
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
@@ -215,6 +215,7 @@ public class IntegralrecordController extends BaseController {
         //更新库存
         String[] split = productIds.split(",");
         String[] productNumsSplit = productNums.split(",");
+        String[] productMianFeiNum = productMianFeiNums.split(",");
         int index = 0;
 
         // 2019-02-27 luo
@@ -224,6 +225,7 @@ public class IntegralrecordController extends BaseController {
         for (String temp : split) {
             int parseIntTemp = Integer.parseInt(temp);
             int parseIntproductNums = Integer.parseInt(productNumsSplit[index]);
+            int MianFeiNum = Integer.parseInt(productMianFeiNum[index]);
             //积分添加操作
             BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
             typeWrapper.eq("id", parseIntTemp);
@@ -315,7 +317,7 @@ public class IntegralrecordController extends BaseController {
                             "       LinkMan: \"新协会员管理系统\",\n" +
                             "       ContactPhone: \"13611111111\",\n" +
                             "       Department :{code: \"" + dept.gettPlusDeptCode() + "\"},\n" +
-                            "       Memo: \"新协会员管理系统\",\n" +
+                            "       Memo: \"新协会员管理系统-购买商品-赠品数量："+MianFeiNum+"\",\n" +
                             "       IsAutoGenerateSaleOut:true,\n" +
                             "       dynamicPropertyKeys: [\"isautoaudit\",\"isautoauditsaleout\"],"+
                             "       dynamicPropertyValues: [true,true],"+

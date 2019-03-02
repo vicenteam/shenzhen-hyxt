@@ -96,7 +96,7 @@ public class JifenAddApiController extends BaseController {
     public ResponseData addJifen(RequstData requstData,Integer jifenAddUserId,Double nowPice,Integer jifenType,Integer consumptionNum) throws Exception {
         ResponseData responseData = new ResponseData();
         try {
-            integralrecordController.add(nowPice,jifenType,jifenAddUserId,consumptionNum,null,null,null,null,null,null);
+            integralrecordController.add(nowPice,jifenType,jifenAddUserId,consumptionNum,null,null,null,null,null,null,null,null);
         }catch (Exception e){
             throw new Exception("新增失败 请联系管理员!");
         }

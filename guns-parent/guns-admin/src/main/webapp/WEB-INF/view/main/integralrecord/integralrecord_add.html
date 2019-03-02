@@ -114,6 +114,13 @@
                 <option value="0">商品</option>
                 <option value="1">赠品</option>
             </#select>
+            <div class="form-group" id="scannerTypeContent" style="display: none;">
+                <label class="col-sm-3 control-label">赠品说明</label>
+                <div class="col-sm-9">
+                    <input class="form-control" id="scannerTypeContext" name="scannerTypeContext">
+
+                </div>
+            </div>
                     <div id="map_canvasInfo">
                         <table class="table" style="text-align: center;">
                             <thead>
@@ -360,6 +367,7 @@
     var products = new Array();
     var productIds = "";
     var productNums = "";
+    var productMianFeiNums = "";
     // array.push(值); //向数组中添加值
 
     // array.shift(值);//向数组中移除值
@@ -443,6 +451,7 @@
         var play = 0;
         productIds = "";
         productNums = "";
+        productMianFeiNums = "";
         var productjifen=0;
         for (var i = 0; i < products.length; i++) {
             // alert(products[i].val.productjifen)
@@ -460,6 +469,7 @@
             play = play + (products[i].val.productpice*products[i].val.consumptionNum - products[i].val.productpice * products[i].val.sumFree)
             productIds += products[i].val.id + ","
             productNums += products[i].val.consumptionNum + ","
+            productMianFeiNums+=products[i].val.sumFree+","
             productjifen+=Number(products[i].val.productjifen*products[i].val.consumptionNum)
 
         }
@@ -558,5 +568,14 @@ var tableNase64DataTemp="";
             }
         );
     }
+</script>
+<script>
+    // $("#scannerType").bind("change",function(){
+    //    if($("#scannerType").val()==0){
+    //        $("#scannerTypeContent").css("display","none")
+    //    }else {
+    //        $("#scannerTypeContent").css("display","block")
+    //    }
+    // });
 </script>
 @}

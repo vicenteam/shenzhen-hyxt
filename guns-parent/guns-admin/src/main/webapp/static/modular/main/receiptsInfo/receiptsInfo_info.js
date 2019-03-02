@@ -90,5 +90,7 @@ $(function() {
 
 function commit() {
     $("#hidenDiv").css("display","none")
+    // document.getElementById("WebBrowser").ExecWB(6,2)
+    document.getElementById("WebBrowser").ExecWB(8,1)
     document.getElementById("WebBrowser").ExecWB(6,2)
 }

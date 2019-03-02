@@ -51,7 +51,12 @@ IntegralrecordInfoDlg.get = function(key) {
  * 关闭此对话框
  */
 IntegralrecordInfoDlg.close = function() {
-    document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
+    hidenBtn()
+    //执行打印
+    // document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
+    //显示dom
+    showBtn()
+    // document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
 }
 
 /**
@@ -63,6 +68,7 @@ IntegralrecordInfoDlg.collectData = function() {
     .set('productname')
     .set('playType')
     .set('play')
+    .set('scannerTypeContent')
     .set('consumptionNum')
     .set('typeId')
     .set('memberId');
@@ -122,7 +128,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.integralrecordInfoData);
-    ajax.set({productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val(),tableNase64Data:tableNase64Data});
+    ajax.set({productMianFeiNums:productMianFeiNums,productIds:productIds,productNums:productNums,verificationcode:$("#verificationcode").val(),tableNase64Data:tableNase64Data});
     ajax.start();
     
 }
@@ -248,6 +254,7 @@ function hidenBtn() {
     // $("#cancel").css("display","none")
     $("#hiddenDiv0").css("display","block")
     $("#hiddenDiv1").css("display","none")
+
 }
 function showBtn() {
     $("#hiddenDiv0").css("display","none")
