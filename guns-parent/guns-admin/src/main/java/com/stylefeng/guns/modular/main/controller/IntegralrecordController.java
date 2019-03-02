@@ -309,7 +309,7 @@ public class IntegralrecordController extends BaseController {
                             "    dto:{\n" +
                             "       VoucherDate: \"" + now + "\",\n" +
                             "       ExternalCode:\"" + (i + 1) + "\",\n" +
-                            "       Customer: {Code: \"LS\"}, \n" +
+                            "       Customer: {Code: \""+dept.gettPlusDeptCode()+"\"}, \n" +
                             "       InvoiceType: {Code: \"00\"},\n" +
                             "       Address: \"新协会员管理系统\",\n" +
                             "       LinkMan: \"新协会员管理系统\",\n" +
@@ -317,6 +317,8 @@ public class IntegralrecordController extends BaseController {
                             "       Department :{code: \"" + dept.gettPlusDeptCode() + "\"},\n" +
                             "       Memo: \"新协会员管理系统\",\n" +
                             "       IsAutoGenerateSaleOut:true,\n" +
+                            "       dynamicPropertyKeys: [\"isautoaudit\",\"isautoauditsaleout\"],"+
+                            "       dynamicPropertyValues: [true,true],"+
                             "       Warehouse:{code:\"" + integralrecordtype.getWarehouseCode() + "\"},\n" +
                             "       IsPresent:" + busiType + ",\n" +
                             "       SaleDeliveryDetails: [{\n" +

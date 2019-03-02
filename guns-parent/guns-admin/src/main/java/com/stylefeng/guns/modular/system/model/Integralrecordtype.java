@@ -71,9 +71,19 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
     private String Specification;
     //商品可用数量
     private Double AvailableQuantity;
+    private Double ExistingQuantity;
+
     private String UnitName;
 
     private Double retailPrice;
+
+    public Double getExistingQuantity() {
+        return ExistingQuantity;
+    }
+
+    public void setExistingQuantity(Double existingQuantity) {
+        ExistingQuantity = existingQuantity;
+    }
 
     public String getUnitName() {
         return UnitName;

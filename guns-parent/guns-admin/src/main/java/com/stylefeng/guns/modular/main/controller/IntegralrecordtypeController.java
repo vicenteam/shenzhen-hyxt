@@ -169,6 +169,7 @@ public class IntegralrecordtypeController extends BaseController {
         System.out.println("同步数据。。。");
         List<Integralrecordtype> integralrecordtypes = JSON.parseArray(s, Integralrecordtype.class);
         for (Integralrecordtype integralrecordtype : integralrecordtypes) {
+            integralrecordtype.setAvailableQuantity(integralrecordtype.getExistingQuantity());
             String inventoryCode = integralrecordtype.getInventoryCode();
             BaseEntityWrapper<Object> objectBaseEntityWrapper = new BaseEntityWrapper<>();
             objectBaseEntityWrapper.eq("InventoryCode", inventoryCode);

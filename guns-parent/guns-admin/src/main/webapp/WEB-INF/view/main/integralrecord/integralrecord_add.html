@@ -108,7 +108,12 @@
                     </body>
                     </html>
                 </iframe>
+
                 <#input id="scannerCode" name="扫码条信息" underline="true" />
+                <#select id="scannerType" name="扫码类型" underline="true">
+                <option value="0">商品</option>
+                <option value="1">赠品</option>
+            </#select>
                     <div id="map_canvasInfo">
                         <table class="table" style="text-align: center;">
                             <thead>
@@ -359,12 +364,18 @@
 
     // array.shift(值);//向数组中移除值
     var findCode = function () {
+        var scannerType=$("#scannerType").val();
+        var sumFree=0;
+        if(scannerType==1){
+            sumFree=1;
+        }
         var scannerCode = $('#scannerCode').is(':focus');
         if (scannerCode) {
             var ajax = new $ax(Feng.ctxPath + "/integralrecordtype/findCode/" + $("#scannerCode").val(), function (data) {
                 console.log(data)
                 if (data != "error") {
                     if(products.length==0){
+
                         products.push(
                             {
                                 key:data.id,
@@ -375,7 +386,8 @@
                                     productspecification: data.productspecification,
                                     productjifen:data.productjifen,
                                     retailPrice:data.retailPrice,
-                                    consumptionNum:1
+                                    consumptionNum:1,
+                                    sumFree:sumFree
                                 }
                             }
                         )
@@ -399,12 +411,14 @@
                                             productpice: data.productpice,
                                             productspecification: data.productspecification,
                                             productjifen:data.productjifen,
-                                            consumptionNum:1
+                                            consumptionNum:1,
+                                            sumFree:sumFree
                                         }
                                     }
                                 )
                             }else {
                                 products[isHaveKeyIndex].val.consumptionNum+=1
+                                products[isHaveKeyIndex].val.sumFree+=sumFree
                             }
                         }
                     }
@@ -440,10 +454,10 @@
                 "<td>"+products[i].val.productspecification+"</td>" +
                 "<td>"+products[i].val.consumptionNum+"</td>" +
                 "<td>"+products[i].val.retailPrice+"</td>" +
-                "<td>"+(products[i].val.productpice * products[i].val.consumptionNum)+"</td>" +"</tr>");
+                "<td>"+(products[i].val.productpice * products[i].val.consumptionNum - products[i].val.productpice * products[i].val.sumFree)+"</td>" +"</tr>");
             $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
 
-            play = play + (products[i].val.productpice*products[i].val.consumptionNum)
+            play = play + (products[i].val.productpice*products[i].val.consumptionNum - products[i].val.productpice * products[i].val.sumFree)
             productIds += products[i].val.id + ","
             productNums += products[i].val.consumptionNum + ","
             productjifen+=Number(products[i].val.productjifen*products[i].val.consumptionNum)
