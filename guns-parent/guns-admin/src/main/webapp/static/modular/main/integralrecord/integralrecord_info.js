@@ -98,11 +98,13 @@ IntegralrecordInfoDlg.addSubmit = function() {
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecord/add", function(data){
         //隐藏dom
-        hidenBtn()
+        // hidenBtn()
         //执行打印
-        document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
+        // document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
         //显示dom
-        showBtn()
+        viewToWord()
+        // alert("正在打印。。。")
+        // showBtn()
         Feng.success("操作成功!");
         $("#introducerName").val("");
         $("#name").val("");
@@ -262,4 +264,83 @@ function showBtn() {
     // $("#read").css("display","block")
     // $("#ensure").css("display","block")
     // $("#cancel").css("display","block")
+}
+// 打印小票
+
+function viewToWord() {
+    //当前时间
+    var time = new Date();   // 程序计时的月从0开始取值后+1
+    var m = time.getMonth() + 1;
+    var t = time.getFullYear() + "-" + m + "-"
+        + time.getDate() + " " + time.getHours() + ":"
+        + time.getMinutes() + ":" + time.getSeconds();
+
+    var fileName=new Date().getTime();
+    try {
+        // 创建ActiveXObject对象
+        wdapp = new ActiveXObject("Word.Application");
+    }
+    catch (e) {
+        console.log("无法调用Office对象，！", e)
+        wdapp = null;
+        return;
+    }
+    wdapp.Documents.Open("D:\\xingxie\\shouyinxiaopiaoTemp4.doc"); //打开本地(客户端)word模板
+    wddoc = wdapp.ActiveDocument;
+    wddoc.Bookmarks("time").Range.Text = t + "";
+    wddoc.Bookmarks("yingshou").Range.Text = yingshou+ "";
+    wddoc.Bookmarks("shishou").Range.Text = shishou + "";
+    wddoc.Bookmarks("zhekou").Range.Text = zhekou + "";
+    //添加表格
+    // var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,3,4);//(赋值区域,行数,列数)
+    var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,products.length,4);//(赋值区域,行数,列数)
+    //隐藏边框
+    var table=wdapp.ActiveDocument.Tables(1);
+    // table.PreferredWidth =140
+    table.Columns(1).Width = 60
+    table.Columns(2).Width = 30
+    table.Columns(3).Width = 30
+    table.Columns(4).Width = 30
+    table.Range.ParagraphFormat.Alignment = 2
+    table.Borders(-1).LineStyle=0;
+    table.Borders(-2).LineStyle=0;
+    table.Borders(-3).LineStyle=0;
+    table.Borders(-4).LineStyle=0;
+    // for(i=1;i<=3;i++){//行
+    for(i=0;i<products.length;i++){//行
+        //第一列
+        with (myTable.Cell(i+1,1).Range){
+            font.Size = 5;//调整字体大小
+            InsertAfter(products[i].val.productname);//插入的内容 商品名称
+            ParagraphFormat.Alignment=2;
+
+        }
+        //第二列
+        with(myTable.Cell(i+1,2).Range){
+            font.Size = 8;
+            InsertAfter(products[i].val.retailPrice); //零售价
+            ParagraphFormat.Alignment=1;//表格内容对齐:0-左对齐 1-居中 2-右对齐
+        }
+        //第三列
+        with(myTable.Cell(i+1,3).Range){
+            font.Size = 8;
+            InsertAfter(products[i].val.productpice); //亲情价
+            ParagraphFormat.Alignment=2;
+        }
+        //第四列
+        with(myTable.Cell(i+1,4).Range){
+            font.Size = 8;
+            InsertAfter(products[i].val.consumptionNum);//数量
+            ParagraphFormat.Alignment=1;
+        }
+    }
+    wdapp.visible = false;
+    wddoc.saveAs("D:\\xingxie\\PrinterTemp_"+fileName+".doc"); //保存临时文件word
+    // wddoc.Bookmarks("TotalPrice").Range.Text = "无价" + "\n";
+    // wddoc.Bookmarks("Time").Range.Text = Time;
+    //wdapp.ActiveDocument.ActiveWindow.View.Type = 1;
+    // wdapp.visible = false; //word模板是否可见
+    wdapp.Application.Printout(); //调用自动打印功能
+    wdapp.quit();
+    wdapp = null;
 }

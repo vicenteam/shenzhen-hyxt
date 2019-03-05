@@ -305,6 +305,9 @@
         temp_integral = parseInt($("#integral").val());
     })
     $("#read").click(function () {
+        products = new Array()
+        loadProduct()
+
         getUserInfo();
         var memberId = $("#introducerId").val();
         $.ajax({
@@ -444,7 +447,9 @@
 
 
     }
-
+    var yingshou=0;
+    var shishou=0;
+    var zhekou=0;
     function loadProduct() {
         $("#storeInfo").empty();
         $("#storeInfoHidden").empty();
@@ -496,9 +501,13 @@
             "        <div>\n" +
             "            应收金额：\n" +j2+
             "        </div>\n" ;
+        yingshou=j2;
+        shishou=j1;
+        zhekou=(j1-j2);
         $("#hiden_moneyText").empty();
         $("#hiden_moneyText").append(insaHtml);
     }
+
 </script>
 <!--发验证码-->
 <script>
