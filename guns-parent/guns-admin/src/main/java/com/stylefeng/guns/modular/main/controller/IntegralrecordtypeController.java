@@ -324,6 +324,8 @@ public class IntegralrecordtypeController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
+            details.clear();
+            outputStream.close();
         }
     }
 }

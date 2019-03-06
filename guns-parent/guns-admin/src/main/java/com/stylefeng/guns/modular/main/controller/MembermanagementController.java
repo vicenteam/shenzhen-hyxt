@@ -1,9 +1,12 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -16,6 +19,7 @@ import com.stylefeng.guns.modular.main.service.IBaMedicalService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.system.utils.IntegralRecordTypeExcel;
 import com.stylefeng.guns.modular.system.utils.MemberExcel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -46,6 +50,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -672,7 +677,7 @@ public class MembermanagementController extends BaseController {
     @RequestMapping("export_excel")
     public void export(HttpServletResponse response, String name, String address, String fstatus, String sex, String idcard, String phone, String stafff
             , String deptid, String province, String city, String district, String memberid, String townshipid) throws Exception {
-        List<Map<String, Object>> memberExcels = new ArrayList<>();
+        List<MemberExcel> memberExcels = new ArrayList<>();
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
         if (!StringUtils.isEmpty(name)) baseEntityWrapper.eq("name", name);
         if (!StringUtils.isEmpty(address)) baseEntityWrapper.like("address", address);
@@ -689,7 +694,6 @@ public class MembermanagementController extends BaseController {
             } else {
                 baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
             }
-
         }
         if (!StringUtils.isEmpty(province)) baseEntityWrapper.eq("province", province);
         if (!StringUtils.isEmpty(city)) baseEntityWrapper.eq("city", city);
@@ -700,75 +704,31 @@ public class MembermanagementController extends BaseController {
         List<Membermanagement> membermanagements = membermanagementService.selectList(baseEntityWrapper);
         for (Membermanagement m : membermanagements) {
             Map<String, Object> mMap = new LinkedHashMap<>();
-            mMap.put("name", m.getName());
-            mMap.put("sex", m.getSex());
-            mMap.put("cadID", m.getCadID());
-            mMap.put("phone", m.getPhone());
-            mMap.put("address", m.getAddress());
-            mMap.put("integral", m.getIntegral());
-            mMap.put("countPrice", m.getCountPrice());
-            mMap.put("isoldsociety", m.getIsoldsociety());
-            mMap.put("level", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
-            mMap.put("createDt", m.getCreateTime());
-            mMap.put("deptName", deptService.selectById(m.getDeptId())==null?"":deptService.selectById(m.getDeptId()).getFullname());
-            memberExcels.add(mMap);
+            mMap.put("mName", m.getName());
+            mMap.put("mSex", m.getSex());
+            mMap.put("mCadID", m.getCadID());
+            mMap.put("mPhone", m.getPhone());
+            mMap.put("mAddress", m.getAddress());
+            mMap.put("mIntegral", m.getIntegral());
+            mMap.put("mCountPrice", m.getCountPrice());
+            mMap.put("mIsoldsociety", m.getIsoldsociety());
+            mMap.put("mLevel", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
+            mMap.put("mCreateDt", m.getCreateTime());
+            mMap.put("mDeptName", deptService.selectById(m.getDeptId())==null?"":deptService.selectById(m.getDeptId()).getFullname());
+            MemberExcel memberExcel = JSON.parseObject(JSON.toJSONString(mMap), new TypeReference<MemberExcel>() {});
+            memberExcels.add(memberExcel);
         }
-        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
-        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
-        Map<String, Object> mapTile = memberExcels.size()!=0?memberExcels.get(0):new HashMap<>();
-        //创建excel 数据列名
-        SXSSFRow rowTitle = sxssfSheet.createRow(0);
-        Integer j = 0;
-        for (Map.Entry<String, Object> entry : mapTile.entrySet()) {
-            if (entry.getKey().equals("name")) {
-                CellUtil.createCell(rowTitle, j, "客户名称");
-            } else if (entry.getKey().equals("sex")) {
-                CellUtil.createCell(rowTitle, j, "性别");
-            } else if (entry.getKey().equals("phone")) {
-                CellUtil.createCell(rowTitle, j, "联系电话");
-            } else if (entry.getKey().equals("cadID")) {
-                CellUtil.createCell(rowTitle, j, "卡号");
-            } else if (entry.getKey().equals("address")) {
-                CellUtil.createCell(rowTitle, j, "联系地址");
-            } else if (entry.getKey().equals("integral")) {
-                CellUtil.createCell(rowTitle, j, "可用积分");
-            } else if (entry.getKey().equals("countPrice")) {
-                CellUtil.createCell(rowTitle, j, "总积分");
-            } else if (entry.getKey().equals("isoldsociety")) {
-                CellUtil.createCell(rowTitle, j, "是否老年协会会员");
-            } else if (entry.getKey().equals("level")) {
-                CellUtil.createCell(rowTitle, j, "卡片等级");
-            } else if (entry.getKey().equals("createDt")) {
-                CellUtil.createCell(rowTitle, j, "开卡时间");
-            } else if (entry.getKey().equals("deptName")) {
-                CellUtil.createCell(rowTitle, j, "门店名称");
-            }
-            j++;
-        }
-        for (int i = 0; i < memberExcels.size(); i++) {
-            Map<String, Object> nMap = memberExcels.get(i);
-            SXSSFRow row = sxssfSheet.createRow(i + 1);
-            // 数据
-            Integer k = 0;
-            for (Map.Entry<String, Object> ma : nMap.entrySet()) {
-                String value = "";
-                if (ma.getValue() != null) {
-                    value = ma.getValue().toString();
-                }
-                CellUtil.createCell(row, k, value);
-                k++;
-            }
-        }
-        response.setHeader("content-Type", "application/vnc.ms-excel;charset=utf-8");
-        //文件名使用uuid，避免重复
-        response.setHeader("Content-Disposition", "attachment;filename=" + "会员信息" + ".xlsx");
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, MemberExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员信息导出", "UTF-8")+".xls");
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
-            sxssfWorkbook.write(outputStream);
+            workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        }finally {
             memberExcels.clear();
             outputStream.close();
         }
@@ -792,7 +752,7 @@ public class MembermanagementController extends BaseController {
         JSONObject resJson = new JSONObject();
         try {
             List<MemberExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(), MemberExcel.class, params);
-            System.out.println(JSON.toJSONString(excelUpload));
+//            System.out.println(JSON.toJSONString(excelUpload));
             Membermanagement membermanagement = new Membermanagement();
             BaseEntityWrapper<Membershipcardtype> typeWrapper = new BaseEntityWrapper<>();
             typeWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
