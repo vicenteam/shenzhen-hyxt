@@ -243,7 +243,9 @@ public class IntegralrecordtypeController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        Map<String,String> map=new HashMap<>();
+        map.put("msg","上传成功");
+        return map;
     }
 
     @RequestMapping("/export")
