@@ -248,61 +248,82 @@ public class IntegralrecordtypeController extends BaseController {
 
     @RequestMapping("/export")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
+//        List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
+//        List<IntegralRecordTypeExcel> excelList = new ArrayList<>();
+//        for (Integralrecordtype detail : details) {
+//            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {
+//            });
+//            excelList.add(excel);
+//        }
+//
+//        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+//        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+//        //创建excel 数据列名
+//        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+//        CellUtil.createCell(rowTitle, 0, "商品编码");
+//        CellUtil.createCell(rowTitle, 1, "商品名称");
+//        CellUtil.createCell(rowTitle, 2, "亲民价");
+//        CellUtil.createCell(rowTitle, 3, "零售价");
+//        CellUtil.createCell(rowTitle, 4, "规格");
+//        CellUtil.createCell(rowTitle, 5, "可用数量");
+//        CellUtil.createCell(rowTitle, 6, "计量单位");
+//        CellUtil.createCell(rowTitle, 7, "商品类型");
+//        CellUtil.createCell(rowTitle, 8, "门店名称");
+//        CellUtil.createCell(rowTitle, 9, "门店编码");
+//        Iterator<IntegralRecordTypeExcel> iter = excelList.iterator();
+//        Integer i = 1;
+//        while (iter.hasNext()) {
+//            SXSSFRow row = sxssfSheet.createRow(i);
+//            IntegralRecordTypeExcel integralRecordTypeExcel = iter.next();
+//            Field[] fields = integralRecordTypeExcel.getClass().getDeclaredFields();
+//            for (int c = 0; c < fields.length; c++) {
+//                String name = fields[c].getName();
+//                // 将属性的首字符大写，方便构造get，set方法
+//                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+//                Method m = integralRecordTypeExcel.getClass().getMethod("get" + name);
+//                // 调用getter方法获取属性值
+//                String value = (String) m.invoke(integralRecordTypeExcel);
+//                if (!StringUtils.isEmpty(value)) {
+//                    CellUtil.createCell(row, c, value);
+//                } else {
+//                    CellUtil.createCell(row, c, "");
+//                }
+//            }
+//            i++;
+//        }
+//        response.setHeader("content-Type", "application/vnc.ms-excel");
+//        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("商品导出", "UTF-8") + ".xlsx");
+//        response.setCharacterEncoding("UTF-8");
+//        ServletOutputStream outputStream = response.getOutputStream();
+//        try {
+//            sxssfWorkbook.write(outputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            details.clear();
+//            outputStream.close();
+//        }
+
         BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
         List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
-        List<IntegralRecordTypeExcel> excelList = new ArrayList<>();
+        List<IntegralRecordTypeExcel> excels = new ArrayList<>();
         for (Integralrecordtype detail : details) {
-            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {
-            });
-            excelList.add(excel);
+            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {});
+            excels.add(excel);
         }
-
-        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
-        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
-        //创建excel 数据列名
-        SXSSFRow rowTitle = sxssfSheet.createRow(0);
-        CellUtil.createCell(rowTitle, 0, "商品编码");
-        CellUtil.createCell(rowTitle, 1, "商品名称");
-        CellUtil.createCell(rowTitle, 2, "亲民价");
-        CellUtil.createCell(rowTitle, 3, "零售价");
-        CellUtil.createCell(rowTitle, 4, "规格");
-        CellUtil.createCell(rowTitle, 5, "可用数量");
-        CellUtil.createCell(rowTitle, 6, "计量单位");
-        CellUtil.createCell(rowTitle, 7, "商品类型");
-        CellUtil.createCell(rowTitle, 8, "门店名称");
-        CellUtil.createCell(rowTitle, 9, "门店编码");
-        Iterator<IntegralRecordTypeExcel> iter = excelList.iterator();
-        Integer i = 1;
-        while (iter.hasNext()) {
-            SXSSFRow row = sxssfSheet.createRow(i);
-            IntegralRecordTypeExcel integralRecordTypeExcel = iter.next();
-            Field[] fields = integralRecordTypeExcel.getClass().getDeclaredFields();
-            for (int c = 0; c < fields.length; c++) {
-                String name = fields[c].getName();
-                // 将属性的首字符大写，方便构造get，set方法
-                name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                Method m = integralRecordTypeExcel.getClass().getMethod("get" + name);
-                // 调用getter方法获取属性值
-                String value = (String) m.invoke(integralRecordTypeExcel);
-                if (!StringUtils.isEmpty(value)) {
-                    CellUtil.createCell(row, c, value);
-                } else {
-                    CellUtil.createCell(row, c, "");
-                }
-            }
-            i++;
-        }
-        response.setHeader("content-Type", "application/vnc.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("商品导出", "UTF-8") + ".xlsx");
+        ExportParams params = new ExportParams();
+        params.setSheetName("商品列表");
+        Workbook workbook = ExcelExportUtil.exportExcel(params, IntegralRecordTypeExcel.class, excels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("商品导出", "UTF-8")+".xls");
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
-            sxssfWorkbook.write(outputStream);
+            workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            details.clear();
-            outputStream.close();
+        }finally {
         }
     }
 }
