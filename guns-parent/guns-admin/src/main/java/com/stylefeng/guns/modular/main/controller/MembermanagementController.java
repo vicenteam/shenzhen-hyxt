@@ -710,7 +710,7 @@ public class MembermanagementController extends BaseController {
             mMap.put("isoldsociety", m.getIsoldsociety());
             mMap.put("level", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
             mMap.put("createDt", m.getCreateTime());
-            mMap.put("deptName", deptService.selectById(m.getDeptId()).getFullname());
+            mMap.put("deptName", deptService.selectById(m.getDeptId())==null?"":deptService.selectById(m.getDeptId()).getFullname());
             memberExcels.add(mMap);
         }
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
