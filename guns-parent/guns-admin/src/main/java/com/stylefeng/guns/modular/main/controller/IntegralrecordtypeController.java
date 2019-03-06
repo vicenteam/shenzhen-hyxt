@@ -1,35 +1,48 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.service.IDeptService;
+import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
 import com.stylefeng.guns.modular.system.utils.IntegralRecordTypeExcel;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import org.springframework.web.multipart.MultipartFile;
 import yongyou.util.YongYouAPIUtils;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * 积分类型控制器
@@ -146,9 +159,9 @@ public class IntegralrecordtypeController extends BaseController {
     @ResponseBody
     public Object findCode(@PathVariable("productCode") String productCode) {
         BaseEntityWrapper<Integralrecordtype> integralrecordtypeBaseEntityWrapper = new BaseEntityWrapper<>();
-        integralrecordtypeBaseEntityWrapper.eq("InventoryCode",productCode);
+        integralrecordtypeBaseEntityWrapper.eq("InventoryCode", productCode);
         Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(integralrecordtypeBaseEntityWrapper);
-        return integralrecordtype==null?"error":integralrecordtype;
+        return integralrecordtype == null ? "error" : integralrecordtype;
     }
 
     /**
@@ -214,21 +227,82 @@ public class IntegralrecordtypeController extends BaseController {
             List<IntegralRecordTypeExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(), IntegralRecordTypeExcel.class, params);
             for (IntegralRecordTypeExcel integralRecordTypeExcel : excelUpload) {
                 BaseEntityWrapper<Integralrecordtype> iWrapper = new BaseEntityWrapper<>();
-                iWrapper.eq("InventoryCode",integralRecordTypeExcel.getInventoryCode());
+                iWrapper.eq("InventoryCode", integralRecordTypeExcel.getInventoryCode());
                 Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
-                if(integralrecordtype != null){ //更新导入价格
-                    integralrecordtype.setProductpice(integralRecordTypeExcel.getProductpice());
-                    integralrecordtype.setRetailPrice(integralRecordTypeExcel.getRetailPrice());
+                if (integralrecordtype != null) { //更新导入价格
+                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getProductpice()))
+                        integralrecordtype.setProductpice(Double.parseDouble(integralRecordTypeExcel.getProductpice()));
+                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getRetailPrice()))
+                        integralrecordtype.setRetailPrice(Double.parseDouble(integralRecordTypeExcel.getRetailPrice()));
                     integralrecordtypeService.updateById(integralrecordtype);
-                }else{
-                    resultMessage.append(integralRecordTypeExcel.getInventoryCode()+"、");
+                } else {
+                    resultMessage.append(integralRecordTypeExcel.getInventoryCode() + "、");
                 }
             }
-            resJson.put("msg", "导入成功，"+resultMessage == null ? "": "未找到商品："+resultMessage.toString());
-        }catch (Exception e){
+            resJson.put("msg", "导入成功，" + resultMessage == null ? "" : "未找到商品：" + resultMessage.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @RequestMapping("/export")
+    public void exportExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
+        List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
+        List<IntegralRecordTypeExcel> excelList = new ArrayList<>();
+        for (Integralrecordtype detail : details) {
+            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {
+            });
+            excelList.add(excel);
+        }
+
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+        //创建excel 数据列名
+        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+        CellUtil.createCell(rowTitle, 0, "商品编码");
+        CellUtil.createCell(rowTitle, 1, "商品名称");
+        CellUtil.createCell(rowTitle, 2, "亲民价");
+        CellUtil.createCell(rowTitle, 3, "零售价");
+        CellUtil.createCell(rowTitle, 4, "规格");
+        CellUtil.createCell(rowTitle, 5, "可用数量");
+        CellUtil.createCell(rowTitle, 6, "计量单位");
+        CellUtil.createCell(rowTitle, 7, "商品类型");
+        CellUtil.createCell(rowTitle, 8, "门店名称");
+        CellUtil.createCell(rowTitle, 9, "门店编码");
+        Iterator<IntegralRecordTypeExcel> iter = excelList.iterator();
+        Integer i = 1;
+        while (iter.hasNext()) {
+            SXSSFRow row = sxssfSheet.createRow(i);
+            IntegralRecordTypeExcel integralRecordTypeExcel = iter.next();
+            Field[] fields = integralRecordTypeExcel.getClass().getDeclaredFields();
+            for (int c = 0; c < fields.length; c++) {
+                String name = fields[c].getName();
+                // 将属性的首字符大写，方便构造get，set方法
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                Method m = integralRecordTypeExcel.getClass().getMethod("get" + name);
+                // 调用getter方法获取属性值
+                String value = (String) m.invoke(integralRecordTypeExcel);
+                if (!StringUtils.isEmpty(value)) {
+                    CellUtil.createCell(row, c, value);
+                } else {
+                    CellUtil.createCell(row, c, "");
+                }
+            }
+            i++;
+        }
+        response.setHeader("content-Type", "application/vnc.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("商品导出", "UTF-8") + ".xlsx");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            sxssfWorkbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            details.clear();
+            outputStream.close();
+        }
+    }
 }

@@ -161,3 +161,8 @@ Integralrecordtype.importExcel = function () {
     });
     this.layerIndex = index;
 };
+
+Integralrecordtype.exportExcel = function () {
+  window.location.href = Feng.ctxPath + "/integralrecordtype/export";
+    // window.location.href = Feng.ctxPath + "/barranking/export_excel";
+};
