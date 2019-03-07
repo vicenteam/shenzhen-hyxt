@@ -147,6 +147,15 @@ public class DeptController extends BaseController {
             Membershipcardtype membershipcardtype1 = new Membershipcardtype();
             membershipcardtype1.setCardname(membershipcardtype.getCardname());
             membershipcardtype1.setUpamount(membershipcardtype.getUpamount());
+
+            //2019-03-07 luo
+            membershipcardtype1.setSignin(membershipcardtype.getSignin());
+            membershipcardtype1.setShopping(membershipcardtype.getShopping());
+            membershipcardtype1.setNewpoints(membershipcardtype.getNewpoints());
+            membershipcardtype1.setShoppingnew(membershipcardtype.getShoppingnew());
+            membershipcardtype1.setCardlevel(membershipcardtype.getCardlevel());
+            //
+
             membershipcardtype1.setTips(membershipcardtype.getTips());
             membershipcardtype1.setStatus(membershipcardtype.getStatus());
             membershipcardtype1.setCreatedt(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
