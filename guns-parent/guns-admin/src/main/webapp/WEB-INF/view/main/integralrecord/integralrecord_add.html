@@ -422,6 +422,7 @@
                                             productpice: data.productpice,
                                             productspecification: data.productspecification,
                                             productjifen:data.productjifen,
+                                            retailPrice:data.retailPrice,
                                             consumptionNum:1,
                                             sumFree:sumFree
                                         }
@@ -467,7 +468,7 @@
                 "<td>"+products[i].val.productname+"</td>" +
                 "<td>"+products[i].val.productspecification+"</td>" +
                 "<td>"+products[i].val.consumptionNum+"</td>" +
-                "<td>"+products[i].val.retailPrice+"</td>" +
+                "<td>"+products[i].val.productpice+"</td>" +
                 "<td>"+(products[i].val.productpice * products[i].val.consumptionNum - products[i].val.productpice * products[i].val.sumFree)+"</td>" +"</tr>");
             $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
 
