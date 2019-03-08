@@ -103,6 +103,7 @@ MembermanagementInfoDlg.collectData = function() {
     .set('cardCode')
     .set('avatar')
     .set("otherMemberId")
+    .set("levelID")
     .set("anotherName")
     .set('token');
 }

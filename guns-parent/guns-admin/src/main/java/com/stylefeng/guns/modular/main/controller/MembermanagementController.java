@@ -117,7 +117,10 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
         EntityWrapper<BaMedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
+        //获取会员等级
+        List<Membershipcardtype> list1 = membershipcardtypeService.selectList(new BaseEntityWrapper<Membershipcardtype>());
         List<BaMedical> baMedicals = baMedicalService.selectList(memberBamedicalEntityWrapper);
+        model.addAttribute("membershipcardtype",list1);
         model.addAttribute("staffs", list);
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < baMedicals.size(); i++) {
@@ -280,7 +283,7 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code
-            , String otherMemberId) throws Exception {
+            , String otherMemberId,String levelID) throws Exception {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
         EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
@@ -295,11 +298,12 @@ public class MembermanagementController extends BaseController {
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");
-        BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
-        membershipcardtypeBaseEntityWrapper.orderBy("leaves", true);
-        Membershipcardtype membershipcardtype = membershipcardtypeService.selectOne(membershipcardtypeBaseEntityWrapper);
+        //设置会员等级
+        Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
         if (membershipcardtype != null) {
             membermanagement.setLevelID(membershipcardtype.getId() + "");
+            membermanagement.setCountPrice(membershipcardtype.getShopping());
+            membermanagement.setPrice(membershipcardtype.getUpamount());
         }
 
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))
@@ -314,6 +318,7 @@ public class MembermanagementController extends BaseController {
                 throw new Exception("关联卡片已存在关联会员！");
             }
         }
+
         membermanagementService.insert(membermanagement);
 
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();

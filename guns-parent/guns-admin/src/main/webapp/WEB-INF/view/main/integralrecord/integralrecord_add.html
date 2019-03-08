@@ -451,6 +451,7 @@
     var yingshou=0;
     var shishou=0;
     var zhekou=0;
+    var jifen=0;
     function loadProduct() {
         $("#storeInfo").empty();
         $("#storeInfoHidden").empty();
@@ -479,9 +480,11 @@
             productjifen+=Number(products[i].val.productjifen*products[i].val.consumptionNum)
 
         }
-        $("#play").val(play*Number($("#offNum").val()));
-        $("#integral").val(productjifen);
 
+        $("#play").val(play*Number($("#offNum").val()));
+        productjifen=Math.floor(play*Number($("#offNum").val())/100)
+        $("#integral").val(productjifen);
+        jifen=productjifen;
         tableBase64();
 
         //计算小票显示金额

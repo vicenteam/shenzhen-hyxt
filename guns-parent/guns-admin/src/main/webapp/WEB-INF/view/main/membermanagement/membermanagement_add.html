@@ -24,6 +24,11 @@
                                 <option value="${item.id}">${item.name}</option>
                                 @}
                         </#select>
+                        <#select id="levelID" name="会员等级" underline="true">
+                                @for(item in membershipcardtype){
+                                <option value="${item.id}">${item.cardname}</option>
+                                @}
+                    </#select>
                             <#input id="name" name="姓名" underline="true"/>
                     <#select id="sex" name="性别" underline="true">
                         <option value="">请选择</option>

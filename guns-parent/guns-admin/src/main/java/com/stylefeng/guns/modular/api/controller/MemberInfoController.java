@@ -240,7 +240,7 @@ public class MemberInfoController extends BaseController {
         membermanagement.setAddress(membermanagementModel.getAddress());
         membermanagement.setFamilyStatusID(membermanagementModel.getFamilyStatusID());
         membermanagementController.add(membermanagement,membermanagementModel.getCardCode(),membermanagementModel.getBaMedicals()
-                ,membermanagementModel.getCode(),membermanagementModel.getOtherMemberId());
+                ,membermanagementModel.getCode(),membermanagementModel.getOtherMemberId(),null);
         return responseData;
     }
 

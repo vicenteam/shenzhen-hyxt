@@ -291,6 +291,7 @@ function viewToWord() {
     wddoc.Bookmarks("yingshou").Range.Text = yingshou+ "";
     wddoc.Bookmarks("shishou").Range.Text = shishou + "";
     wddoc.Bookmarks("zhekou").Range.Text = zhekou + "";
+    wddoc.Bookmarks("jifen").Range.Text = jifen + "";
     //添加表格
     // var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,3,4);//(赋值区域,行数,列数)
     var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,products.length,4);//(赋值区域,行数,列数)
@@ -340,6 +341,7 @@ function viewToWord() {
     // wddoc.Bookmarks("Time").Range.Text = Time;
     //wdapp.ActiveDocument.ActiveWindow.View.Type = 1;
     // wdapp.visible = false; //word模板是否可见
+    wdapp.Application.Printout(); //调用自动打印功能
     wdapp.Application.Printout(); //调用自动打印功能
     wdapp.quit();
     wdapp = null;
