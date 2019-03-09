@@ -6,9 +6,9 @@ import yongyou.openAPI.openAPI;
 public class YongYouAPIUtils {
 //    public static final String user = "冯芳";
 //    public static final String pwd="";
-    public static final String user = "demo";
-    public static final String pwd="ak123456";
-    public static final String account= "1";
+    public static final String user = "15361669711";
+    public static final String pwd="15361669711";
+    public static final String account= "2";
 
     //授权信息
     private static String appKey = "a4e5cec6-7070-4858-a802-57e13adbd699";
