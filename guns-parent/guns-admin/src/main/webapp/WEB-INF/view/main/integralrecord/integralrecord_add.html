@@ -136,7 +136,10 @@
                             </tbody>
                         </table>
                         <hr/>
-                        <label id="show" style="width: 100%;text-align: right"></label>
+                        <div id="jineText">
+
+                        </div>
+                        <label id="show" style="width: 100%;text-align: left"></label>
                     </div>
 
                 <div id="scannerInfo">
@@ -455,6 +458,7 @@
     function loadProduct() {
         $("#storeInfo").empty();
         $("#storeInfoHidden").empty();
+        $("#jineText").empty();
         var play = 0;
         productIds = "";
         productNums = "";
@@ -505,9 +509,15 @@
             "        <div>\n" +
             "            应收金额：\n" +j2+
             "        </div>\n" ;
-        yingshou=j2;
-        shishou=j1;
+        yingshou=j1;
+        shishou=j2;
         zhekou=(j1-j2);
+        $("#jineText").append(
+            " <div>应收金额："+yingshou+"</div>\n" +
+            "                            <div>折扣金额："+zhekou+"</div>\n" +
+            "                            <div>实收金额："+shishou+"</div>\n" +
+            "                            <div>获得积分："+productjifen+"</div>"
+        );
         $("#hiden_moneyText").empty();
         $("#hiden_moneyText").append(insaHtml);
     }
