@@ -73,6 +73,8 @@
                             @if(shiro.hasPermission("/membermanagement/import")){
                                 <#button name="Excel导入" icon="fa-upload" clickFun="Membermanagement.importExcel()" space="true"/>
                             @}
+                            <#button name="积分赠送" icon="fa-pencil" clickFun="Membermanagement.jifenzengsong()" space="true"/>
+                            <#button name="积分清零" icon="fa-trash" clickFun="Membermanagement.jifenqingchu()" space="true"/>
                         </div>
                         <#table id="MembermanagementTable"/>
                     </div>

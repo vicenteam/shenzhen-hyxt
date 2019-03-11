@@ -39,6 +39,10 @@
         <result column="deptId" property="deptId" />
         <result column="token" property="token" />
         <result column="price" property="price" />
+        <result column="checkInNum" property="checkInNum" />
+        <result column="xiaofeiJifen" property="xiaofeiJifen" />
+        <result column="qiandaoJifen" property="qiandaoJifen" />
+        <result column="daifenJifen" property="daifenJifen" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -793,4 +793,24 @@ public class MembermanagementController extends BaseController {
         }
         return resJson;
     }
+    @BussinessLog(value = "积分赠送", key = "jifenzengsong")
+    @RequestMapping("/jifenzengsong")
+    @ResponseBody
+    public Object jifenzengsong(String id,Double jifenNum) throws Exception {
+
+        BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+        List<Membermanagement> ms = membermanagementService.selectList(wrapper);
+        //积分添加操作
+        integralrecordController.insertIntegral(jifenNum,2,10,ms,0);
+        return SUCCESS_TIP;
+    }
+    @BussinessLog(value = "积分清零", key = "jifenqingchu")
+    @RequestMapping("/jifenqingchu")
+    @ResponseBody
+    public Object jifenqingchu(String id) {
+        Membermanagement membermanagement = membermanagementService.selectById(id);
+        membermanagement.setIntegral(0.0);
+        membermanagementService.updateById(membermanagement);
+        return SUCCESS_TIP;
+    }
 }
