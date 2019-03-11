@@ -6,8 +6,8 @@ import yongyou.openAPI.openAPI;
 public class YongYouAPIUtils {
 //    public static final String user = "冯芳";
 //    public static final String pwd="";
-    public static final String user = "15361669711";
-    public static final String pwd="15361669711";
+    public static final String user = "200";
+    public static final String pwd="";
     public static final String account= "2";
 
     //授权信息
@@ -92,8 +92,8 @@ public class YongYouAPIUtils {
 //        String s = postUrl("", "{\"param\":{}}");
         String s ="";
         //获取仓库信息
-//         s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
-//        System.out.println(s);
+         s = postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\"param\":{}}");
+        System.out.println(s);
         //获取商品信息
 //         s = postUrl(YongYouAPIUtils.CURRENTSTOCK_QUERY, "{\"param\":{}}");
 //        System.out.println(s);
@@ -120,27 +120,27 @@ public class YongYouAPIUtils {
 // );
 //
 //        System.out.println(s);
-        s = postUrl(YongYouAPIUtils.INVENTORYPRICE_QUERYINVENTORYPRICE,
-// "{\"param\":[{\"RowID\": 1,\"Partner\": {    \"Code\": \"0010001\"       },\"Inventory\": {  \"Code\": \"20180002\"       }}]}"
- "{\n" +
-         "    \"param\": [\n" +
-         "\n" +
-         "        {\n" +
-
-         "\n" +
-         "            \"Inventory\": {  \"Code\": \"20180021\"       },\n" +
-         "\n" +
-         "            \"Unit\": {       \"Code\":    8     }\n" +
-         "\n" +
-         "\n" +
-         "        }      \n" +
-         "\n" +
-         "    ]\n" +
-         "\n" +
-         "}"
-//                "{ \"param\" :[Inventory]}"
- );
-
-        System.out.println(s);
+//        s = postUrl(YongYouAPIUtils.INVENTORYPRICE_QUERYINVENTORYPRICE,
+//// "{\"param\":[{\"RowID\": 1,\"Partner\": {    \"Code\": \"0010001\"       },\"Inventory\": {  \"Code\": \"20180002\"       }}]}"
+// "{\n" +
+//         "    \"param\": [\n" +
+//         "\n" +
+//         "        {\n" +
+//
+//         "\n" +
+//         "            \"Inventory\": {  \"Code\": \"20180021\"       },\n" +
+//         "\n" +
+//         "            \"Unit\": {       \"Code\":    8     }\n" +
+//         "\n" +
+//         "\n" +
+//         "        }      \n" +
+//         "\n" +
+//         "    ]\n" +
+//         "\n" +
+//         "}"
+////                "{ \"param\" :[Inventory]}"
+// );
+//
+//        System.out.println(s);
     }
 }
