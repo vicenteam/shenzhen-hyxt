@@ -319,19 +319,19 @@ function viewToWord() {
         //第二列
         with(myTable.Cell(i+1,2).Range){
             font.Size = 8;
-            InsertAfter(products[i].val.retailPrice); //零售价
+            InsertAfter(products[i].val.consumptionNum); //数量
             ParagraphFormat.Alignment=1;//表格内容对齐:0-左对齐 1-居中 2-右对齐
         }
         //第三列
         with(myTable.Cell(i+1,3).Range){
             font.Size = 8;
-            InsertAfter(products[i].val.productpice); //亲情价
+            InsertAfter(products[i].val.productpice); //单价
             ParagraphFormat.Alignment=2;
         }
         //第四列
         with(myTable.Cell(i+1,4).Range){
             font.Size = 8;
-            InsertAfter(products[i].val.consumptionNum);//数量
+            InsertAfter(products[i].val.consumptionNum*products[i].val.productpice);//金额
             ParagraphFormat.Alignment=1;
         }
     }
