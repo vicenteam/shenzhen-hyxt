@@ -4,6 +4,8 @@
         <div class="form-horizontal" id="deptInfoForm">
 
             <input type="hidden" id="id" value="${dept.id}">
+            <input type="hidden" id="tPlusWarehouseCodeTemp" value="${dept.tPlusWarehouseCode}">
+            <input type="hidden" id="tPlusDeptCodeTemp" value="${dept.tPlusDeptCode}">
 
             <div class="row">
                 <div class="col-sm-6 b-r">
@@ -27,6 +29,16 @@
                     <#AddressSelect id="province" province="province" name="所属地区"/>
                     <#AddressSelect id="city" city="city" name="所属区域"/>
                     <#AddressSelect id="district" district="district" name="所属区县"/>
+                    <#select name="同步T+门店" id="tPlusDeptCode" >
+                    @for(item in deptCodes){
+                    <option value="${item.Code}">${item.Name}</option>
+                    @}
+                </#select>
+                <#select name="同步T+仓库" id="tPlusWarehouseCode" >
+                @for(item in warehouseCodes){
+                <option value="${item.Code}">${item.Name}</option>
+                @}
+            </#select>
                 </div>
             </div>
 
@@ -54,6 +66,8 @@
         $("#city").val(${dept.cityid});
         district("district");
         $("#district").val(${dept.districtid});
+        $("#tPlusDeptCode").val($("#tPlusDeptCodeTemp").val())
+        $("#tPlusWarehouseCode").val($("#tPlusWarehouseCodeTemp").val())
     });
 </script>
 @}

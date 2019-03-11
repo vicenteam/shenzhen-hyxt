@@ -72,8 +72,9 @@ public class DeptController extends BaseController {
                 "       \n" +
                 "}\n" +
                 "}");
-        System.out.println("-----"+s);
         model.addAttribute("deptCodes",JSON.parseArray(s,HashMap.class));
+        s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{param:{}}");
+        model.addAttribute("warehouseCodes",JSON.parseArray(s,HashMap.class));
         return PREFIX + "dept_add.html";
     }
 
@@ -82,11 +83,19 @@ public class DeptController extends BaseController {
      */
     @Permission
     @RequestMapping("/dept_update/{deptId}")
-    public String deptUpdate(@PathVariable Integer deptId, Model model) {
+    public String deptUpdate(@PathVariable Integer deptId, Model model) throws Exception {
         Dept dept = deptService.selectById(deptId);
         model.addAttribute(dept);
         model.addAttribute("pName", ConstantFactory.me().getDeptName(dept.getPid()));
         LogObjectHolder.me().set(dept);
+        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.DEPARTMENT_QUERY, "{\n" +
+                "dto: {\n" +
+                "       \n" +
+                "}\n" +
+                "}");
+        model.addAttribute("deptCodes",JSON.parseArray(s,HashMap.class));
+        s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{param:{}}");
+        model.addAttribute("warehouseCodes",JSON.parseArray(s,HashMap.class));
         return PREFIX + "dept_edit.html";
     }
 
@@ -120,25 +129,28 @@ public class DeptController extends BaseController {
         //完善pids,根据pid拿到pid的pids
         deptSetPids(dept);
         //同步tplus仓库
-        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{dto:{Code: \""+tPlusDeptCode+"\"}}");
-       List<TPlusDept> tPlusDepts=JSON.parseArray(s,TPlusDept.class);
-        System.out.println("---"+JSON.toJSONString(tPlusDepts));
-        System.out.println("---"+tPlusDeptCode);
-       if(tPlusDepts.size()==1){
-           //获取仓库
-           dept.settPlusDeptCode(tPlusDepts.get(0).getCode());
-           dept.settPlusDeptName(tPlusDepts.get(0).getName());
-            s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{param:{}}");
-           List<TPlusDept> house= JSON.parseArray(s,TPlusDept.class);
-           for(TPlusDept a:house){
-               if( a.getName().indexOf(tPlusDepts.get(0).getName())!=-1){
-                   dept.settPlusWarehouseCode(a.getCode());
-                   dept.settPlusWarehouseName(a.getName());
-                    break;
-               }
-           }
-
-       }
+//        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{dto:{Code: \""+tPlusDeptCode+"\"}}");
+//       List<TPlusDept> tPlusDepts=JSON.parseArray(s,TPlusDept.class);
+//       if(tPlusDepts.size()==1){
+//           //获取仓库
+//           dept.settPlusDeptCode(tPlusDepts.get(0).getCode());
+//           dept.settPlusDeptName(tPlusDepts.get(0).getName());
+//            s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\n" +
+//                    "\t\"param\": \n" +
+//                    "\t\t{\n" +
+//                    "\t\t\t\"Code\": \""+dept.gettPlusWarehouseCode()+"\"\n" +
+//                    "\t\t}\n" +
+//                    "}");
+//           List<TPlusDept> house= JSON.parseArray(s,TPlusDept.class);
+//           for(TPlusDept a:house){
+//               if( a.getName().indexOf(tPlusDepts.get(0).getName())!=-1){
+//                   dept.settPlusWarehouseCode(a.getCode());
+//                   dept.settPlusWarehouseName(a.getName());
+//                    break;
+//               }
+//           }
+//
+//       }
         boolean insert = this.deptService.insert(dept);
         //自动初始化会员配置
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();

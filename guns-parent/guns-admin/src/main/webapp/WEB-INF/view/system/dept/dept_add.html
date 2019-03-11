@@ -32,6 +32,11 @@
                         <option value="${item.Code}">${item.Name}</option>
                         @}
                     </#select>
+                <#select name="同步T+仓库" id="tPlusWarehouseCode" >
+                @for(item in warehouseCodes){
+                <option value="${item.Code}">${item.Name}</option>
+                @}
+            </#select>
             </div>
 
             <!-- 父级部门的选择框 -->
