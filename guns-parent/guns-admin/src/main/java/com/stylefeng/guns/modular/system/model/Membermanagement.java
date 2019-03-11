@@ -140,6 +140,55 @@ public class Membermanagement extends Model<Membermanagement> {
      */
     private Double price;
 
+    /**
+     * 可签到获取积分的次数
+     */
+    private Integer checkInNum;
+    /**
+     * 消费积分
+     */
+    private Integer xiaofeiJifen;
+    /**
+     * 签到积分
+     */
+    private Integer qiandaoJifen;
+    /**
+     * 带人积分
+     */
+    private Integer daifenJifen;
+
+    public Integer getCheckInNum() {
+        return checkInNum;
+    }
+
+    public void setCheckInNum(Integer checkInNum) {
+        this.checkInNum = checkInNum;
+    }
+
+    public Integer getXiaofeiJifen() {
+        return xiaofeiJifen;
+    }
+
+    public void setXiaofeiJifen(Integer xiaofeiJifen) {
+        this.xiaofeiJifen = xiaofeiJifen;
+    }
+
+    public Integer getQiandaoJifen() {
+        return qiandaoJifen;
+    }
+
+    public void setQiandaoJifen(Integer qiandaoJifen) {
+        this.qiandaoJifen = qiandaoJifen;
+    }
+
+    public Integer getDaifenJifen() {
+        return daifenJifen;
+    }
+
+    public void setDaifenJifen(Integer daifenJifen) {
+        this.daifenJifen = daifenJifen;
+    }
+
     public Double getMoney() {
         return money;
     }

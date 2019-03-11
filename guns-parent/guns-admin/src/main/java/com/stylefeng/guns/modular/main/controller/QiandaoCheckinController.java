@@ -143,7 +143,12 @@ public class QiandaoCheckinController extends BaseController {
                 }
             }
             System.out.println(integralrecordController==null);
+            //判断可签到获得积分次数 >0执行积分操作
+            Integer checkInNum = membermanagement.getCheckInNum();
+            if(checkInNum!=null&&checkInNum>0){
                 integralrecordController.insertIntegral(integral,2,0,membermanagements,0);
+                membermanagement.setCheckInNum(membermanagement.getCheckInNum()-1);
+            }
 //            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
 //                List<Membermanagement> introducers = new ArrayList<>();
 //

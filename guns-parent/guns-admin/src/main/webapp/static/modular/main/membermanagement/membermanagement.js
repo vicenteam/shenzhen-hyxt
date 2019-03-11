@@ -28,6 +28,7 @@ Membermanagement.initColumn = function () {
                      if(value==undefined)value="";
                      return '<span style="font-size: 10px">'+value+'</span>';
                  }},
+            {title: '可签到获取积分次数', field: 'checkInNum', visible: true, align: 'center', valign: 'middle'},
             {title: '当前积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
             {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
@@ -235,4 +236,57 @@ Membermanagement.importExcel = function () {
         content: Feng.ctxPath + '/membermanagement/import_excel'
     });
     this.layerIndex = index;
+};
+Membermanagement.jifenzengsong = function () {
+    if (this.check()) {
+        // var index = layer.open({
+        //     type: 2,
+        //     title: '积分赠送',
+        //     area: ['800px', '420px'], //宽高
+        //     fix: false, //不固定
+        //     maxmin: true,
+        //     content: Feng.ctxPath + '/qiandaoCheckin/qiandaoCheckin_update/' + QiandaoCheckin.seItem.id
+        // });
+        // this.layerIndex = index;
+
+        layer.confirm('<div>赠送积分数量：<input type="text" style="width: 50px"value="0" id="jifenNum"></div>', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/membermanagement/jifenzengsong", function (data) {
+                Feng.success("赠送成功!");
+                Membermanagement.table.refresh();
+            }, function (data) {
+                Feng.error("赠送失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("id", selectid);
+            ajax.set("jifenNum", $("#jifenNum").val());
+            ajax.start();
+        });
+    }
+};
+Membermanagement.jifenqingchu = function () {
+    if (this.check()) {
+        // var index = layer.open({
+        //     type: 2,
+        //     title: '积分清零',
+        //     area: ['800px', '420px'], //宽高
+        //     fix: false, //不固定
+        //     maxmin: true,
+        //     content: Feng.ctxPath + '/qiandaoCheckin/qiandaoCheckin_update/' + QiandaoCheckin.seItem.id
+        // });
+        // this.layerIndex = index;
+        var selectid=this.seItem.id;
+        layer.confirm('您确定要进行该操作吗？', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/membermanagement/jifenqingchu", function (data) {
+                Feng.success("清除成功!");
+                Membermanagement.table.refresh();
+            }, function (data) {
+                Feng.error("清除失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("id",selectid);
+            ajax.start();
+        });
+
+
+    }
 };
