@@ -22,9 +22,9 @@ public class IntegralRecordTypeExcel {
     private String unitName;
     @Excel(name = "商品类型",orderNum = "8")
     private String producttype;
-    @Excel(name = "门店名称",orderNum = "9")
+    @Excel(name = "仓库名称",orderNum = "9")
     private String warehouseName;
-    @Excel(name = "门店编码",orderNum = "10")
+    @Excel(name = "仓库编码",orderNum = "10")
     private String warehouseCode;
 
     public String getInventoryCode() {

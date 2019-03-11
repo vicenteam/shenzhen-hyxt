@@ -302,7 +302,7 @@ public class MembermanagementController extends BaseController {
         Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
         if (membershipcardtype != null) {
             membermanagement.setLevelID(membershipcardtype.getId() + "");
-            membermanagement.setCountPrice(membershipcardtype.getShopping());
+//            membermanagement.setCountPrice(membershipcardtype.getShopping());
             membermanagement.setPrice(membershipcardtype.getUpamount());
         }
 
