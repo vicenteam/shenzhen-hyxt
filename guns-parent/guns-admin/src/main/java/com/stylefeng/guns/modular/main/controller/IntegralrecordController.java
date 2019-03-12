@@ -71,6 +71,8 @@ public class IntegralrecordController extends BaseController {
     private IVerificationCodeService verificationCodeService;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IMemberXiaofeigetjienService memberXiaofeigetjienService;
 
 
     /**
@@ -260,6 +262,34 @@ public class IntegralrecordController extends BaseController {
                 inventoryManagement.setIsDueToRemind(1);
             }
             inventoryManagementService.insert(inventoryManagement);
+            //判断当前商品类型是否参与购买1000送？积分类型
+            if(integralrecordtype.getIsfandian()==1){
+                MemberXiaofeigetjien t = new MemberXiaofeigetjien();
+                t.setDeptid(ShiroKit.getUser().deptId);
+                t.setMemberid(memberId);
+                t.setPlayproductnum(parseIntproductNums);
+                t.setPlayproductmoney(integralrecordtype.getProductpice()*parseIntproductNums);
+                memberXiaofeigetjienService.insert(t);
+                int i = memberXiaofeigetjienService.sumMoneyByMemberId(memberId);
+                if(i!=0){//更新获取次数
+                    Integer addcheckInNum = membermanagements.get(0).getAddcheckInNum();
+                    if(addcheckInNum!=null){
+                        int floor = (int)Math.floor(i / 1000);
+                        int isinsert=floor-addcheckInNum;
+                        if(isinsert>0){
+                            Membermanagement membermanagement = membermanagements.get(0);
+                            membermanagement.setAddcheckInNum(membermanagement.getAddcheckInNum()+isinsert);
+                            //添加可签到获得积分次数
+                            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+                            if(membershipcardtype.getKeqiandaonum()!=null){
+                                membermanagement.setCheckInNum(membermanagement.getCheckInNum()+membershipcardtype.getKeqiandaonum());
+                            }
+                            membermanagementService.updateById(membermanagement);
+                        }
+                    }
+                }
+
+            }
 
             //同步数据写入T+库
             String now = DateUtil.format(new Date(), "yyyy-MM-dd");
@@ -271,41 +301,11 @@ public class IntegralrecordController extends BaseController {
             String InventoryCode = integralrecordtype.getInventoryCode();
 //        YongYouAPIUtils.postUrl(YongYouAPIUtils.INVENTORY_QUERY,"{\"param\":{\"code\":\""+InventoryCode+"\"}}");
             int i = mainSynchronousService.selectCount(null);
-            String tableJson = "{\n" +
-                    "        \"dto\": {\n" +
-                    "            \"BusiType\": {\"Code\": \"15\"},\n" +       //15 销售出库，16 销售退库
-                    "            \"Warehouse\": {\"Code\": \"" + integralrecordtype.getWarehouseCode() + "\"},\n" + //仓库信息。传入的仓库编码信息与T+系统编码一致
-                    "            \"VoucherDate\": \"" + now + "\",\n" +      //单据日期
-                    "            \"Customer\": {\"Code\": \"0010001\"},\n" + //客户，PartnerDTO对象，客户信息
-                    "            \"RDRecordDetails\": [{\"BaseQuantity\": " + baseQuantity + ", \"Code\": \"" + (i + 1) + "\", \"Inventory\": {\"Code\": \"" + InventoryCode + "\"}}],\n" + //单据明细信
-                    "            \"Code\": \"" + radomInt + "\",\n" + //单据编码
-//        "            \"Partner\": {\"Code\": \"001\"},\n" +
-                    "            \"Memo\": \"销售\",\n" + //备注
-                    "            \"ExternalCode\": \"" + radomInt + "\",\n" + //外部系统数据编号；OpenAPI调用者填写,后台做唯一性检查。用于防止重复提交，和外系统数据对应。
-                    "            \"VoucherType\": {\"Code\": \"ST1021\"}\n" + //单据类型。固定值:{Code: "ST1021"},
-                    "        }\n" +
-                    "    }";
+            String tableJson = "";
             boolean busiType = false;
             if (integralrecordtype.getProducttype() == 0) {//赠送出库
                 busiType = true;
             }
-//            tableJson="{\n" +
-//                    "\tdto:{\n" +
-//                    "\t\tExternalCode: \""+(i+1)+"\",\n" +
-//                    "\t\tVoucherType: {Code: \"ST1021\"},\n" +
-//                    "\t\tPartner:{Code:\"LS\"},\n"+
-//                    "\t\tVoucherDate: \""+now+"\",\n" +
-//                    "\t\tBusiType: {Code: \""+busiType+"\"},\n" +
-//                    "\t\tWarehouse: {Code: \""+integralrecordtype.getWarehouseCode()+"\"},\n" +
-//                    "\t\tMemo: \"销售\",\n" +
-//                    "\t\tRDRecordDetails: [{\n" +
-//                    "\t\t\tInvBarCode: \"\",\n" +
-//                    "\t\t\tInventory: {Code: \""+InventoryCode+"\"},\n" +
-//                    "\t\t\tBaseQuantity: "+baseQuantity+"\n" +
-//                    "\t\t}]\n" +
-//                    "\t}\n" +
-//                    "}";
-
             tableJson =
                     "{\n" +
                             "    dto:{\n" +

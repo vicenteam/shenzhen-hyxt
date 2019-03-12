@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.modular.system.dao.MemberXiaofeigetjienMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.modular.system.model.MemberXiaofeigetjien">
+        <id column="id" property="id" />
+        <result column="memberid" property="memberid" />
+        <result column="deptid" property="deptid" />
+        <result column="productid" property="productid" />
+        <result column="playproductnum" property="playproductnum" />
+        <result column="playproductmoney" property="playproductmoney" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, memberid, deptid, productid, playproductnum, playproductmoney
+    </sql>
+    <select id="sumMoneyByMemberId" resultType="java.lang.Integer">
+		select sum(a.playproductmoney) from main_member_xiaofeigetjien a where a.memberid=#{memberId}
+	</select>
+</mapper>
