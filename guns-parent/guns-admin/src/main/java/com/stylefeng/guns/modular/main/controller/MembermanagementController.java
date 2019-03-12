@@ -342,22 +342,15 @@ public class MembermanagementController extends BaseController {
         //判断推荐人]
         String introducerId = membermanagement.getIntroducerId();
         if (!StringUtils.isEmpty(introducerId)) {
-            Membermanagement membermanagement1 = membermanagementService.selectById(introducerId);
-//            BaseEntityWrapper<Activity> activityBaseEntityWrapper = new BaseEntityWrapper<>();
-//            activityBaseEntityWrapper.eq("ruleexpression", 3);
-//            Activity activity = activityService.selectOne(activityBaseEntityWrapper);
-//            if (membermanagement1 != null) {
-//                Integer ruleexpression = activity.getRuleexpression();
-//                if (ruleexpression == 3) {//积分操作
-//                    Double jifen = activity.getJifen();//
-//                    //积分操作
-//                    List<Membermanagement> membermanagements = new ArrayList<>();
-//                    membermanagements.add(membermanagement1);
-//                    //调用积分变动方法
-//                    integralrecordController.insertIntegral(jifen, 9, membermanagements);
-//                }
-//                activityController.insertAcitvityMember(activity.getId() + "", membermanagement.getId() + "", ShiroKit.getUser().getDeptId());
-//            }
+            //老会员带人积分
+            BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+            mWrapper.eq("id",introducerId);
+            List<Membermanagement> membermanagementList = membermanagementService.selectList(mWrapper);
+            Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(membermanagementList.get(0).getLevelID());
+            if(null != membershipcardtype2.getNewpoints() && 0 != membershipcardtype2.getNewpoints()){
+                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,1, membermanagementList,0);
+            }
+
             //获取推荐活动 被推荐活动
             BaseEntityWrapper<Activity> baseEntityWrapper = new BaseEntityWrapper<Activity>();
             baseEntityWrapper.eq("ruleexpression", 3);
@@ -371,7 +364,7 @@ public class MembermanagementController extends BaseController {
             list1.forEach(a -> {
                 MemberInactivity memberInactivity = new MemberInactivity();
                 memberInactivity.setActivityId(a.getId());
-                memberInactivity.setMemberId(membermanagement1.getId());
+                memberInactivity.setMemberId(membermanagementList.get(0).getId());
                 memberInactivity.setDeptId(ShiroKit.getUser().getDeptId());
                 memberInactivity.setCreateDt(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
                 memberInactivityService.insert(memberInactivity);
@@ -797,7 +790,6 @@ public class MembermanagementController extends BaseController {
     @RequestMapping("/jifenzengsong")
     @ResponseBody
     public Object jifenzengsong(String id,Double jifenNum) throws Exception {
-
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
