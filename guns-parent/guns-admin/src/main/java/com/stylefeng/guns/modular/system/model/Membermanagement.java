@@ -161,6 +161,14 @@ public class Membermanagement extends Model<Membermanagement> {
      */
     private Integer addcheckInNum;
 
+    public Integer getAddcheckInNum() {
+        return addcheckInNum;
+    }
+
+    public void setAddcheckInNum(Integer addcheckInNum) {
+        this.addcheckInNum = addcheckInNum;
+    }
+
     public Integer getCheckInNum() {
         return checkInNum;
     }

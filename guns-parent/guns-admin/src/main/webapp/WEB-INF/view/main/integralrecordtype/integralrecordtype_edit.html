@@ -4,6 +4,7 @@
         <div class="form-horizontal" id="activityId">
                 <input type="hidden" id="id" value="${item.id}">
                 <input type="hidden" id="producttype_temp" value="${item.producttype}">
+                <input type="hidden" id="isfandian_temp" value="${item.isfandian}">
             <input type="hidden" id="names" value="def">
             <div class="row">
                 <div class="col-sm-6 b-r">
@@ -16,7 +17,18 @@
                         </#select>
                             <#input id="productspecification" name="商品规格" value="${item.productspecification}" underline="true"/>
                             <#input id="productpice" name="亲民价" value="${item.productpice}" underline="true"/>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否加入消费积分计划</label>
+                    <div class="col-sm-9">
+                        <label style="color: red;font-size: 12px">以每增加 1000 元消费获得 ？次</label>
+                        <select class="form-control" id="isfandian" name="isfandian">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
 
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
                 </div>
 
                 <div class="col-sm-6">
@@ -40,5 +52,6 @@
 <script src="${ctxPath}/static/modular/main/integralrecordtype/integralrecordtype_info.js"></script>
 <script>
     $("#producttype").val($("#producttype_temp").val())
+    $("#isfandian").val($("#isfandian_temp").val())
 </script>
 @}

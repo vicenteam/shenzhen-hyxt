@@ -93,6 +93,7 @@ IntegralrecordtypeInfoDlg.collectData = function() {
     .set('createtime')
     .set('updatetime')
     .set('createuserid')
+    .set('isfandian')
     .set('updateuserid');
 }
 

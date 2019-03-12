@@ -77,6 +77,16 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
 
     private Double retailPrice;
 
+    private Integer isfandian;
+
+    public Integer getIsfandian() {
+        return isfandian;
+    }
+
+    public void setIsfandian(Integer isfandian) {
+        this.isfandian = isfandian;
+    }
+
     public Double getExistingQuantity() {
         return ExistingQuantity;
     }
