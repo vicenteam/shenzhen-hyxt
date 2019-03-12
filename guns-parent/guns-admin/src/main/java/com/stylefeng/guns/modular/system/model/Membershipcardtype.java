@@ -71,6 +71,16 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
      */
     private String cardlevel;
 
+    private Integer keqiandaonum;
+
+    public Integer getKeqiandaonum() {
+        return keqiandaonum;
+    }
+
+    public void setKeqiandaonum(Integer keqiandaonum) {
+        this.keqiandaonum = keqiandaonum;
+    }
+
     public Integer getLeaves() {
         return leaves;
     }

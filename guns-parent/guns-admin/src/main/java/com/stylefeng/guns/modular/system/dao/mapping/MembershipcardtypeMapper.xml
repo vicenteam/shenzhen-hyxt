@@ -20,6 +20,7 @@
         <result column="checkleavenum" property="checkleavenum" />
         <result column="leaves" property="leaves" />
         <result column="cardlevel" property="cardlevel" />
+        <result column="keqiandaonum" property="keqiandaonum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -78,6 +78,7 @@ MembershipcardtypeInfoDlg.collectData = function() {
     .set('createdt')
     .set('leaves')
     .set("cardlevel")
+    .set("keqiandaonum")
     .set('updatedt');
 }
 
