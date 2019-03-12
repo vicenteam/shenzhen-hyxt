@@ -43,6 +43,7 @@
         <result column="xiaofeiJifen" property="xiaofeiJifen" />
         <result column="qiandaoJifen" property="qiandaoJifen" />
         <result column="daifenJifen" property="daifenJifen" />
+        <result column="addcheckInNum" property="addcheckInNum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -156,6 +156,10 @@ public class Membermanagement extends Model<Membermanagement> {
      * 带人积分
      */
     private Integer daifenJifen;
+    /**
+     * 会员配置可签到获取积分的次数
+     */
+    private Integer addcheckInNum;
 
     public Integer getCheckInNum() {
         return checkInNum;
