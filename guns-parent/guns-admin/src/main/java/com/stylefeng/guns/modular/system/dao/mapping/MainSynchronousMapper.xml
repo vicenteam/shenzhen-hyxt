@@ -8,6 +8,9 @@
         <result column="synchronousJson" property="synchronousJson" />
         <result column="status" property="status" />
         <result column="errorMssage" property="errorMssage" />
+        <result column="synchronousurl" property="synchronousurl" />
+        <result column="createdt" property="createdt" />
+        <result column="memberid" property="memberid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

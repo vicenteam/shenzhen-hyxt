@@ -357,7 +357,7 @@ public class IntegralrecordController extends BaseController {
         receiptsInfo.setReceiptsBase64Img(tableNase64Data);
         receiptsInfo.insert();
         //提交T+收款单
-        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true);
+        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true,memberId);
         return SUCCESS_TIP;
     }
 
@@ -466,6 +466,8 @@ public class IntegralrecordController extends BaseController {
      */
     public Object synchronousData(MainSynchronous mainSynchronous) throws Exception {
         String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDELIVERY_CREATE, mainSynchronous.getSynchronousJson());
+        mainSynchronous.setSynchronousurl(YongYouAPIUtils.SALEDELIVERY_CREATE);
+        mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
         System.out.println("---" + s);
         if (!"null".equals(s)) {
             JSONObject jsonObject = JSON.parseObject(s);
@@ -474,6 +476,7 @@ public class IntegralrecordController extends BaseController {
             throw new GunsException(BizExceptionEnum.NUM_ERROR);
         } else {
             mainSynchronous.setStatus(1);
+            mainSynchronous.setErrorMssage(s);
         }
         mainSynchronousService.updateById(mainSynchronous);
         return null;
@@ -486,13 +489,13 @@ public class IntegralrecordController extends BaseController {
      * @param origAmount
      * @param playType
      */
-    public void receiveVoucherCreate(String departmentCode, Double origAmount, int playType,String text,boolean IsReceiveFlag) throws Exception {
+    public void receiveVoucherCreate(String departmentCode, Double origAmount, int playType,String text,boolean IsReceiveFlag,Integer memberId) throws Exception {
         String SettleStyleCode = "";
         String SettleStyleBankAccountName = "";
         switch (playType) {
             case 0:
                 SettleStyleCode="994";
-                SettleStyleBankAccountName = "现金";
+                SettleStyleBankAccountName = "刷卡";
                 break;
             case 1:
                 SettleStyleCode="1";
@@ -511,8 +514,8 @@ public class IntegralrecordController extends BaseController {
                 SettleStyleBankAccountName = "现金";
                 break;
             case 5:
-                SettleStyleCode="199";
-                SettleStyleBankAccountName = "零售抵现";
+                SettleStyleCode="993";
+                SettleStyleBankAccountName = "积分抵现";
                 break;
         }
 
@@ -556,6 +559,14 @@ public class IntegralrecordController extends BaseController {
                         "}";
         System.out.println("收款单："+json);
         String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.RECEIVEVOUCHER_CREATE, json);
+        MainSynchronous mainSynchronous = new MainSynchronous();
+        mainSynchronous.setSynchronousurl(YongYouAPIUtils.RECEIVEVOUCHER_CREATE);
+        mainSynchronous.setStatus(1);
+        mainSynchronous.setErrorMssage(s);
+        mainSynchronous.setSynchronousJson(json);
+        mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        mainSynchronous.setMemberid(memberId);
+        mainSynchronousService.insert(mainSynchronous);
         System.out.println("---" + s);
     }
 }

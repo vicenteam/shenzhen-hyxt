@@ -200,7 +200,7 @@ public class ProductReturnChangeController extends BaseController {
             inventoryManagementService.deleteById(productReturnChange.getInventoryManagementId());
             //更新会员会员等级
             membermanagementController.updateMemberLeave(memberId.toString());
-            productReceiveT(integralrecordtype, "04", (double) returnchangeNum);
+            productReceiveT(integralrecordtype, "04", (double) returnchangeNum,memberId);
         }
         productReturnChange.updateById();
 
@@ -240,7 +240,7 @@ public class ProductReturnChangeController extends BaseController {
      * @param baseQuantity
      * @throws Exception
      */
-    public void productReceiveT(Integralrecordtype integralrecordtype, String busiType, Double baseQuantity) throws Exception {
+    public void productReceiveT(Integralrecordtype integralrecordtype, String busiType, Double baseQuantity,Integer memberId) throws Exception {
         String now = DateUtil.format(new Date(), "yyyy-MM-dd");
         String InventoryCode = integralrecordtype.getInventoryCode();
         String tableJson = "{\n" +
@@ -289,6 +289,7 @@ public class ProductReturnChangeController extends BaseController {
         MainSynchronous mainSynchronous = new MainSynchronous();
         mainSynchronous.setSynchronousJson(tableJson);
         mainSynchronous.setStatus(0);
+        mainSynchronous.setMemberid(memberId);
         mainSynchronousService.insert(mainSynchronous);
         //
         String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDELIVERY_CREATE, tableJson);
@@ -303,7 +304,7 @@ public class ProductReturnChangeController extends BaseController {
         mainSynchronousService.updateById(mainSynchronous);
 
         //
-        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),-(baseQuantity*integralrecordtype.getProductpice()),0,"商品退款",true);
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),-(baseQuantity*integralrecordtype.getProductpice()),0,"商品退款",true,memberId);
 
     }
 }

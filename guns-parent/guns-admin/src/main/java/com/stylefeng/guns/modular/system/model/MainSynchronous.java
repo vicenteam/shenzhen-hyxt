@@ -24,7 +24,33 @@ public class MainSynchronous extends Model<MainSynchronous> {
      */
     private Integer status;
     private String errorMssage;
+    private String synchronousurl;
+    private String createdt;
+    private Integer memberid;
 
+    public Integer getMemberid() {
+        return memberid;
+    }
+
+    public void setMemberid(Integer memberid) {
+        this.memberid = memberid;
+    }
+
+    public String getSynchronousurl() {
+        return synchronousurl;
+    }
+
+    public void setSynchronousurl(String synchronousurl) {
+        this.synchronousurl = synchronousurl;
+    }
+
+    public String getCreatedt() {
+        return createdt;
+    }
+
+    public void setCreatedt(String createdt) {
+        this.createdt = createdt;
+    }
 
     public Integer getId() {
         return id;
