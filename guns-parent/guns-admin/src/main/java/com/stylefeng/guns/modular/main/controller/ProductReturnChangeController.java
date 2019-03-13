@@ -290,6 +290,7 @@ public class ProductReturnChangeController extends BaseController {
         mainSynchronous.setSynchronousJson(tableJson);
         mainSynchronous.setStatus(0);
         mainSynchronous.setMemberid(memberId);
+        mainSynchronous.setSynchronousurl(YongYouAPIUtils.SALEDELIVERY_CREATE);
         mainSynchronousService.insert(mainSynchronous);
         //
         String s = YongYouAPIUtils.postUrl(YongYouAPIUtils.SALEDELIVERY_CREATE, tableJson);

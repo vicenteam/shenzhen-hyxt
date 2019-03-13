@@ -337,6 +337,8 @@ public class IntegralrecordController extends BaseController {
             MainSynchronous mainSynchronous = new MainSynchronous();
             mainSynchronous.setSynchronousJson(tableJson);
             mainSynchronous.setStatus(0);
+            mainSynchronous.setMemberid(memberId);
+            mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
             mainSynchronousService.insert(mainSynchronous);
             //
 //            synchronousData(mainSynchronous);
