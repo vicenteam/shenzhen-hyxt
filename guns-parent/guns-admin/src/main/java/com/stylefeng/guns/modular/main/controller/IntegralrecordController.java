@@ -491,7 +491,7 @@ public class IntegralrecordController extends BaseController {
         String SettleStyleBankAccountName = "";
         switch (playType) {
             case 0:
-                SettleStyleCode="94";
+                SettleStyleCode="994";
                 SettleStyleBankAccountName = "现金";
                 break;
             case 1:
@@ -511,7 +511,7 @@ public class IntegralrecordController extends BaseController {
                 SettleStyleBankAccountName = "现金";
                 break;
             case 5:
-                SettleStyleCode="99";
+                SettleStyleCode="199";
                 SettleStyleBankAccountName = "零售抵现";
                 break;
         }
