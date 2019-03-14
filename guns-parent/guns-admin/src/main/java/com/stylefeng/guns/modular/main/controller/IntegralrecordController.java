@@ -232,7 +232,8 @@ public class IntegralrecordController extends BaseController {
             BaseEntityWrapper<Integralrecordtype> typeWrapper = new BaseEntityWrapper<>();
             typeWrapper.eq("id", parseIntTemp);
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
-            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
+//            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
+            getIntegral = Double.parseDouble(integralrecordtype.getProductjifen());
             List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice());
 
             integralrecordtype.setProductnum(integralrecordtype.getProductnum() - parseIntproductNums);//库存减
@@ -350,7 +351,7 @@ public class IntegralrecordController extends BaseController {
         }
         //新增购买小票
         ReceiptsInfo receiptsInfo = new ReceiptsInfo();
-        receiptsInfo.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-HH-dd HH:mm:ss"));
+        receiptsInfo.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         receiptsInfo.setDeptId(ShiroKit.getUser().deptId);
         receiptsInfo.setMemberId(memberId);
         receiptsInfo.setMemberName(membermanagements.get(0).getName());

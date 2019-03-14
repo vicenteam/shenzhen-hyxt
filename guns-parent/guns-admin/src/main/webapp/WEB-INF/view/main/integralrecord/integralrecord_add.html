@@ -304,7 +304,7 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/integralrecord/integralrecord_info.js"></script>
-<!--<script src="${ctxPath}/static/modular/main/integralrecord/html2canvas.js"></script>-->
+<script src="${ctxPath}/static/modular/main/integralrecord/html2canvas.js"></script>
 <script src="${ctxPath}/static/modular/main/integralrecord/bluebird.js"></script>
 
 <script src="${ctxPath}/static/device/device.js"></script>
@@ -509,7 +509,7 @@
         productjifen=Math.floor(play*Number($("#offNum").val())/100)
         $("#integral").val(productjifen);
         jifen=productjifen;
-        // tableBase64();
+        tableBase64();
 
         //计算小票显示金额
         var j1=play;//总金额

@@ -66,9 +66,11 @@ public class ReceiptsInfoController extends BaseController {
     public Object list(String condition) {
         Page<ReceiptsInfo> page = new PageFactory<ReceiptsInfo>().defaultPage();
         BaseEntityWrapper<ReceiptsInfo> baseEntityWrapper = new BaseEntityWrapper<>();
+
        if(!StringUtils.isEmpty(condition)){
            baseEntityWrapper.like("memberName",condition).or().like("memberPhone",condition);
-       }
+       } baseEntityWrapper.orderBy("createTime",false);
+
         Page<ReceiptsInfo> result = receiptsInfoService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
