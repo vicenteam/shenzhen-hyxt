@@ -14,46 +14,97 @@ var Membermanagement = {
 Membermanagement.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '性别', field: 'sex', visible: true, align: 'center', valign: 'middle',width:'44px',formatter: function (value, row, index) {
-                if(value==1){
+        {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
+        {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
+        {
+            title: '性别',
+            field: 'sex',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            width: '44px',
+            formatter: function (value, row, index) {
+                if (value == 1) {
                     return '男';
-                }else {
+                } else {
                     return '女';
                 }
-                }},
-            {title: '联系方式', field: 'phone', visible: true, align: 'center', valign: 'middle'},
-             {title: '今日签到时间', field: 'today', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                     if(value==undefined)value="";
-                     return '<span style="font-size: 10px">'+value+'</span>';
-                 }},
-            {title: '可签到获取积分次数', field: 'checkInNum', visible: true, align: 'center', valign: 'middle'},
-            {title: '当前积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                    if(value==undefined)value="";
-                    return '<span style="font-size: 10px">'+value+'</span>';
-                }},
-            {title: '老年协会会员', field: 'isoldsociety', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                if(value==1){
+            }
+        },
+        {title: '联系方式', field: 'phone', visible: true, align: 'center', valign: 'middle'},
+        {
+            title: '今日签到时间',
+            field: 'today',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                if (value == undefined) value = "";
+                return '<span style="font-size: 10px">' + value + '</span>';
+            }
+        },
+        {title: '可签到获取积分次数', field: 'checkInNum', visible: true, align: 'center', valign: 'middle'},
+        {title: '当前积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
+        {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
+        {
+            title: '创建时间',
+            field: 'createTime',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                if (value == undefined) value = "";
+                return '<span style="font-size: 10px">' + value + '</span>';
+            }
+        },
+        {
+            title: '老年协会会员',
+            field: 'isoldsociety',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                if (value == 1) {
                     return '是';
-                }else {
+                } else {
                     return '否';
                 }
-                }},
-            {title: '家庭地址', field: 'address', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                    return '<span style="font-size: 10px">'+value+'</span>';
-                }},
-            {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
+            }
+        },
+        {
+            title: '家庭地址',
+            field: 'address',
+            visible: true,
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                return '<span style="font-size: 10px">' + value + '</span>';
+            }
+        },
+        {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
         {title: '余额', field: 'money', visible: true, align: 'center', valign: 'middle'},
-            {title: '操作', field: 'id', visible: true, align: 'center', width:'380px', valign: 'middle',formatter: function (value, row, index) {
+        {
+            title: '操作',
+            field: 'id',
+            visible: true,
+            align: 'center',
+            width: '380px',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                var tempDom = "";
+                console.log($("#editSecurity").val() == "true")
+                if ($("#editSecurity").val() == "true") {
+                    tempDom += '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>';
+                }
+                if ($("#deleteSecurity").val() == "true") {
+                    tempDom += '<button type="button" class=" btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;删除</button>';
+                }
+                tempDom+='<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>';
+                return tempDom;
 
-                    return '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                        '<button type="button" class=" btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;删除</button>'+
-                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
-                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
-                }},
+            }
+        },
     ];
 };
 
@@ -62,10 +113,10 @@ Membermanagement.initColumn = function () {
  */
 Membermanagement.check = function () {
     var selected = $('#' + this.id).bootstrapTable('getSelections');
-    if(selected.length == 0){
+    if (selected.length == 0) {
         Feng.info("请先选中表格中的某一记录！");
         return false;
-    }else{
+    } else {
         Membermanagement.seItem = selected[0];
         return true;
     }
@@ -90,45 +141,45 @@ Membermanagement.openAddMembermanagement = function () {
  * 打开查看会员基础信息详情
  */
 Membermanagement.openMembermanagementDetail = function (id) {
-        var index = layer.open({
-            type: 2,
-            title: '会员基础信息详情',
-            area: ['800px', '800px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + id
-        });
-        this.layerIndex = index;
+    var index = layer.open({
+        type: 2,
+        title: '会员基础信息详情',
+        area: ['800px', '800px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + id
+    });
+    this.layerIndex = index;
 };
 /**
  * 打开签到记录页面
  * @param id
  */
 Membermanagement.opencheckHistory = function (id) {
-        var index = layer.open({
-            type: 2,
-            title: '签到记录',
-            area: ['800px', '500px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/membermanagement/membermanagementcheckHistory/' + id
-        });
-        this.layerIndex = index;
+    var index = layer.open({
+        type: 2,
+        title: '签到记录',
+        area: ['800px', '500px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/membermanagementcheckHistory/' + id
+    });
+    this.layerIndex = index;
 };
 /**
  * 介绍人查询
  * @param id
  */
 Membermanagement.openintroducer = function (id) {
-        var index = layer.open({
-            type: 2,
-            title: '我推荐的人',
-            area: ['850px', '500px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/membermanagement/openintroducer/' + id
-        });
-        this.layerIndex = index;
+    var index = layer.open({
+        type: 2,
+        title: '我推荐的人',
+        area: ['850px', '500px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/openintroducer/' + id
+    });
+    this.layerIndex = index;
 };
 
 /**
@@ -143,7 +194,7 @@ Membermanagement.delete = function (id) {
         }, function (data) {
             Feng.error("删除失败!" + data.responseJSON.message + "!");
         });
-        ajax.set("membermanagementId",id);
+        ajax.set("membermanagementId", id);
         ajax.start();
     });
 };
@@ -172,30 +223,31 @@ Membermanagement.search1 = function () {
     readDeviceCard();
 //校验密码
     RfAuthenticationKey();
-    var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
-    if(CZx_32Ctrl.lErrorCode == 0){
+    var ret = CZx_32Ctrl.RfRead(DeviceHandle.value, BlockM1.value);
+    if (CZx_32Ctrl.lErrorCode == 0) {
         DevBeep();
         $.ajax({
             url: '/membermanagement/getUserInfo',
             // data: {value:ret},
-            data: {value:$("#readDeviceCard").val()},
+            data: {value: $("#readDeviceCard").val()},
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded;charset=utf-8',
             async: false,
             success: function (data) {
-                if(data.id!=undefined){
+                if (data.id != undefined) {
                     queryData1['memberid'] = data.memberid;
-                }else {
-                    if(data=="202"){
+                } else {
+                    if (data == "202") {
                         Feng.error("该卡已挂失无法执行该操作!");
-                    }else {
+                    } else {
                         queryData1['memberid'] = -1;
 
                     }
                 }
 
                 Membermanagement.table.refresh({query: queryData1});
-            }})
+            }
+        })
     }
 
 
@@ -210,20 +262,20 @@ $(function () {
 });
 
 Membermanagement.exportExcel = function () {
-    window.location.href=Feng.ctxPath +"/membermanagement/export_excel?" +
-        "address="+ $("#address").val() +
-        "&city="+ $("#city").val() +
-        "&deptid="+ $("#deptid").val() +
-        "&fstatus="+ $("#fstatus").val() +
-        "&idcard="+ $("#idcard").val() +
+    window.location.href = Feng.ctxPath + "/membermanagement/export_excel?" +
+        "address=" + $("#address").val() +
+        "&city=" + $("#city").val() +
+        "&deptid=" + $("#deptid").val() +
+        "&fstatus=" + $("#fstatus").val() +
+        "&idcard=" + $("#idcard").val() +
         // "&memberid="+ $("#memberid").val() +
         // "&townshipid="+ $("#townshipid").val() +
-        "&name="+ $("#name").val() +
-        "&district="+ $("#district").val() +
-        "&phone="+ $("#phone").val() +
-        "&province="+ $("#province").val() +
-        "&sex="+ $("#sex").val() +
-        "&stafff="+ $("#stafff").val();
+        "&name=" + $("#name").val() +
+        "&district=" + $("#district").val() +
+        "&phone=" + $("#phone").val() +
+        "&province=" + $("#province").val() +
+        "&sex=" + $("#sex").val() +
+        "&stafff=" + $("#stafff").val();
 };
 
 Membermanagement.importExcel = function () {
@@ -274,7 +326,7 @@ Membermanagement.jifenqingchu = function () {
         //     content: Feng.ctxPath + '/qiandaoCheckin/qiandaoCheckin_update/' + QiandaoCheckin.seItem.id
         // });
         // this.layerIndex = index;
-        var selectid=this.seItem.id;
+        var selectid = this.seItem.id;
         layer.confirm('您确定要进行该操作吗？', {btn: ['确定', '取消']}, function () {
             layer.closeAll('dialog');
             var ajax = new $ax(Feng.ctxPath + "/membermanagement/jifenqingchu", function (data) {
@@ -283,7 +335,7 @@ Membermanagement.jifenqingchu = function () {
             }, function (data) {
                 Feng.error("清除失败!" + data.responseJSON.message + "!");
             });
-            ajax.set("id",selectid);
+            ajax.set("id", selectid);
             ajax.start();
         });
 
