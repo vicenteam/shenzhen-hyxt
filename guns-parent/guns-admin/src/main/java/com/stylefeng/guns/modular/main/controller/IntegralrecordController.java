@@ -35,6 +35,7 @@ import yongyou.util.YongYouAPIUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Member;
 import java.sql.Wrapper;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -258,7 +259,17 @@ public class IntegralrecordController extends BaseController {
             inventoryManagement.setMemberName(membermanagements.get(0).getName());
             inventoryManagement.setIntegralid(integralrecords.get(0).getId());
             inventoryManagement.setConsumptionNum(parseIntproductNums);
+            //设置支付金额与付款方式
+            DecimalFormat df   = new DecimalFormat("######0.00");
+            inventoryManagement.setJine(Double.parseDouble(df.format((integralrecordtype.getProductpice()*parseIntproductNums)*lType.getShoppingnew())));
+            inventoryManagement.setPayType(playType==0?"账户余额"
+                    :playType==1?"现金支付":
+                    playType==2?"支付宝":
+                    playType==3?"微信":
+                    playType==4?"其他":"积分消费"
+            );
             //判断商品是否需要进行追销
+
             if (dueToRemindController.judgeDueToRemind(parseIntTemp)) {
                 inventoryManagement.setIsDueToRemind(1);
             }

@@ -43,6 +43,24 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private Integer clearid;
     private String memberPhone;
     private Integer isDueToRemind;
+    private Double jine;
+    private String payType;
+
+    public Double getJine() {
+        return jine;
+    }
+
+    public void setJine(Double jine) {
+        this.jine = jine;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
 
     public Integer getIsDueToRemind() {
         return isDueToRemind;

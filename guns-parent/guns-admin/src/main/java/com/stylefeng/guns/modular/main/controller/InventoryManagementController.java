@@ -114,11 +114,12 @@ public class InventoryManagementController extends BaseController {
     }
     @RequestMapping(value = "/order")
     @ResponseBody
-    public Object order(String condition) {
+    public Object order(String condition,String startTime,String endTime) {
         Page<InventoryManagement> page = new PageFactory<InventoryManagement>().defaultPage();
         BaseEntityWrapper<InventoryManagement> baseEntityWrapper = new BaseEntityWrapper<>();
         if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("memberName",condition);
         if(!StringUtils.isEmpty(condition))baseEntityWrapper.or().like("memberPhone",condition);
+        if(!StringUtils.isEmpty(startTime)&&!StringUtils.isEmpty(endTime))baseEntityWrapper.between("createtime",startTime,endTime);
         baseEntityWrapper.eq("status",1);
         baseEntityWrapper.orderBy("createtime",false);
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);

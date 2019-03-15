@@ -12,6 +12,12 @@
                             <div class="col-sm-2">
                                 <#NameCon id="condition" name="购买者名称或电话" />
                             </div>
+                            <div class="col-sm-2">
+                                <#TimeCon id="startTime" name="开始时间段" isTime="false"  pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </div>
+                            <div class=" col-sm-2">
+                                <#TimeCon id="endTime" name="结束时间段" isTime="false"  pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </div>
                             <div class="col-sm-3">
                                 <#button name="搜索" icon="fa-search" clickFun="InventoryManagement.search()"/>
                             </div>

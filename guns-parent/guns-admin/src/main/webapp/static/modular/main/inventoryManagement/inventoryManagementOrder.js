@@ -65,6 +65,8 @@ InventoryManagement.initColumn = function () {
                     return '<span style="color: green">' + value + '</span>';
             }
         },
+        {title: '金额', field: 'jine', visible: true, align: 'center', valign: 'middle'},
+        {title: '付款方式', field: 'payType', visible: true, align: 'center', valign: 'middle'},
         {title: '记录时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
         {title: '操作人', field: 'createuserid', visible: true, align: 'center', valign: 'middle'},
         // {title: '消耗库存人id(meimberid)', field: 'memberid', visible: true, align: 'center', valign: 'middle'},
@@ -175,6 +177,8 @@ InventoryManagement.delete1 = function () {
 InventoryManagement.search = function () {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
+    queryData['startTime'] = $("#startTime").val();
+    queryData['endTime'] = $("#endTime").val();
     InventoryManagement.table.refresh({query: queryData});
 };
 

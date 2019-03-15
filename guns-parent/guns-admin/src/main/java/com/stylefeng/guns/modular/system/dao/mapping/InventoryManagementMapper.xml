@@ -18,6 +18,8 @@
         <result column="integralid" property="integralid" />
         <result column="clearid" property="clearid" />
         <result column="isDueToRemind" property="isDueToRemind" />
+        <result column="jine" property="jine" />
+        <result column="payType" property="payType" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

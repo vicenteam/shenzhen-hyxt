@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,5 +45,13 @@ public class ActivityTask {
                 activityService.updateById(activity);
             }
         }
+    }
+    @Scheduled(cron = "2 1 0 1/1 * ?")
+    public void dbCopy() throws IOException {
+        log.info("定时数据库备份");
+        String cmd =  "mysqldump -u"+ "jksq" +"  -p"+"akmn123" + " shenzhen_guns" + " -r "
+                + "d:" + "/beifen/" + "shenzhen_guns"+new java.util.Date().getTime()+ ".sql";
+        Process process = Runtime.getRuntime().exec(cmd);
+        log.info("定时数据库备份--success");
     }
 }

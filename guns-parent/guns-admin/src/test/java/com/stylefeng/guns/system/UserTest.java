@@ -12,14 +12,12 @@ import javax.annotation.Resource;
  * @author fengshuonan
  * @date 2017-04-27 17:05
  */
-public class UserTest extends BaseJunit {
+public class UserTest  {
 
-    @Resource
-    UserMapper userMapper;
-
-    @Test
-    public void userTest() throws Exception {
-
+    public static void main(String[] args) {
+        String cmd =  "mysqldump -u"+ "jksq" +"  -p"+"akmn123" + " shenzhen_guns" + " -r "
+                + "d:" + "/beifen/" + "shenzhen_guns"+new java.util.Date().getTime()+ ".sql";
+        System.out.println(cmd);
     }
 
 }
