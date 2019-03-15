@@ -269,7 +269,6 @@ public class IntegralrecordController extends BaseController {
                     playType==4?"其他":"积分消费"
             );
             //判断商品是否需要进行追销
-
             if (dueToRemindController.judgeDueToRemind(parseIntTemp)) {
                 inventoryManagement.setIsDueToRemind(1);
             }

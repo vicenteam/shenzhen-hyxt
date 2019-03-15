@@ -292,6 +292,7 @@ function viewToWord() {
     wddoc.Bookmarks("shishou").Range.Text = shishou + "";
     wddoc.Bookmarks("zhekou").Range.Text = zhekou + "";
     wddoc.Bookmarks("jifen").Range.Text = jifen + "";
+    wddoc.Bookmarks("staffName").Range.Text = $("#staffName").val() + "";
     //添加表格
     // var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,3,4);//(赋值区域,行数,列数)
     var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,products.length,4);//(赋值区域,行数,列数)
@@ -311,7 +312,7 @@ function viewToWord() {
     for(i=0;i<products.length;i++){//行
         //第一列
         with (myTable.Cell(i+1,1).Range){
-            font.Size = 5;//调整字体大小
+            font.Size = 6;//调整字体大小
             InsertAfter(products[i].val.productname);//插入的内容 商品名称
             ParagraphFormat.Alignment=2;
 
