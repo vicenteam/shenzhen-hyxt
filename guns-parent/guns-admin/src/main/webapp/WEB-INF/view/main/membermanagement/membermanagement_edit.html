@@ -6,6 +6,7 @@
                 <input type="hidden" id="id"  name="id" value="${item.id}">
             <input id="avatar" type="hidden" value="">
             <input id="sss" type="hidden" value="${item.avatar}">
+            <input id="levelIDTemp" type="hidden" value="${item.levelID}">
             <div class="row">
                 <div class="col-sm-6 b-r">
                     <#select id="staffID" name="服务员工" underline="true">
@@ -14,6 +15,11 @@
                     <option value="${item.id}">${item.name}</option>
                     @}
                 </#select>
+                <#select id="levelID" name="会员等级" underline="true">
+                @for(item in membershipcardtype){
+                <option value="${item.id}">${item.cardname}</option>
+                @}
+            </#select>
                 <#input id="name" name="姓名" underline="true" value="${item.name}"/>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">头像</label>
@@ -104,10 +110,12 @@
 </script>
 <script>
     $(function () {
+        $("#levelID").val($("#levelIDTemp").val())
         // 初始化头像上传
         var avatarUp = new $WebUpload("avatar");
         avatarUp.setUploadBarId("progressBar");
         avatarUp.init();
+
     })
 </script>
 @}

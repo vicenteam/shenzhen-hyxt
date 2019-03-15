@@ -175,7 +175,10 @@ public class MembermanagementController extends BaseController {
         LogObjectHolder.me().set(membermanagement);
         Map<String, Object> map1 = new HashMap<>();
         map1.put("val", userbaMedicals);
+        //获取会员等级
+        List<Membershipcardtype> list1 = membershipcardtypeService.selectList(new BaseEntityWrapper<Membershipcardtype>());
         model.addAttribute("userbaMedicals", map1);
+        model.addAttribute("membershipcardtype", list1);
         return PREFIX + "membermanagement_edit.html";
     }
 
@@ -429,6 +432,11 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(Membermanagement membermanagement, String baMedicals) {
+        Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+        if (membershipcardtype != null) {
+//            membermanagement.setCountPrice(membershipcardtype.getShopping());
+            membermanagement.setPrice(membershipcardtype.getUpamount());
+        }
         membermanagementService.updateById(membermanagement);
         //删除历史健康记录
         EntityWrapper<MemberBamedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
