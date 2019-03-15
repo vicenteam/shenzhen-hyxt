@@ -75,6 +75,8 @@
                             @}
                             <#button name="积分赠送" icon="fa-pencil" clickFun="Membermanagement.jifenzengsong()" space="true"/>
                             <#button name="积分清零" icon="fa-trash" clickFun="Membermanagement.jifenqingchu()" space="true"/>
+                            <input type="hidden" id="editSecurity" value='${shiro.hasPermission("/hyxx_edit")}'>
+                            <input type="hidden" id="deleteSecurity" value='${shiro.hasPermission("/hyxx_delete")}'>
                         </div>
                         <#table id="MembermanagementTable"/>
                     </div>
