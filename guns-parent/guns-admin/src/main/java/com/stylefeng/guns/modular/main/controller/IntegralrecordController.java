@@ -235,7 +235,7 @@ public class IntegralrecordController extends BaseController {
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
 //            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
             getIntegral = Double.parseDouble(integralrecordtype.getProductjifen());
-            List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice());
+            List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
 
             integralrecordtype.setProductnum(integralrecordtype.getProductnum() - parseIntproductNums);//库存减
             integralrecordtype.setUpdatetime(DateUtil.getTime());
@@ -288,7 +288,7 @@ public class IntegralrecordController extends BaseController {
                         int floor = (int)Math.floor(i / 1000);
                         int isinsert=floor-addcheckInNum;
                         if(isinsert>0){
-                            Membermanagement membermanagement = membermanagements.get(0);
+                            Membermanagement membermanagement = membermanagementService.selectById(memberId);
                             membermanagement.setAddcheckInNum(membermanagement.getAddcheckInNum()+isinsert);
                             //添加可签到获得积分次数
                             Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
@@ -384,7 +384,7 @@ public class IntegralrecordController extends BaseController {
      * @return
      * @throws Exception
      */
-    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList, double price) throws Exception {
+    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList, double price,Integer parseIntproductNums) throws Exception {
         List<Integralrecord> integralrecords = new ArrayList<>();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
@@ -402,7 +402,7 @@ public class IntegralrecordController extends BaseController {
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
-                    memberId.setPrice(price); //总消费额
+                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
                 }
             } else if (type == 2) {
                 if (typeId == 2) { //扣除积分
@@ -414,7 +414,7 @@ public class IntegralrecordController extends BaseController {
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
-                    memberId.setPrice(price); //总消费额
+                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
                 }
             }
             //更新会员总积分和实际积分

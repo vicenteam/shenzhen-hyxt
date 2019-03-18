@@ -351,7 +351,7 @@ public class MembermanagementController extends BaseController {
             List<Membermanagement> membermanagementList = membermanagementService.selectList(mWrapper);
             Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(membermanagementList.get(0).getLevelID());
             if(null != membershipcardtype2.getNewpoints() && 0 != membershipcardtype2.getNewpoints()){
-                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,1, membermanagementList,0);
+                integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,1, membermanagementList,0,1);
             }
 
             //获取推荐活动 被推荐活动
@@ -664,15 +664,16 @@ public class MembermanagementController extends BaseController {
      */
     public void updateMemberLeave(String memberId) {
         Membermanagement membermanagement = membermanagementService.selectById(memberId);
-        Double countPrice = membermanagement.getPrice();
+        Double price = membermanagement.getPrice();
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
         for (Membershipcardtype membershipcardtype : list) {
-            System.out.println(countPrice );
+            System.out.println(price +"-----");
             System.out.println( membershipcardtype.getUpamount());
-            if (countPrice >= membershipcardtype.getUpamount()) {
+            if (price >= membershipcardtype.getUpamount()) {
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
+                System.out.println(membershipcardtype.getId());
                 membermanagementService.updateById(membermanagement);
                 break;
             }
@@ -801,7 +802,7 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
-        integralrecordController.insertIntegral(jifenNum,2,10,ms,0);
+        integralrecordController.insertIntegral(jifenNum,2,10,ms,0,1);
         return SUCCESS_TIP;
     }
     @BussinessLog(value = "积分清零", key = "jifenqingchu")

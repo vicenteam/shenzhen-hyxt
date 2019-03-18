@@ -272,7 +272,7 @@ public class ActivityController extends BaseController {
             mWrapper.eq("id",memberId);
             List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
             //调用积分变动方法
-            integralrecordController.insertIntegral(jifen,2, 2, membermanagements,0);
+            integralrecordController.insertIntegral(jifen,2, 2, membermanagements,0,1);
         }else if (ruleexpression == 3||ruleexpression == 4){
             //清除一条待领取活动信息
             EntityWrapper<MemberInactivity> baseEntityWrapper=new EntityWrapper<MemberInactivity>();
@@ -289,7 +289,7 @@ public class ActivityController extends BaseController {
                     mWrapper.eq("id",memberId);
                     List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
                     //调用积分变动方法
-                    integralrecordController.insertIntegral(jifen,2, 1, membermanagements,0);
+                    integralrecordController.insertIntegral(jifen,2, 1, membermanagements,0,1);
                 }
             }else {
                 throw new GunsException(BizExceptionEnum.NO_PERMITION1);

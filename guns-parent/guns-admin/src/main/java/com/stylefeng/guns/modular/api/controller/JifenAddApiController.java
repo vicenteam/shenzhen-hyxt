@@ -148,7 +148,7 @@ public class JifenAddApiController extends BaseController {
             }
             List<Membermanagement> ms = membermanagementService.selectList(wrapper);
             //积分添加操作
-            integralrecordController.insertIntegral(nowPice,2,10,ms,0);
+            integralrecordController.insertIntegral(nowPice,2,10,ms,0,1);
 
         }catch (Exception e){
             throw new Exception("赠送积分失败 请联系管理员!");
