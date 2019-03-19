@@ -299,11 +299,11 @@ function viewToWord() {
     //隐藏边框
     var table=wdapp.ActiveDocument.Tables(1);
     // table.PreferredWidth =140
-    table.Columns(1).Width = 60
+    table.Columns(1).Width = 56
     table.Columns(2).Width = 30
-    table.Columns(3).Width = 30
-    table.Columns(4).Width = 30
-    table.Range.ParagraphFormat.Alignment = 2
+    table.Columns(3).Width = 28
+    table.Columns(4).Width = 28
+    table.Range.ParagraphFormat.Alignment = 1
     table.Borders(-1).LineStyle=0;
     table.Borders(-2).LineStyle=0;
     table.Borders(-3).LineStyle=0;
@@ -312,7 +312,7 @@ function viewToWord() {
     for(i=0;i<products.length;i++){//行
         //第一列
         with (myTable.Cell(i+1,1).Range){
-            font.Size = 6;//调整字体大小
+            font.Size = 5;//调整字体大小
             InsertAfter(products[i].val.productname);//插入的内容 商品名称
             ParagraphFormat.Alignment=2;
 
@@ -327,13 +327,13 @@ function viewToWord() {
         with(myTable.Cell(i+1,3).Range){
             font.Size = 8;
             InsertAfter(products[i].val.productpice); //单价
-            ParagraphFormat.Alignment=2;
+            ParagraphFormat.Alignment=1;
         }
         //第四列
         with(myTable.Cell(i+1,4).Range){
             font.Size = 8;
             InsertAfter(products[i].val.consumptionNum*products[i].val.productpice);//金额
-            ParagraphFormat.Alignment=1;
+            ParagraphFormat.Alignment=0;
         }
     }
     wdapp.visible = false;
