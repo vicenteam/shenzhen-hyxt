@@ -99,7 +99,7 @@ Membermanagement.initColumn = function () {
                 if ($("#deleteSecurity").val() == "true") {
                     tempDom += '<button type="button" class=" btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;删除</button>';
                 }
-                tempDom+='<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
+                tempDom += '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
                     '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>';
                 return tempDom;
 
@@ -300,7 +300,7 @@ Membermanagement.jifenzengsong = function () {
         //     content: Feng.ctxPath + '/qiandaoCheckin/qiandaoCheckin_update/' + QiandaoCheckin.seItem.id
         // });
         // this.layerIndex = index;
-
+        var selectid = this.seItem.id;
         layer.confirm('<div>赠送积分数量：<input type="text" style="width: 50px"value="0" id="jifenNum"></div>', {btn: ['确定', '取消']}, function () {
             layer.closeAll('dialog');
             var ajax = new $ax(Feng.ctxPath + "/membermanagement/jifenzengsong", function (data) {
