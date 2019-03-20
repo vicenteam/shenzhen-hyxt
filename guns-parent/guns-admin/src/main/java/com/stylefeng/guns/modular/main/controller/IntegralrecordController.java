@@ -393,9 +393,11 @@ public class IntegralrecordController extends BaseController {
             nowIntegral = memberId.getIntegral();
             nowCountPrice = memberId.getCountPrice();
             if (type == 1) {
-                if (integral < 0) { //扣除类积分
+                if (integral <= 0) { //扣除类积分
                     if ((nowIntegral + integral) >= 0) {
                         memberId.setIntegral(nowIntegral + integral);
+                        memberId.setCountPrice(nowCountPrice + integral);
+                        memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
                     } else {
                         throw new Exception("可用积分不足！");
                     }
@@ -408,6 +410,7 @@ public class IntegralrecordController extends BaseController {
                 if (typeId == 2) { //扣除积分
                     if ((nowIntegral - integral) >= 0) {
                         memberId.setIntegral(nowIntegral - integral);
+                        memberId.setCountPrice(nowCountPrice - integral);
                     } else {
                         throw new Exception("可用积分不足！");
                     }
