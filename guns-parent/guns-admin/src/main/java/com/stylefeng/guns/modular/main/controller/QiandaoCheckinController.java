@@ -125,8 +125,7 @@ public class QiandaoCheckinController extends BaseController {
         qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
         qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
         qiandaoCheckinService.insert(qiandaoCheckin);
-        //进行复签
-        update(memberId,chechId);
+
         //修改签到记录
         Membermanagement membermanagement = membermanagementService.selectById(memberId);
         if(membermanagement!=null){
@@ -140,6 +139,7 @@ public class QiandaoCheckinController extends BaseController {
                 Date nowDate = new Date();
                 if(date.getMonth() == nowDate.getMonth() && date.getDay() == nowDate.getDay()){ //判断是否为生日  双倍签到积分
                     integralrecordController.insertIntegral(integral ,2,3,membermanagements,0,1); //
+                    membermanagement = membermanagementService.selectById(memberId);
                 }
             }
             System.out.println(integralrecordController==null);
@@ -147,7 +147,10 @@ public class QiandaoCheckinController extends BaseController {
             Integer checkInNum = membermanagement.getCheckInNum();
             if(checkInNum!=null&&checkInNum>0){
                 integralrecordController.insertIntegral(integral,2,0,membermanagements,0,1);
+                membermanagement = membermanagementService.selectById(memberId);
                 membermanagement.setCheckInNum(membermanagement.getCheckInNum()-1);
+            }else {
+                throw new Exception("签到次数不足!");
             }
 //            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
 //                List<Membermanagement> introducers = new ArrayList<>();
@@ -160,6 +163,8 @@ public class QiandaoCheckinController extends BaseController {
             membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             membermanagement.setIsvisit(0);
             membermanagementService.updateById(membermanagement);
+            //进行复签
+            update(memberId,chechId);
         }
         return SUCCESS_TIP;
     }
