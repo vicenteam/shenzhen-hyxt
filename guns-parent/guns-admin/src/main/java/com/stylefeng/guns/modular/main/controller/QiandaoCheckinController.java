@@ -150,7 +150,7 @@ public class QiandaoCheckinController extends BaseController {
                 membermanagement = membermanagementService.selectById(memberId);
                 membermanagement.setCheckInNum(membermanagement.getCheckInNum()-1);
             }else {
-                throw new Exception("签到次数不足!");
+//                throw new Exception("签到次数不足!");
             }
 //            if(! StringUtils.isEmpty(membermanagement.getIntroducerId())){ //会员打卡推荐人获得积分
 //                List<Membermanagement> introducers = new ArrayList<>();
