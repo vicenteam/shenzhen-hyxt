@@ -413,11 +413,12 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
         memberCardBaseEntityWrapper.eq("memberid", memberId);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
-        if (memberCard != null) {
+        if (memberCard != null && ! StringUtils.isEmpty(cardID)) {
             memberCard.setCode(cardID);
             memberCardService.updateById(memberCard);
-            Membermanagement membermanagement = new Membermanagement();
-            membermanagement.setId(Integer.parseInt(memberId));
+//            Membermanagement membermanagement = new Membermanagement();
+            Membermanagement membermanagement = membermanagementService.selectById(memberId);
+//            membermanagement.setId(Integer.parseInt(memberId));
             membermanagement.setCadID(cadID); //会员身份证id
             membermanagementService.updateById(membermanagement);
         }
