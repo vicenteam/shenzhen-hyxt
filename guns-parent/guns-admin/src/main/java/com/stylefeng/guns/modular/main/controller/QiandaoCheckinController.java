@@ -54,6 +54,8 @@ public class QiandaoCheckinController extends BaseController {
     private IMembershipcardtypeService membershipcardtypeService;
     @Autowired
     private IntegralrecordController integralrecordController;
+    @Autowired
+    private MembermanagementController membermanagementController;
 
     /**
      * 跳转到复签记录首页
@@ -163,6 +165,7 @@ public class QiandaoCheckinController extends BaseController {
             membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             membermanagement.setIsvisit(0);
             membermanagementService.updateById(membermanagement);
+            membermanagementController.updateMemberInfo(membermanagement);
             //进行复签
             update(memberId,chechId);
         }
@@ -224,6 +227,7 @@ public class QiandaoCheckinController extends BaseController {
                         }
 //                        }
                         membermanagementService.updateById(membermanagement);
+                        membermanagementController.updateMemberInfo(membermanagement);
                     }
                 }
 

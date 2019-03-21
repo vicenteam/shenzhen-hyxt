@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stylefeng.guns.GunsApplication;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.constant.dictmap.DeptDict;
@@ -30,6 +31,8 @@ import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -62,7 +65,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/membermanagement")
 public class MembermanagementController extends BaseController {
-
+    private final static Logger logger = LoggerFactory.getLogger(MembermanagementController.class);
     private String PREFIX = "/main/membermanagement/";
 
 
@@ -679,6 +682,7 @@ public class MembermanagementController extends BaseController {
                 break;
             }
         }
+        updateMemberInfo(membermanagement);
     }
 
     @BussinessLog(value = "会员资料导出", key = "export_excel")
@@ -814,5 +818,9 @@ public class MembermanagementController extends BaseController {
         membermanagement.setIntegral(0.0);
         membermanagementService.updateById(membermanagement);
         return SUCCESS_TIP;
+    }
+
+    public void updateMemberInfo(Membermanagement membermanagement){
+        logger.info("deptId:"+membermanagement.getDeptId()+"-userId:"+membermanagement.getId()+"json:"+JSON.toJSONString(membermanagement));
     }
 }
