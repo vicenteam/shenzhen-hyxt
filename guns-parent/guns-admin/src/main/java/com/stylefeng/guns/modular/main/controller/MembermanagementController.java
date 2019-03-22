@@ -678,6 +678,7 @@ public class MembermanagementController extends BaseController {
             System.out.println( membershipcardtype.getUpamount());
             if (price.doubleValue()>= membershipcardtype.getUpamount().doubleValue()) {
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
+                membermanagement.setPrice(membershipcardtype.getUpamount());
                 System.out.println(membershipcardtype.getId());
                 membermanagementService.updateById(membermanagement);
                 break;
