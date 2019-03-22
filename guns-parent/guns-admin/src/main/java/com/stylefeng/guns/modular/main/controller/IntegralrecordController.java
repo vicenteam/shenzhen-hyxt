@@ -398,14 +398,14 @@ public class IntegralrecordController extends BaseController {
                     if ((nowIntegral + integral) >= 0) {
                         memberId.setIntegral(nowIntegral + integral);
                         memberId.setCountPrice(nowCountPrice + integral);
-                        memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                        memberId.setPrice(memberId.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
                     } else {
                         throw new Exception("可用积分不足！");
                     }
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
-                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                    memberId.setPrice(memberId.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
                 }
             } else if (type == 2) {
                 if (typeId == 2) { //扣除积分
