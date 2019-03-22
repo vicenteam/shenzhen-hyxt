@@ -456,6 +456,7 @@ public class MembermanagementController extends BaseController {
                 memberBamedicalService.insert(memberBamedical);
             }
         }
+        updateMemberInfo(membermanagement);
         return SUCCESS_TIP;
     }
 
@@ -675,7 +676,7 @@ public class MembermanagementController extends BaseController {
         for (Membershipcardtype membershipcardtype : list) {
             System.out.println(price +"-----");
             System.out.println( membershipcardtype.getUpamount());
-            if (price >= membershipcardtype.getUpamount()) {
+            if (price.doubleValue()>= membershipcardtype.getUpamount().doubleValue()) {
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
                 System.out.println(membershipcardtype.getId());
                 membermanagementService.updateById(membermanagement);

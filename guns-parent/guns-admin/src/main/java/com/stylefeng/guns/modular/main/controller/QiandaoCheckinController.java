@@ -206,32 +206,32 @@ public class QiandaoCheckinController extends BaseController {
             qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             qiandaoCheckinService.updateById(qiandaoCheckin);
             //如果当前用户复签次数累计>=10次更新为普通会员卡
-            EntityWrapper<QiandaoCheckin> qiandaoc = new EntityWrapper<>();
-            qiandaoc.eq("memberid", memberId);
-            qiandaoc.isNotNull("updatetime");
-            int count = qiandaoCheckinService.selectCount(qiandaoc);
-            Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
-//            if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
-            if (membermanagement1 != null) {
-                String levelID = membermanagement1.getLevelID();
-                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
-                if (membershipcardtype != null && membershipcardtype.getLeaves() == 0) {
-                    if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
-                        Membermanagement membermanagement = membermanagementService.selectById(memberId);
-//                        if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
-                        EntityWrapper<Membershipcardtype> membershipcardtypeEntityWrapper = new EntityWrapper<>();
-                        membershipcardtypeEntityWrapper.eq("deptid", qiandaoCheckin.getDeptid());
-                        List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
-                        if (list.size() >= 2) {
-                            membermanagement.setLevelID(list.get(1).getId() + "");
-                        }
+//            EntityWrapper<QiandaoCheckin> qiandaoc = new EntityWrapper<>();
+//            qiandaoc.eq("memberid", memberId);
+//            qiandaoc.isNotNull("updatetime");
+//            int count = qiandaoCheckinService.selectCount(qiandaoc);
+//            Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
+////            if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
+//            if (membermanagement1 != null) {
+//                String levelID = membermanagement1.getLevelID();
+//                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
+//                if (membershipcardtype != null && membershipcardtype.getLeaves() == 0) {
+//                    if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
+//                        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+////                        if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
+//                        EntityWrapper<Membershipcardtype> membershipcardtypeEntityWrapper = new EntityWrapper<>();
+//                        membershipcardtypeEntityWrapper.eq("deptid", qiandaoCheckin.getDeptid());
+//                        List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
+//                        if (list.size() >= 2) {
+//                            membermanagement.setLevelID(list.get(1).getId() + "");
 //                        }
-                        membermanagementService.updateById(membermanagement);
-                        membermanagementController.updateMemberInfo(membermanagement);
-                    }
-                }
-
-            }
+////                        }
+//                        membermanagementService.updateById(membermanagement);
+//                        membermanagementController.updateMemberInfo(membermanagement);
+//                    }
+//                }
+//
+//            }
 
             //复签成功后统计当前场次完整签到人数
             Checkin checkin = checkinService.selectById(chechId);

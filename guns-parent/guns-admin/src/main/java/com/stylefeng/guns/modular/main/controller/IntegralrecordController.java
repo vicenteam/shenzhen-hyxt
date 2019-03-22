@@ -418,12 +418,14 @@ public class IntegralrecordController extends BaseController {
                 } else {
                     memberId.setIntegral(nowIntegral + integral);
                     memberId.setCountPrice(nowCountPrice + integral);
-                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+//                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
                 }
             }
             //更新会员总积分和实际积分
             membermanagementService.updateById(memberId);
-            membermanagementController.updateMemberLeave(memberId.getId() + "");
+            if(type!=2){
+                membermanagementController.updateMemberLeave(memberId.getId() + "");
+            }
 
             if (type == 1) { // type=1 商品积分
                 integralrecord.setIntegralType(type.toString());

@@ -46,12 +46,12 @@ public class ActivityTask {
             }
         }
     }
-    @Scheduled(cron = "2 1 0 1/1 * ?")
-    public void dbCopy() throws IOException {
-        log.info("定时数据库备份");
-        String cmd =  "mysqldump -u"+ "jksq" +"  -p"+"akmn123" + " shenzhen_guns" + " -r "
-                + "d:" + "/beifen/" + "shenzhen_guns"+new java.util.Date().getTime()+ ".sql";
-        Process process = Runtime.getRuntime().exec(cmd);
-        log.info("定时数据库备份--success");
-    }
+//    @Scheduled(cron = "2 1 0 1/1 * ?")
+//    public void dbCopy() throws IOException {
+//        log.info("定时数据库备份");
+//        String cmd =  "mysqldump -u"+ "jksq" +"  -p"+"akmn123" + " shenzhen_guns" + " -r "
+//                + "d:" + "/beifen/" + "shenzhen_guns"+new java.util.Date().getTime()+ ".sql";
+//        Process process = Runtime.getRuntime().exec(cmd);
+//        log.info("定时数据库备份--success");
+//    }
 }
