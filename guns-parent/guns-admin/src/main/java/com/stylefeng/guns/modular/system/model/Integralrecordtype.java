@@ -54,6 +54,19 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
      */
     private String productjifen;
     /**
+     * 商品兑换积分
+     */
+    private double productduihuanjifen;
+
+    public double getProductduihuanjifen() {
+        return productduihuanjifen;
+    }
+
+    public void setProductduihuanjifen(double productduihuanjifen) {
+        this.productduihuanjifen = productduihuanjifen;
+    }
+
+    /**
      * 食用剂量(,号隔开)
      */
     private String producteatingdose;

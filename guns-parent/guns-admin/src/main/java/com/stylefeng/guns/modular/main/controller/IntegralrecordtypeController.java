@@ -172,6 +172,7 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/tongbuData")
     @ResponseBody
     public Object tongbuData() throws Exception {
+        StringBuilder sb=new StringBuilder();
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         String Warehouse = "";
         if (dept.gettPlusWarehouseCode() != null) {
@@ -198,11 +199,16 @@ public class IntegralrecordtypeController extends BaseController {
                 integralrecordtype.setDeptid(ShiroKit.getUser().deptId + "");
                 integralrecordtype.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.insert(integralrecordtype);
+                sb.append(integralrecordtype.getId()+",");
             } else {
                 integralrecordtype1.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.updateById(integralrecordtype1);
+                sb.append(integralrecordtype1.getId()+",");
             }
         }
+        BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
+        wrapper.notIn("id",sb.toString());
+        integralrecordtypeService.delete(wrapper);
         System.out.println("同步数据完成。。。");
         return "success";
     }

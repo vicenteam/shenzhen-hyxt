@@ -19,10 +19,11 @@ Integralrecord.initColumn = function () {
             {title: '身份证号', field: 'membercadid', visible: true, align: 'center', valign: 'middle'},
             {title: '联系电话', field: 'memberPhone', visible: true, align: 'center', valign: 'middle'},
             {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                     if (row.type == 5||row.type == 3){
-                        return "<span style='color: red'>-"+value+"</span>";
-                    }else {
+
+                     if(value>=0){
                          return "<span style='color: green'>+"+value+"</span>";
+                     }else {
+                         return "<span style='color: red'>-"+value+"</span>";
                      }
                 }},
             {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},

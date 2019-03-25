@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,8 @@ public class IntegralRecordQueryController extends BaseController {
             if(type.equals("1")){
                 Integralrecordtype integralrecordtype = new Integralrecordtype();
                 integralrecordtype.setId(Integer.parseInt(e.get("typeId")));
-                e.put("name",integralrecordtypeService.selectById(integralrecordtype).getProductname());
+                Integralrecordtype integralrecordtype1 = integralrecordtypeService.selectById(integralrecordtype);
+                e.put("name", integralrecordtype1.getProductname());
             }else{
                 if(e.get("otherTypeId").equals("0")){
                     e.put("name","签到积分");
@@ -81,6 +83,9 @@ public class IntegralRecordQueryController extends BaseController {
                 }
             }
         });
+        Map<String ,String> map=new HashMap<>();
+        map.put("name","全部");
+        types2.add(0,map);
         return types2;
     }
 
@@ -120,7 +125,9 @@ public class IntegralRecordQueryController extends BaseController {
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
         iWrapper.eq("integralType",type);
         if(type.equals("1")){
-            iWrapper.eq("typeId",integralType);
+            if(!"undefined".equals(integralType)){
+                iWrapper.eq("typeId",integralType);
+            }
         }else if(type.equals("2")){
             iWrapper.eq("otherTypeId",integralType);
         }

@@ -12,6 +12,7 @@
         <result column="productnum" property="productnum" />
         <result column="productbalance" property="productbalance" />
         <result column="productjifen" property="productjifen" />
+        <result column="productduihuanjifen" property="productduihuanjifen" />
         <result column="producteatingdose" property="producteatingdose" />
         <result column="deptid" property="deptid" />
         <result column="createtime" property="createtime" />
