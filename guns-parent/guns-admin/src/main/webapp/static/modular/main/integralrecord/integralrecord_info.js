@@ -86,6 +86,12 @@ IntegralrecordInfoDlg.validate = function () {
 /**
  * 提交添加
  */
+var timeClose=null;
+var tempData=new Array();
+var yingshouTemp=0;
+var shishouTemp=0;
+var zhekouTemp=0;
+var jifenTemp=0;
 IntegralrecordInfoDlg.addSubmit = function() {
 
     this.clearData();
@@ -102,7 +108,13 @@ IntegralrecordInfoDlg.addSubmit = function() {
         //执行打印
         // document.getElementById("iframe_map_canvasInfo").contentWindow.commit();
         //显示dom
-        viewToWord()
+         tempData=products;
+        yingshouTemp=yingshou;
+        shishouTemp=shishou;
+        zhekouTemp=zhekou;
+        jifenTemp=jifen;
+
+        // viewToWord(products)
         // alert("正在打印。。。")
         // showBtn()
         Feng.success("操作成功!");
@@ -122,10 +134,8 @@ IntegralrecordInfoDlg.addSubmit = function() {
         products = new Array()
         loadProduct()
         //执行打印操作
-        // document.getElementById("WebBrowser").ExecWB(6,2)
-        // var iframe = document.getElementById("iframe_map_canvasInfo")
-        // iframe.contentWindow.getElementById("WebBrowser").ExecWB(6,2)
-        // document.getElementById("iframe_map_canvasInfo").contentWindow
+        // IntegralrecordInfoDlg.addSubmit.trigger('done');
+        timeClose= window.setInterval("viewToWord(tempData)",3000);
     },function(data){
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });
@@ -134,7 +144,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
     ajax.start();
     
 }
-
+// IntegralrecordInfoDlg.addSubmit.on('done', viewToWord(tempData));
 /**
  * 提交修改
  */
@@ -267,7 +277,8 @@ function showBtn() {
 }
 // 打印小票
 
-function viewToWord() {
+function viewToWord(temp) {console.log("--执行")
+    var products=temp;
     //当前时间
     var time = new Date();   // 程序计时的月从0开始取值后+1
     var m = time.getMonth() + 1;
@@ -288,10 +299,10 @@ function viewToWord() {
     wdapp.Documents.Open("D:\\xingxie\\shouyinxiaopiaoTemp4.doc"); //打开本地(客户端)word模板
     wddoc = wdapp.ActiveDocument;
     wddoc.Bookmarks("time").Range.Text = t + "";
-    wddoc.Bookmarks("yingshou").Range.Text = yingshou+ "";
-    wddoc.Bookmarks("shishou").Range.Text = shishou + "";
-    wddoc.Bookmarks("zhekou").Range.Text = zhekou + "";
-    wddoc.Bookmarks("jifen").Range.Text = jifen + "";
+    wddoc.Bookmarks("yingshou").Range.Text = yingshouTemp+ "";
+    wddoc.Bookmarks("shishou").Range.Text = shishouTemp + "";
+    wddoc.Bookmarks("zhekou").Range.Text = zhekouTemp + "";
+    wddoc.Bookmarks("jifen").Range.Text = jifenTemp + "";
     wddoc.Bookmarks("staffName").Range.Text = $("#staffName").val() + "";
     //添加表格
     // var myTable = wddoc.Tables.Add (wddoc.Bookmarks("OrderCart").Range,3,4);//(赋值区域,行数,列数)
@@ -346,4 +357,5 @@ function viewToWord() {
     wdapp.Application.Printout(); //调用自动打印功能
     wdapp.quit();
     wdapp = null;
+    window.clearTimeout(timeClose);
 }
