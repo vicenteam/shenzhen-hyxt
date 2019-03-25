@@ -436,7 +436,9 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(Membermanagement membermanagement, String baMedicals) {
+        Membermanagement membermanagement1 = membermanagementService.selectById(membermanagement.getId());
         Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+        logger.info("修改会员等级+Leave"+membermanagement1.getName()+" 原等级id："+membermanagement1.getLevelID() +" 修改后等级Id:"+membershipcardtype.getId());
         if (membershipcardtype != null) {
 //            membermanagement.setCountPrice(membershipcardtype.getShopping());
             membermanagement.setPrice(membershipcardtype.getUpamount());
@@ -677,8 +679,9 @@ public class MembermanagementController extends BaseController {
             System.out.println(price +"-----");
             System.out.println( membershipcardtype.getUpamount());
             if (price.doubleValue()>= membershipcardtype.getUpamount().doubleValue()) {
+                logger.info("修改会员等级+Leave"+membermanagement.getName()+" 原等级id："+membermanagement.getLevelID() +" 修改后等级Id:"+membershipcardtype.getId());
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
-                membermanagement.setPrice(membershipcardtype.getUpamount());
+//                membermanagement.setPrice(membershipcardtype.getUpamount());
                 System.out.println(membershipcardtype.getId());
                 membermanagementService.updateById(membermanagement);
                 break;
