@@ -201,7 +201,7 @@ public class IntegralrecordController extends BaseController {
                 verificationCodeService.deleteById(verificationCode.getId());
             }
 
-            Double money = membermanagements.get(0).getMoney();
+            double money = membermanagements.get(0).getMoney();
             if (money < play) {
                 throw new GunsException(BizExceptionEnum.MONEY_ERROR);
             } else {//扣除用户余额
@@ -385,7 +385,7 @@ public class IntegralrecordController extends BaseController {
      * @return
      * @throws Exception
      */
-    public List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList, double price,Integer parseIntproductNums) throws Exception {
+    public synchronized List<Integralrecord> insertIntegral(double integral, Integer type, Integer typeId, List<Membermanagement> mList, double price,Integer parseIntproductNums) throws Exception {
         List<Integralrecord> integralrecords = new ArrayList<>();
         Integralrecord integralrecord = new Integralrecord();
         double nowIntegral = 0;
