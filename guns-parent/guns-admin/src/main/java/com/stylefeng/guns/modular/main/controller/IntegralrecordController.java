@@ -397,7 +397,7 @@ public class IntegralrecordController extends BaseController {
                 if (integral < 0) { //扣除类积分
                     if ((nowIntegral + integral) >= 0) {
                         memberId.setIntegral(nowIntegral + integral);
-                        memberId.setCountPrice(nowCountPrice + integral);
+//                        memberId.setCountPrice(nowCountPrice + integral);
                         memberId.setPrice(memberId.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
                     } else {
                         throw new Exception("可用积分不足！");
@@ -407,11 +407,14 @@ public class IntegralrecordController extends BaseController {
                     memberId.setCountPrice(nowCountPrice + integral);
                     memberId.setPrice(memberId.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
                 }
+                // type=1 商品积分
+                integralrecord.setIntegralType(type.toString());
+                integralrecord.setTypeId(typeId.toString());
             } else if (type == 2) {
                 if (typeId == 2) { //扣除积分
                     if ((nowIntegral - integral) >= 0) {
                         memberId.setIntegral(nowIntegral - integral);
-                        memberId.setCountPrice(nowCountPrice - integral);
+//                        memberId.setCountPrice(nowCountPrice - integral);
                     } else {
                         throw new Exception("可用积分不足！");
                     }
@@ -420,6 +423,9 @@ public class IntegralrecordController extends BaseController {
                     memberId.setCountPrice(nowCountPrice + integral);
 //                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
                 }
+                // type=2 行为积分
+                integralrecord.setIntegralType(type.toString());
+                integralrecord.setOtherTypeId(typeId.toString());
             }
             //更新会员总积分和实际积分
             membermanagementService.updateById(memberId);
@@ -427,13 +433,6 @@ public class IntegralrecordController extends BaseController {
                 membermanagementController.updateMemberLeave(memberId.getId() + "");
             }
 
-            if (type == 1) { // type=1 商品积分
-                integralrecord.setIntegralType(type.toString());
-                integralrecord.setTypeId(typeId.toString());
-            } else if (type == 2) { // type=2 行为积分
-                integralrecord.setIntegralType(type.toString());
-                integralrecord.setOtherTypeId(typeId.toString());
-            }
             //添加积分记录
             integralrecord.setIntegral(integral);
             if (type == 2 && typeId == 2) integralrecord.setIntegral(-integral);
