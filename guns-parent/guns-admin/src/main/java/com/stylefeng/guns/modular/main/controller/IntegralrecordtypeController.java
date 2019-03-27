@@ -210,7 +210,8 @@ public class IntegralrecordtypeController extends BaseController {
         }
         BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
         wrapper.notIn("id",sb.toString());
-        integralrecordtypeService.delete(wrapper);
+//        integralrecordtypeService.delete(wrapper);
+        integralrecordtypeService.updateForSet("status=0",wrapper);
         System.out.println("同步数据完成。。。");
         return "success";
     }
