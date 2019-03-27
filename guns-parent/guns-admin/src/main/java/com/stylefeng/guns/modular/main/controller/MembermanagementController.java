@@ -33,6 +33,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -63,6 +64,7 @@ import java.util.*;
  * @Date 2018-08-10 16:00:02
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/membermanagement")
 public class MembermanagementController extends BaseController {
     private final static Logger logger = LoggerFactory.getLogger(MembermanagementController.class);
