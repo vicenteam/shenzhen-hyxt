@@ -4,12 +4,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.modular.main.service.ICheckinService;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
-import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
-import com.stylefeng.guns.modular.system.model.Checkin;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
-import com.stylefeng.guns.modular.system.model.Membershipcardtype;
+import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.system.model.*;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -24,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
-import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,6 +50,8 @@ public class QiandaoCheckinController extends BaseController {
     private IntegralrecordController integralrecordController;
     @Autowired
     private MembermanagementController membermanagementController;
+    @Autowired
+    private IIntegralrecordService integralrecordService;
 
     /**
      * 跳转到复签记录首页
@@ -102,7 +98,7 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(String memberId, String chechId) throws Exception {
+    public synchronized Object add(String memberId, String chechId) throws Exception {
         //判断签到场次是否被结束
         if (!StringUtils.isEmpty(chechId)) {
             Checkin checkin1 = checkinService.selectById(chechId);
@@ -140,7 +136,74 @@ public class QiandaoCheckinController extends BaseController {
                 Date date = sdf.parse(membermanagement.getBirthday());
                 Date nowDate = new Date();
                 if(date.getMonth() == nowDate.getMonth() && date.getDay() == nowDate.getDay()){ //判断是否为生日  双倍签到积分
-                    integralrecordController.insertIntegral(integral ,2,3,membermanagements,0,1); //
+                    //integralrecordController.insertIntegral(integral ,2,3,membermanagements,0,1); //
+                    {
+                        //----
+//                double integral=integral;
+                        Integer type=2;
+                        Integer typeId=3;
+                        List<Membermanagement> mList=membermanagements;
+                        int price=0;
+                        int parseIntproductNums=1;
+                        List<Integralrecord> integralrecords = new ArrayList<>();
+                        Integralrecord integralrecord = new Integralrecord();
+                        double nowIntegral = 0;
+                        double nowCountPrice = 0;
+                        for (Membermanagement memberIdo : mList) {  //循环当前门店会员列表为
+                            nowIntegral = memberIdo.getIntegral();
+                            nowCountPrice = memberIdo.getCountPrice();
+                            if (type == 1) {
+                                if (integral < 0) { //扣除类积分
+                                    if ((nowIntegral + integral) >= 0) {
+                                        memberIdo.setIntegral(nowIntegral + integral);
+//                        memberId.setCountPrice(nowCountPrice + integral);
+                                        memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                    } else {
+                                        throw new Exception("可用积分不足！");
+                                    }
+                                } else {
+                                    memberIdo.setIntegral(nowIntegral + integral);
+                                    memberIdo.setCountPrice(nowCountPrice + integral);
+                                    memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                }
+                                // type=1 商品积分
+                                integralrecord.setIntegralType(type.toString());
+                                integralrecord.setTypeId(typeId.toString());
+                            } else if (type == 2) {
+                                if (typeId == 2) { //扣除积分
+                                    if ((nowIntegral - integral) >= 0) {
+                                        memberIdo.setIntegral(nowIntegral - integral);
+//                        memberId.setCountPrice(nowCountPrice - integral);
+                                    } else {
+                                        throw new Exception("可用积分不足！");
+                                    }
+                                } else {
+                                    memberIdo.setIntegral(nowIntegral + integral);
+                                    memberIdo.setCountPrice(nowCountPrice + integral);
+//                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                                }
+                                // type=2 行为积分
+                                integralrecord.setIntegralType(type.toString());
+                                integralrecord.setOtherTypeId(typeId.toString());
+                            }
+                            //更新会员总积分和实际积分
+                            membermanagementService.updateById(memberIdo);
+                            if(type!=2){
+                                membermanagementController.updateMemberLeave(memberIdo.getId() + "");
+                            }
+
+                            //添加积分记录
+                            integralrecord.setIntegral(integral);
+                            if (type == 2 && typeId == 2) integralrecord.setIntegral(-integral);
+                            integralrecord.setCreateTime(DateUtil.getTime());
+                            integralrecord.setMemberid(memberIdo.getId());
+                            integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+                            integralrecord.setStaffid(ShiroKit.getUser().getId());
+                            integralrecordService.insert(integralrecord);
+                            integralrecords.add(integralrecord);
+                        }
+                        //----
+                    }
                     membermanagement = membermanagementService.selectById(memberId);
                 }
             }
@@ -148,7 +211,74 @@ public class QiandaoCheckinController extends BaseController {
             //判断可签到获得积分次数 >0执行积分操作
             Integer checkInNum = membermanagement.getCheckInNum();
             if(checkInNum!=null&&checkInNum>0){
-                integralrecordController.insertIntegral(integral,2,0,membermanagements,0,1);
+                //integralrecordController.insertIntegral(integral,2,0,membermanagements,0,1);
+                {
+                    //----
+//                double integral=integral;
+                    Integer type=2;
+                    Integer typeId=0;
+                    List<Membermanagement> mList=membermanagements;
+                    int price=0;
+                    int parseIntproductNums=1;
+                    List<Integralrecord> integralrecords = new ArrayList<>();
+                    Integralrecord integralrecord = new Integralrecord();
+                    double nowIntegral = 0;
+                    double nowCountPrice = 0;
+                    for (Membermanagement memberIdo : mList) {  //循环当前门店会员列表为
+                        nowIntegral = memberIdo.getIntegral();
+                        nowCountPrice = memberIdo.getCountPrice();
+                        if (type == 1) {
+                            if (integral < 0) { //扣除类积分
+                                if ((nowIntegral + integral) >= 0) {
+                                    memberIdo.setIntegral(nowIntegral + integral);
+//                        memberId.setCountPrice(nowCountPrice + integral);
+                                    memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                } else {
+                                    throw new Exception("可用积分不足！");
+                                }
+                            } else {
+                                memberIdo.setIntegral(nowIntegral + integral);
+                                memberIdo.setCountPrice(nowCountPrice + integral);
+                                memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                            }
+                            // type=1 商品积分
+                            integralrecord.setIntegralType(type.toString());
+                            integralrecord.setTypeId(typeId.toString());
+                        } else if (type == 2) {
+                            if (typeId == 2) { //扣除积分
+                                if ((nowIntegral - integral) >= 0) {
+                                    memberIdo.setIntegral(nowIntegral - integral);
+//                        memberId.setCountPrice(nowCountPrice - integral);
+                                } else {
+                                    throw new Exception("可用积分不足！");
+                                }
+                            } else {
+                                memberIdo.setIntegral(nowIntegral + integral);
+                                memberIdo.setCountPrice(nowCountPrice + integral);
+//                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                            }
+                            // type=2 行为积分
+                            integralrecord.setIntegralType(type.toString());
+                            integralrecord.setOtherTypeId(typeId.toString());
+                        }
+                        //更新会员总积分和实际积分
+                        membermanagementService.updateById(memberIdo);
+                        if(type!=2){
+                            membermanagementController.updateMemberLeave(memberIdo.getId() + "");
+                        }
+
+                        //添加积分记录
+                        integralrecord.setIntegral(integral);
+                        if (type == 2 && typeId == 2) integralrecord.setIntegral(-integral);
+                        integralrecord.setCreateTime(DateUtil.getTime());
+                        integralrecord.setMemberid(memberIdo.getId());
+                        integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+                        integralrecord.setStaffid(ShiroKit.getUser().getId());
+                        integralrecordService.insert(integralrecord);
+                        integralrecords.add(integralrecord);
+                    }
+                    //----
+                }
                 membermanagement = membermanagementService.selectById(memberId);
                 membermanagement.setCheckInNum(membermanagement.getCheckInNum()-1);
             }else {
@@ -188,7 +318,7 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
 //    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object update(String memberId, String chechId) throws Exception {
+    public synchronized Object update(String memberId, String chechId) throws Exception {
         //判断签到场次是否被结束
         if (!StringUtils.isEmpty(chechId)) {
             Checkin checkin1 = checkinService.selectById(chechId);

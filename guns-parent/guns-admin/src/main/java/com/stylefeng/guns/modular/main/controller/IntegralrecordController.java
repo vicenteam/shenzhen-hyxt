@@ -2,39 +2,33 @@ package com.stylefeng.guns.modular.main.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
-import com.stylefeng.guns.core.base.tips.SuccessTip;
+import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
+import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
+import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.shiro.ShiroKit;
-import com.stylefeng.guns.core.support.DateTime;
 import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.controller.DeptController;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.stylefeng.guns.core.common.constant.factory.PageFactory;
-import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.stylefeng.guns.core.log.LogObjectHolder;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import yongyou.util.YongYouAPIUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Member;
-import java.sql.Wrapper;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -181,7 +175,7 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Double integral, Integer productname, Integer memberId, Integer consumptionNum,String productMianFeiNums, String productIds, String productNums, Double play, Integer playType, String verificationcode, String tableNase64Data,String scannerTypeContent) throws Exception {
+    public synchronized Object add(Double integral, Integer productname, Integer memberId, Integer consumptionNum,String productMianFeiNums, String productIds, String productNums, Double play, Integer playType, String verificationcode, String tableNase64Data,String scannerTypeContent) throws Exception {
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         List<MainSynchronous> synchronousList = new ArrayList<>();
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();

@@ -63,6 +63,8 @@ public class ActivityController extends BaseController {
     private MembermanagementController membermanagementController;
     @Autowired
     private IMemberInactivityService memberInactivityService;
+    @Autowired
+    private IIntegralrecordService integralrecordService;
 
     /**
      * 跳转到活动管理首页
@@ -272,7 +274,74 @@ public class ActivityController extends BaseController {
             mWrapper.eq("id",memberId);
             List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
             //调用积分变动方法
-            integralrecordController.insertIntegral(jifen,2, 2, membermanagements,0,1);
+            //integralrecordController.insertIntegral(jifen,2, 2, membermanagements,0,1);
+            {
+                //----
+                double integral=jifen;
+                Integer type=2;
+                Integer typeId=2;
+                List<Membermanagement> mList=membermanagements;
+                int price=0;
+                int parseIntproductNums=1;
+                List<Integralrecord> integralrecords = new ArrayList<>();
+                Integralrecord integralrecord = new Integralrecord();
+                double nowIntegral = 0;
+                double nowCountPrice = 0;
+                for (Membermanagement memberIdo : mList) {  //循环当前门店会员列表为
+                    nowIntegral = memberIdo.getIntegral();
+                    nowCountPrice = memberIdo.getCountPrice();
+                    if (type == 1) {
+                        if (integral < 0) { //扣除类积分
+                            if ((nowIntegral + integral) >= 0) {
+                                memberIdo.setIntegral(nowIntegral + integral);
+//                        memberId.setCountPrice(nowCountPrice + integral);
+                                memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                            } else {
+                                throw new Exception("可用积分不足！");
+                            }
+                        } else {
+                            memberIdo.setIntegral(nowIntegral + integral);
+                            memberIdo.setCountPrice(nowCountPrice + integral);
+                            memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                        }
+                        // type=1 商品积分
+                        integralrecord.setIntegralType(type.toString());
+                        integralrecord.setTypeId(typeId.toString());
+                    } else if (type == 2) {
+                        if (typeId == 2) { //扣除积分
+                            if ((nowIntegral - integral) >= 0) {
+                                memberIdo.setIntegral(nowIntegral - integral);
+//                        memberId.setCountPrice(nowCountPrice - integral);
+                            } else {
+                                throw new Exception("可用积分不足！");
+                            }
+                        } else {
+                            memberIdo.setIntegral(nowIntegral + integral);
+                            memberIdo.setCountPrice(nowCountPrice + integral);
+//                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                        }
+                        // type=2 行为积分
+                        integralrecord.setIntegralType(type.toString());
+                        integralrecord.setOtherTypeId(typeId.toString());
+                    }
+                    //更新会员总积分和实际积分
+                    membermanagementService.updateById(memberIdo);
+                    if(type!=2){
+                        membermanagementController.updateMemberLeave(memberIdo.getId() + "");
+                    }
+
+                    //添加积分记录
+                    integralrecord.setIntegral(integral);
+                    if (type == 2 && typeId == 2) integralrecord.setIntegral(-integral);
+                    integralrecord.setCreateTime(DateUtil.getTime());
+                    integralrecord.setMemberid(memberIdo.getId());
+                    integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+                    integralrecord.setStaffid(ShiroKit.getUser().getId());
+                    integralrecordService.insert(integralrecord);
+                    integralrecords.add(integralrecord);
+                }
+                //----
+            }
         }else if (ruleexpression == 3||ruleexpression == 4){
             //清除一条待领取活动信息
             EntityWrapper<MemberInactivity> baseEntityWrapper=new EntityWrapper<MemberInactivity>();
@@ -289,7 +358,74 @@ public class ActivityController extends BaseController {
                     mWrapper.eq("id",memberId);
                     List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
                     //调用积分变动方法
-                    integralrecordController.insertIntegral(jifen,2, 1, membermanagements,0,1);
+                    //integralrecordController.insertIntegral(jifen,2, 1, membermanagements,0,1);
+                    {
+                        //----
+                         double integral=jifen;
+                        Integer type=2;
+                        Integer typeId=1;
+                        List<Membermanagement> mList=membermanagements;
+                        int price=0;
+                        int parseIntproductNums=1;
+                        List<Integralrecord> integralrecords = new ArrayList<>();
+                        Integralrecord integralrecord = new Integralrecord();
+                        double nowIntegral = 0;
+                        double nowCountPrice = 0;
+                        for (Membermanagement memberIdo : mList) {  //循环当前门店会员列表为
+                            nowIntegral = memberIdo.getIntegral();
+                            nowCountPrice = memberIdo.getCountPrice();
+                            if (type == 1) {
+                                if (integral < 0) { //扣除类积分
+                                    if ((nowIntegral + integral) >= 0) {
+                                        memberIdo.setIntegral(nowIntegral + integral);
+//                        memberId.setCountPrice(nowCountPrice + integral);
+                                        memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                    } else {
+                                        throw new Exception("可用积分不足！");
+                                    }
+                                } else {
+                                    memberIdo.setIntegral(nowIntegral + integral);
+                                    memberIdo.setCountPrice(nowCountPrice + integral);
+                                    memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                }
+                                // type=1 商品积分
+                                integralrecord.setIntegralType(type.toString());
+                                integralrecord.setTypeId(typeId.toString());
+                            } else if (type == 2) {
+                                if (typeId == 2) { //扣除积分
+                                    if ((nowIntegral - integral) >= 0) {
+                                        memberIdo.setIntegral(nowIntegral - integral);
+//                        memberId.setCountPrice(nowCountPrice - integral);
+                                    } else {
+                                        throw new Exception("可用积分不足！");
+                                    }
+                                } else {
+                                    memberIdo.setIntegral(nowIntegral + integral);
+                                    memberIdo.setCountPrice(nowCountPrice + integral);
+//                    memberId.setPrice(memberId.getPrice()+(price*parseIntproductNums)); //总消费额
+                                }
+                                // type=2 行为积分
+                                integralrecord.setIntegralType(type.toString());
+                                integralrecord.setOtherTypeId(typeId.toString());
+                            }
+                            //更新会员总积分和实际积分
+                            membermanagementService.updateById(memberIdo);
+                            if(type!=2){
+                                membermanagementController.updateMemberLeave(memberIdo.getId() + "");
+                            }
+
+                            //添加积分记录
+                            integralrecord.setIntegral(integral);
+                            if (type == 2 && typeId == 2) integralrecord.setIntegral(-integral);
+                            integralrecord.setCreateTime(DateUtil.getTime());
+                            integralrecord.setMemberid(memberIdo.getId());
+                            integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+                            integralrecord.setStaffid(ShiroKit.getUser().getId());
+                            integralrecordService.insert(integralrecord);
+                            integralrecords.add(integralrecord);
+                        }
+                        //----
+                    }
                 }
             }else {
                 throw new GunsException(BizExceptionEnum.NO_PERMITION1);
