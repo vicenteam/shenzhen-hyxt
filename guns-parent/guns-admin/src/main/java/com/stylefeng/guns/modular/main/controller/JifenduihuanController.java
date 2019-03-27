@@ -13,6 +13,7 @@ import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import java.util.Random;
  * @Date 2019-02-20 16:56:21
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/jifenduihuan")
 public class JifenduihuanController extends BaseController {
 

@@ -19,6 +19,7 @@ import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import java.util.*;
  * 积分排名图表controller
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/barranking")
 public class BarRankingController extends BaseController {
 

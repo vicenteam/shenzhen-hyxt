@@ -27,6 +27,7 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,7 @@ import java.util.List;
  * 终端系统用户api
  */
 @RestController
+@Scope("prototype")
 @RequestMapping("/api/userapi")
 public class UserApiController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(UserApiController.class);

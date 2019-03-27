@@ -20,6 +20,7 @@ import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -51,6 +52,7 @@ import java.util.*;
  * @Date 2018-10-30 07:52:51
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/integralrecordtype")
 public class IntegralrecordtypeController extends BaseController {
 

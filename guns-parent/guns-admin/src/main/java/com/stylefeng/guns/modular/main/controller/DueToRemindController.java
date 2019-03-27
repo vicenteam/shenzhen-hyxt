@@ -7,6 +7,7 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -32,6 +33,7 @@ import java.util.List;
  * @Date 2018-12-17 11:09:23
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/dueToRemind")
 public class DueToRemindController extends BaseController {
 

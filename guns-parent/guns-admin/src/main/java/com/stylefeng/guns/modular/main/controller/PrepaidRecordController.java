@@ -7,6 +7,7 @@ import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.service.IDeptService;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -31,6 +32,7 @@ import java.util.Date;
  * @Date 2019-01-28 15:54:38
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/prepaidRecord")
 public class PrepaidRecordController extends BaseController {
 

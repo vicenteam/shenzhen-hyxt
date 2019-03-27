@@ -10,6 +10,7 @@ import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 import com.stylefeng.guns.modular.system.model.Checkin;
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Controller
+@Scope("prototype")
 @RequestMapping("/memberRepair")
 public class MemberRepairController extends BaseController {
     private String PREFIX = "/main/membermanagement/";

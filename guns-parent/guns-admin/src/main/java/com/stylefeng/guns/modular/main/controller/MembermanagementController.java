@@ -90,10 +90,6 @@ public class MembermanagementController extends BaseController {
     @Autowired
     private IActivityService activityService;
     @Autowired
-    private IntegralrecordController integralrecordController;
-    @Autowired
-    private ActivityController activityController;
-    @Autowired
     private IMemberInactivityService memberInactivityService;
     @Autowired
     private IIntegralrecordService integralrecordService;

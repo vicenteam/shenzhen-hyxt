@@ -16,6 +16,7 @@ import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ import java.util.Map;
  * @Date 2018-08-14 16:47:26
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/integralrecordclearzero")
 public class IntegralRecordClearZeroController extends BaseController {
 

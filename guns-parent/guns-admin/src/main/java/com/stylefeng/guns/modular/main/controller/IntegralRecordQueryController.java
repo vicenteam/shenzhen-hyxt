@@ -14,6 +14,7 @@ import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -32,6 +33,7 @@ import java.util.Map;
  * @Date 2018-08-14 16:47:26
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/integralrecordquery")
 public class IntegralRecordQueryController extends BaseController {
 

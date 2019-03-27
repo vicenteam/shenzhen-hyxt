@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -22,6 +23,7 @@ import com.stylefeng.guns.modular.main.service.IClearService;
  * @Date 2018-08-16 10:16:36
  */
 @Controller
+@Scope("prototype")
 @RequestMapping("/clear")
 public class ClearController extends BaseController {
 
