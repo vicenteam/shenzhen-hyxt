@@ -878,6 +878,7 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     public Object jifenzengsong(String id,Double jifenNum) throws Exception {
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+        wrapper.eq("id",id);
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
         //integralrecordController.insertIntegral(jifenNum,2,10,ms,0,1);

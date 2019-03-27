@@ -13,6 +13,16 @@
                     <#input id="levelID" name="会员等级" underline="true" disabled="disabled"/>
                     <#input id="address" name="联系地址" underline="true" disabled="disabled"/>
                     <#input id="countPrice" name="可用积分" underline="true" disabled="disabled"/>
+                    <#select id="dtype" name="兑换方式" underline="true">
+                    <option value="0">积分</option>
+                    <option value="1">积分+现金</option>
+                </#select>
+                <div class="form-group" style="display: none;" id="hidenDom">
+                    <label class="col-sm-3 control-label">金额</label>
+                    <div class="col-sm-9">
+                        <input name="payMoney"  class="form-control" id="payMoney" type="text" value="0">
+                    </div>
+                </div>
                 </div>
 
                 <div class="col-sm-4">
@@ -253,5 +263,14 @@
             ajax.start();
         }
     }
+</script>
+<script>
+    $("#dtype").on("change",function () {
+        if($("#dtype").val()==0){
+            $("#hidenDom").css("display","none")
+        }else {
+            $("#hidenDom").css("display","block")
+        }
+    })
 </script>
 @}

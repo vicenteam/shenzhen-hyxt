@@ -70,8 +70,17 @@ UserAttendanceInfoDlg.addSubmit = function() {
     var jifen1=$("#countPrice").val();
     var jifen2=$("#scannerProductNumSumJifen").val()
     if(parseFloat(jifen1)<parseFloat(jifen2)){
-        Feng.error("当前用户积分不足!");
-        return
+        if($("#dtype").val()==0){
+            Feng.error("当前用户积分不足!");
+            return
+        }else if($("#dtype").val()==1){
+            if($("#payMoney").val()<=0){
+                Feng.error("请输入有效金额!");
+                return
+            }
+        }
+
+
     }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/jifenduihuan/add", function(data){
@@ -91,7 +100,10 @@ UserAttendanceInfoDlg.addSubmit = function() {
     },function(data){
         Feng.error("兑换失败!" + data.responseJSON.message + "!");
     });
-    ajax.set({memberId:$("#introducerId").val(),productId:$("#productId").val(),productNum:$("#scannerProductNumSumNum").val()});
+    ajax.set({memberId:$("#introducerId").val()
+        ,productId:$("#productId").val(),
+        productNum:$("#scannerProductNumSumNum").val(),
+        payMoney:$("#payMoney").val()});
     ajax.start();
 }
 

@@ -74,7 +74,7 @@ public class JifenduihuanController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object list(String memberId, String productId, Integer productNum) throws Exception {
+    public Object list(String memberId, String productId, Integer productNum,int payMoney) throws Exception {
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         Integralrecordtype integralrecordtype = integralrecordtypeServicel.selectById(productId);
         if (integralrecordtype.getProductnum() - productNum < 0) {
@@ -91,7 +91,7 @@ public class JifenduihuanController extends BaseController {
             Integer type=1;
             Integer typeId=Integer.parseInt(productId);
             List<Membermanagement> mList=membermanagementList;
-            int price=0;
+            int price=payMoney;
             int parseIntproductNums=1;
             List<Integralrecord> integralrecords = new ArrayList<>();
             Integralrecord integralrecord = new Integralrecord();
@@ -102,13 +102,17 @@ public class JifenduihuanController extends BaseController {
                 nowCountPrice = memberIdo.getCountPrice();
                 if (type == 1) {
                     if (integral < 0) { //扣除类积分
-                        if ((nowIntegral + integral) >= 0) {
-                            memberIdo.setIntegral(nowIntegral + integral);
-//                        memberId.setCountPrice(nowCountPrice + integral);
-                            memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
-                        } else {
-                            throw new Exception("可用积分不足！");
+                        if(payMoney==0){
+                            if ((nowIntegral + integral) >= 0) {
+                                memberIdo.setIntegral(nowIntegral + integral);
+                            } else {
+                                throw new Exception("可用积分不足！");
+                            }
+                        }else {
+                            memberIdo.setIntegral((nowIntegral + integral)<0?0.0:(nowIntegral + integral));
+                            memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(payMoney)); //总消费额
                         }
+
                     } else {
                         memberIdo.setIntegral(nowIntegral + integral);
                         memberIdo.setCountPrice(nowCountPrice + integral);
@@ -183,8 +187,8 @@ public class JifenduihuanController extends BaseController {
                         "           Inventory:{Code: \"" + integralrecordtype.getInventoryCode() + "\"},\n" +
                         "           Unit: {Name:\"" + integralrecordtype.getUnitName() + "\"},\n" +
                         "           Quantity: " + (double) productNum + ",\n" +
-                        "           OrigPrice: " + integralrecordtype.getProductpice() * (double) productNum + ",\n" +
-                        "           OrigTaxAmount: " + integralrecordtype.getProductpice() * (double) productNum + ",\n" +
+                        "           OrigPrice: " + payMoney + ",\n" +
+                        "           OrigTaxAmount: " + payMoney + ",\n" +
                         "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
                         "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
                         "       }]\n" +
@@ -197,6 +201,8 @@ public class JifenduihuanController extends BaseController {
         mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         mainSynchronousService.insert(mainSynchronous);
         integralrecordController.synchronousData(mainSynchronous);
+        //提交T+收款单
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),(double)payMoney,1,"商品积分&现金购买",true,Integer.parseInt(memberId));
         return SUCCESS_TIP;
     }
 
