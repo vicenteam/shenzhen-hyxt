@@ -40,10 +40,10 @@ Integralrecordtype.initColumn = function () {
             }
         },
         {title: '商品规格', field: 'productspecification', visible: true, align: 'center', valign: 'middle'},
-        {title: '商品数量', field: 'productnum', visible: false, align: 'center', valign: 'middle'},
+        {title: '商品数量', field: 'productnum', visible: true, align: 'center', valign: 'middle'},
         // {title: '商品结余', field: 'productbalance', visible: true, align: 'center', valign: 'middle'},
-        {title: '亲民价', field: 'productpice', visible: false, align: 'center', valign: 'middle'},
-        {title: '零售价', field: 'retailPrice', visible: false, align: 'center', valign: 'middle'},
+        {title: '亲民价', field: 'productpice', visible: true, align: 'center', valign: 'middle'},
+        {title: '零售价', field: 'retailPrice', visible: true, align: 'center', valign: 'middle'},
         {title: '商品积分', field: 'productjifen', visible: true, align: 'center', valign: 'middle'},
         {title: '商品兑换积分', field: 'productduihuanjifen', visible: true, align: 'center', valign: 'middle'},
         {title: '食用剂量(天数)', field: 'producteatingdose', visible: true, align: 'center', valign: 'middle'},
