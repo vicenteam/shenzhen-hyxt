@@ -16,7 +16,7 @@ Membershipcardtype.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
+            {title: '会员等级', field: 'levelID', visible: false, align: 'center', valign: 'middle'},
             {title: '当前可用积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
             {title: '签到总场次', field: 'count', visible: true, align: 'center', valign: 'middle'},
     ];
