@@ -76,6 +76,7 @@ public class ApiController extends BaseController {
      */
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public Object test(String token) {
+        System.out.println(token);
         return SUCCESS_TIP;
     }
 

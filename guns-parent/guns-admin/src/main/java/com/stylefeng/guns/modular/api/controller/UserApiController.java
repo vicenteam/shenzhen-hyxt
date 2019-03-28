@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.api.controller;
 
+import com.alibaba.druid.support.spring.stat.SpringStatUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -9,6 +10,7 @@ import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.model.user.UserModel;
 import com.stylefeng.guns.modular.api.model.user.UserResouceModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
+import com.stylefeng.guns.modular.main.controller.IntegralrecordController;
 import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.model.Dept;
@@ -27,7 +29,9 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +47,8 @@ import java.util.List;
 @RequestMapping("/api/userapi")
 public class UserApiController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(UserApiController.class);
+    private static int ob=1;
+    private int oon=1;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -180,5 +186,10 @@ public class UserApiController extends BaseController {
         userResouceModel10.setResouceName("复签");
         userResouceModel10.setSecurity(i2==0?false:true);
         list.add(userResouceModel10);
+    }
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    public String hello(){
+        System.out.println("ob->"+ob+++" oob->"+oon+++"");
+        return "";
     }
 }

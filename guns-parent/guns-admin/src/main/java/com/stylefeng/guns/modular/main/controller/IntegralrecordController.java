@@ -290,7 +290,8 @@ public class IntegralrecordController extends BaseController {
                             //添加可签到获得积分次数
                             Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
                             if(membershipcardtype.getKeqiandaonum()!=null){
-                                membermanagement.setCheckInNum(membermanagement.getCheckInNum()+membershipcardtype.getKeqiandaonum());
+//                                membermanagement.setCheckInNum(membermanagement.getCheckInNum()+membershipcardtype.getKeqiandaonum());
+                                membermanagement.setCheckInNum(membermanagement.getCheckInNum()+(membershipcardtype.getKeqiandaonum()*isinsert));
                             }
                             membermanagementService.updateById(membermanagement);
                         }
