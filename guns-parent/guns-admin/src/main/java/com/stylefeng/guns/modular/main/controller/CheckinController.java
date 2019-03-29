@@ -158,7 +158,9 @@ public class CheckinController extends BaseController {
     @ResponseBody
     public Object getcheck() {
         BaseEntityWrapper<Checkin> checkinBaseEntityWrapper = new BaseEntityWrapper<>();
-        checkinBaseEntityWrapper.ge("startDate", DateUtil.formatDate(new Date(), "yyyy-MM-dd") + " 00:00:00");
+        checkinBaseEntityWrapper.like("startDate",DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
+        checkinBaseEntityWrapper.eq("deptId",ShiroKit.getUser().getDeptId());
+//        checkinBaseEntityWrapper.ge("startDate", DateUtil.formatDate(new Date(), "yyyy-MM-dd") + " 00:00:00");
         List<Checkin> list = checkinService.selectList(checkinBaseEntityWrapper);
         if (list.size() == 0) {
             Checkin checkin = new Checkin();
@@ -171,15 +173,15 @@ public class CheckinController extends BaseController {
             checkinService.insert(checkin);
             return checkin;
         } else {
-            Checkin checkinold = list.get(list.size() - 1);
-            Checkin checkin = new Checkin();
-            checkin.setCreateDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            checkin.setStartDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            checkin.setDeptId(ShiroKit.getUser().getDeptId() + "");
-            checkin.setStatus(1);
-            int v = (checkinold.getScreenings() + 1);
-            checkin.setScreenings(v);
-            checkinService.insert(checkin);
+            Checkin checkin = list.get(0);
+//            Checkin checkin = new Checkin();
+//            checkin.setCreateDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+//            checkin.setStartDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+//            checkin.setDeptId(ShiroKit.getUser().getDeptId() + "");
+//            checkin.setStatus(1);
+//            int v = (checkinold.getScreenings() + 1);
+//            checkin.setScreenings(v);
+//            checkinService.insert(checkin);
             return checkin;
         }
     }
