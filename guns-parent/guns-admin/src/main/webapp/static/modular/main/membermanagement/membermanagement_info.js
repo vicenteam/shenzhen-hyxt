@@ -105,7 +105,8 @@ MembermanagementInfoDlg.collectData = function() {
     .set("otherMemberId")
     .set("levelID")
     .set("anotherName")
-    .set('token');
+    .set('token')
+    .set("remarks");
 }
 
 /**

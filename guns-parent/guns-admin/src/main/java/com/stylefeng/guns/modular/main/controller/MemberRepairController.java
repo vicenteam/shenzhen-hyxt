@@ -5,10 +5,9 @@ import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
-import com.stylefeng.guns.modular.main.service.ICheckinService;
-import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
-import com.stylefeng.guns.modular.system.model.Checkin;
-import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
+import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.system.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @Scope("prototype")
@@ -30,6 +31,12 @@ public class MemberRepairController extends BaseController {
     private ICheckinService checkinService;
     @Autowired
     private IQiandaoCheckinService qiandaoCheckinService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IMembermanagementService membermanagementService;
+    @Autowired
+    private IIntegralrecordService integralrecordService;
 
     @RequestMapping("")
     public String index(){
@@ -84,6 +91,34 @@ public class MemberRepairController extends BaseController {
                 throw new GunsException(BizExceptionEnum.SERVER_ERROR1);
             }
         }
+
+        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+        if(membermanagement != null){
+            Integer checkInNum = membermanagement.getCheckInNum();
+            if(checkInNum!=null&&checkInNum>0){
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+                Integralrecord integralrecord = new Integralrecord();
+                integralrecord.setIntegral(membershipcardtype.getSignin());
+                integralrecord.setOtherTypeId("0");
+                integralrecord.setIntegralType("2");
+                integralrecord.setMemberid(membermanagement.getId());
+                integralrecord.setCreateTime(DateUtil.getTime());
+                integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+                integralrecord.setStaffid(ShiroKit.getUser().getId());
+                integralrecordService.insert(integralrecord);
+
+                membermanagement.setIntegral(membermanagement.getIntegral() + membershipcardtype.getSignin());
+                membermanagement.setCountPrice(membermanagement.getCountPrice() + membershipcardtype.getSignin());
+                membermanagementService.updateById(membermanagement);
+
+                membermanagement = membermanagementService.selectById(memberId);
+                membermanagement.setCheckInNum(membermanagement.getCheckInNum()-1);
+            }
+            membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            membermanagement.setIsvisit(0);
+            membermanagementService.updateById(membermanagement);
+        }
+
         return SUCCESS_TIP;
     }
 }
