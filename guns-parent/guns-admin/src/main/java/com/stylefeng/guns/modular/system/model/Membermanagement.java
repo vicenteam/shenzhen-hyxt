@@ -160,6 +160,10 @@ public class Membermanagement extends Model<Membermanagement> {
      * 会员配置可签到获取积分的次数
      */
     private Integer addcheckInNum;
+    /**
+     * 备注
+     */
+    private String remarks;
 
     public Integer getAddcheckInNum() {
         return addcheckInNum;
@@ -501,6 +505,14 @@ public class Membermanagement extends Model<Membermanagement> {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     @Override

@@ -82,6 +82,7 @@ Membermanagement.initColumn = function () {
             }
         },
         {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
+        {title: '总消费', field: 'price', visible: false, align: 'center', valign: 'middle'},
         {title: '余额', field: 'money', visible: true, align: 'center', valign: 'middle'},
         {
             title: '操作',

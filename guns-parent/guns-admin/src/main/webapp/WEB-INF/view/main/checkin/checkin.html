@@ -14,7 +14,8 @@
              <h2>门店名称:${dept.fullname}</h2>
            </div>
            <div style="height: 100%;width: 52%;float: right;margin-top: -60px">
-               <span style="font-size: 25px;width: 300px" >服务时间:</span> <span id="checkName" style="font-size: 25px;"></span>  <button type="submit" class="btn btn-primary " style="width: 20%;margin-top: -10px" id="chuangjianbtn">创建签到</button>
+               <span style="font-size: 25px;width: 300px" >服务时间:</span> <span id="checkName" style="font-size: 25px;"></span>
+               <!--<button type="submit" class="btn btn-primary " style="width: 20%;margin-top: -10px" id="chuangjianbtn">创建签到</button>-->
            </div>
        </div><br>
         <div style="width: 950px;height: 300px;">
@@ -254,22 +255,27 @@
     $("div").css("text-align","center")
 </script>
 <script>
-    $("#chuangjianbtn").click(function () {
-        var val=$("#chuangjianbtn").html();
-        if(val=="创建签到"){
-            getcheck()
+    $(function () {
+        getcheck();
+    });
 
-        }else {
-            updatecheck()
-            $("#chuangjianbtn").html("创建签到")
-        }
-    })
+    // $("#chuangjianbtn").click(function () {
+    //     var val=$("#chuangjianbtn").html();
+    //     if(val=="创建签到"){
+    //         getcheck()
+    //
+    //     }else {
+    //         updatecheck()
+    //         $("#chuangjianbtn").html("创建签到")
+    //     }
+    // })
+
     //获取会议场次
     function getcheck() {
         var ajax = new $ax(Feng.ctxPath + "/checkin/getcheck", function (data) {
             $("#checkName").html(data.screenings)
             $("#checkid").val(data.id)
-            $("#chuangjianbtn").html("结束签到")
+            // $("#chuangjianbtn").html("结束签到")
         }, function (data) {
             Feng.error("创建失败!" + data.responseJSON.message + "!");
         });
