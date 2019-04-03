@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.GunsApplication;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.base.tips.ErrorTip;
+import com.stylefeng.guns.core.base.tips.SuccessTip;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.constant.dictmap.DeptDict;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -299,7 +301,9 @@ public class MembermanagementController extends BaseController {
             memberCardBaseEntityWrapper.eq("code", code);
             MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
             memberCardService.deleteById(memberCard.getId());
-            throw new Exception("注册用户已存在开卡门店！");
+//            throw new Exception("注册用户已存在开卡门店！");
+            ErrorTip errorTip = new ErrorTip(202,"该身份证已存在开卡门店！");
+            return  errorTip;
         }
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());

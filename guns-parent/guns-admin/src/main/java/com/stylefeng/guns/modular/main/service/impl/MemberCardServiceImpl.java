@@ -4,6 +4,7 @@ import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.stylefeng.guns.modular.system.dao.MemberCardMapper;
 import com.stylefeng.guns.modular.main.service.IMemberCardService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2018-08-10
  */
 @Service
+@Scope("prototype")
 public class MemberCardServiceImpl extends ServiceImpl<MemberCardMapper, MemberCard> implements IMemberCardService {
 
 }

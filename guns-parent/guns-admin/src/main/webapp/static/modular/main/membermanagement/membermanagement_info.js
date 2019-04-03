@@ -131,7 +131,11 @@ if($("#readDeviceCard").val().length==0){
     }).get().join(',');
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/add", function(data){
-        Feng.success("添加成功!");
+        if(data.code==202){
+            Feng.error(data.message);
+        }else {
+            Feng.success("添加成功!");
+        }
         //清除页面值
         $("#cadID").val("")
         $("#introducerName").val("")

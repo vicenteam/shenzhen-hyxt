@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.main.service;
 
 import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.baomidou.mybatisplus.service.IService;
+import org.springframework.context.annotation.Scope;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.service.IService;
  * @author stylefeng
  * @since 2018-08-10
  */
+@Scope("prototype")
 public interface IMemberCardService extends IService<MemberCard> {
 
 }
