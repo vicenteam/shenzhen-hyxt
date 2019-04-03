@@ -239,8 +239,10 @@ public class IntegralrecordtypeController extends BaseController {
                 iWrapper.eq("InventoryCode", integralRecordTypeExcel.getInventoryCode());
                 Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
                 if (integralrecordtype != null) { //更新导入价格
-                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getProductpice()))
+                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getProductpice())){
                         integralrecordtype.setProductpice(Double.parseDouble(integralRecordTypeExcel.getProductpice()));
+                        integralrecordtype.setProductduihuanjifen(Double.parseDouble(integralRecordTypeExcel.getProductpice())); //兑换积分=金额单价
+                    }
                     if(! StringUtils.isEmpty(integralRecordTypeExcel.getRetailPrice()))
                         integralrecordtype.setRetailPrice(Double.parseDouble(integralRecordTypeExcel.getRetailPrice()));
                     integralrecordtypeService.updateById(integralrecordtype);
