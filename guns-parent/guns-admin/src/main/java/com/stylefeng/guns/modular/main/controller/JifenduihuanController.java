@@ -202,7 +202,7 @@ public class JifenduihuanController extends BaseController {
         mainSynchronousService.insert(mainSynchronous);
         integralrecordController.synchronousData(mainSynchronous);
         //提交T+收款单
-        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),(double)payMoney,1,"商品积分&现金购买",true,Integer.parseInt(memberId));
+        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),(double)payMoney,1,payMoney==0?"商品积分":"商品积分&现金购买",true,Integer.parseInt(memberId));
         return SUCCESS_TIP;
     }
 
