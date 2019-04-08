@@ -19,4 +19,7 @@ public interface IMembermanagementService extends IService<Membermanagement> {
      */
     boolean updateIntegralRollBack(Integralrecord integralrecord);
     int updateisvisit( String time);
+
+
+    public int queryBirthDay(String activityId, String memberId);
 }

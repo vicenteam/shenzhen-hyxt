@@ -56,10 +56,14 @@ var ActivityInfoDlg = {
         jifen: {
             validators: {
                 notEmpty: {
-                    message: '"消耗积分不能为空'
+                    message: '"积分不能为空'
                 },
                 numeric:{
                     message: '只能为数字'
+                },
+                greaterThan: {
+                    message: '积分值不为负数',
+                    value: 0,
                 }
             }
         }

@@ -27,4 +27,9 @@ public class MembermanagementServiceImpl extends ServiceImpl<MembermanagementMap
     public int updateisvisit(String time) {
          return this.baseMapper.updateisvisit(time);
     }
+
+    @Override
+    public int queryBirthDay(String activityId, String memberId) {
+        return this.baseMapper.queryBirthDay(activityId,memberId);
+    }
 }

@@ -77,7 +77,7 @@ public class IntegralRecordQueryController extends BaseController {
                 if(e.get("otherTypeId").equals("0")){
                     e.put("name","签到积分");
                 }else if(e.get("otherTypeId").equals("1")){
-                    e.put("name","带新人积分");
+                    e.put("name","带人积分");
                 }else if(e.get("otherTypeId").equals("2")){
                     e.put("name","活动兑换积分");
                 }else if(e.get("otherTypeId").equals("3")){

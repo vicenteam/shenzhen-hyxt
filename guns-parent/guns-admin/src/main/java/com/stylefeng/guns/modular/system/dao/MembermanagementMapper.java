@@ -22,4 +22,6 @@ public interface MembermanagementMapper extends BaseMapper<Membermanagement> {
      */
     boolean updateIntegralRollBack(@Param("integralrecord") Integralrecord integralrecord);
     int updateisvisit(@Param("time") String time);
+
+    public int queryBirthDay(@Param("activityId") String activityId, @Param("memberId") String memberId);
 }

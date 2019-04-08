@@ -63,4 +63,21 @@
         where CheckINTime1 <![CDATA[ <= ]]> #{time}
         and isvisit=0
     </update>
+
+    <select id="queryBirthDay" resultType="java.lang.Integer">
+      select count(a.id)
+      from
+        main_membermanagement as a,
+        (
+          select c.begindate,c.enddate
+          from
+            main_activity c
+          WHERE
+            c.id= #{activityId}
+        ) as b
+      where
+        a.birthday &gt;= b.begindate and
+        a.birthday &lt;= b.enddate and
+        a.id= #{memberId}
+    </select>
 </mapper>

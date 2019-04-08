@@ -74,7 +74,7 @@ public class JifenduihuanController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object list(String memberId, String productId, Integer productNum,int payMoney) throws Exception {
+    public Object list(String memberId, String productId, Integer productNum,double payMoney) throws Exception {
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         Integralrecordtype integralrecordtype = integralrecordtypeServicel.selectById(productId);
         if (integralrecordtype.getProductnum() - productNum < 0) {
@@ -91,7 +91,7 @@ public class JifenduihuanController extends BaseController {
             Integer type=1;
             Integer typeId=Integer.parseInt(productId);
             List<Membermanagement> mList=membermanagementList;
-            int price=payMoney;
+            double price=payMoney;
             int parseIntproductNums=1;
             List<Integralrecord> integralrecords = new ArrayList<>();
             Integralrecord integralrecord = new Integralrecord();
