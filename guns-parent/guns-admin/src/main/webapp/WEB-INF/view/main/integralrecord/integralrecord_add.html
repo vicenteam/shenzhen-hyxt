@@ -494,7 +494,7 @@
                 "<td>"+products[i].val.productspecification+"</td>" +
                 "<td>"+products[i].val.consumptionNum+"</td>" +
                 "<td>"+products[i].val.productpice+"</td>" +
-                "<td>"+(products[i].val.productpice * products[i].val.consumptionNum - products[i].val.productpice * products[i].val.sumFree)+"</td>"+
+                "<td>"+((products[i].val.productpice * products[i].val.consumptionNum).toFixed(2) - (products[i].val.productpice * products[i].val.sumFree).toFixed())+"</td>"+
                 "<td>"+"<button class='layui-btn layui-btn-sm' onclick='deleteProductsByKey("+products[i].key+")'><i class='layui-icon'></i></button>"+"</td>"
                 +"</tr>");
             $("#storeInfoHidden").prepend("<tr><td>"+products[i].val.productname+"</td><td>"+products[i].val.retailPrice+"</td><td>"+products[i].val.productpice+"</td><td>"+products[i].val.consumptionNum+"</td></tr>");
@@ -514,7 +514,7 @@
         tableBase64();
 
         //计算小票显示金额
-        var j1=play;//总金额
+        var j1=play.toFixed(2);//总金额
         var j2=0;//应收金额
         var j3=0;//实收金额
         var off=1;
