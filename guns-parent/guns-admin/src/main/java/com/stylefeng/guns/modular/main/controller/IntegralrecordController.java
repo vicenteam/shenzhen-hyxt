@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import yongyou.util.YongYouAPIUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -364,7 +365,8 @@ public class IntegralrecordController extends BaseController {
         receiptsInfo.setMemberId(memberId);
         receiptsInfo.setMemberName(membermanagements.get(0).getName());
         receiptsInfo.setMemberPhone(membermanagements.get(0).getPhone());
-        receiptsInfo.setPlayMoney(play + "");
+        BigDecimal bigDecimal=new BigDecimal(play);
+        receiptsInfo.setPlayMoney(bigDecimal.setScale(2,BigDecimal.ROUND_UP).doubleValue() + "");
         receiptsInfo.setReceiptsBase64Img(tableNase64Data);
         receiptsInfo.insert();
         //提交T+收款单
