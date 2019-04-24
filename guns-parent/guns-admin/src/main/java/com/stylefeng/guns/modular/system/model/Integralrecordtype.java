@@ -92,6 +92,16 @@ public class Integralrecordtype extends Model<Integralrecordtype> {
 
     private Integer isfandian;
 
+    private int productPid;
+
+    public int getProductPid() {
+        return productPid;
+    }
+
+    public void setProductPid(int productPid) {
+        this.productPid = productPid;
+    }
+
     public Integer getIsfandian() {
         return isfandian;
     }

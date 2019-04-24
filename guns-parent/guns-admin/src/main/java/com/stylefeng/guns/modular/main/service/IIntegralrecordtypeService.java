@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2018-10-30
  */
 public interface IIntegralrecordtypeService extends IService<Integralrecordtype> {
-
+    void updateAllIntegralrecordtype(String id);
 }

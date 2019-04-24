@@ -20,6 +20,7 @@
         <result column="isDueToRemind" property="isDueToRemind" />
         <result column="jine" property="jine" />
         <result column="payType" property="payType" />
+        <result column="toDeptId" property="toDeptId" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

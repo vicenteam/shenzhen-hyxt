@@ -128,29 +128,7 @@ public class DeptController extends BaseController {
         dept.setCreatedt(DateUtil.getTime());
         //完善pids,根据pid拿到pid的pids
         deptSetPids(dept);
-        //同步tplus仓库
-//        String s=YongYouAPIUtils.postUrl(YongYouAPIUtils.STORE_QUERY, "{dto:{Code: \""+tPlusDeptCode+"\"}}");
-//       List<TPlusDept> tPlusDepts=JSON.parseArray(s,TPlusDept.class);
-//       if(tPlusDepts.size()==1){
-//           //获取仓库
-//           dept.settPlusDeptCode(tPlusDepts.get(0).getCode());
-//           dept.settPlusDeptName(tPlusDepts.get(0).getName());
-//            s=YongYouAPIUtils.postUrl(YongYouAPIUtils.WAREHOUSE_QUERY, "{\n" +
-//                    "\t\"param\": \n" +
-//                    "\t\t{\n" +
-//                    "\t\t\t\"Code\": \""+dept.gettPlusWarehouseCode()+"\"\n" +
-//                    "\t\t}\n" +
-//                    "}");
-//           List<TPlusDept> house= JSON.parseArray(s,TPlusDept.class);
-//           for(TPlusDept a:house){
-//               if( a.getName().indexOf(tPlusDepts.get(0).getName())!=-1){
-//                   dept.settPlusWarehouseCode(a.getCode());
-//                   dept.settPlusWarehouseName(a.getName());
-//                    break;
-//               }
-//           }
-//
-//       }
+
         boolean insert = this.deptService.insert(dept);
         //自动初始化会员配置
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();

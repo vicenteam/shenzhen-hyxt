@@ -29,6 +29,7 @@
         <result column="AvailableQuantity" property="AvailableQuantity" />
         <result column="UnitName" property="UnitName" />
         <result column="isfandian" property="isfandian" />
+        <result column="productPid" property="productPid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -36,4 +37,21 @@
         id, names, productname, producttype, productspecification, productnum, productbalance, productjifen, producteatingdose, deptid, createtime, updatetime, createuserid, updateuserid, retailPrice
     </sql>
 
+    <update id="updateAllIntegralrecordtype">
+		update main_integralrecordtype up,main_integralrecordtype temp
+        set
+        up.names=temp.names,
+        up.productname=temp.productname,
+        up.producttype=temp.producttype,
+        up.productspecification=temp.productspecification,
+        up.productpice=temp.productpice,
+        up.retailPrice=temp.retailPrice,
+        up.productduihuanjifen=temp.productduihuanjifen,
+        up.productjifen=temp.productjifen,
+        up.producteatingdose=temp.producteatingdose,
+        up.isfandian=temp.isfandian,
+        up.status=temp.status,
+        up.InventoryCode=temp.InventoryCode
+        where up.productPid=#{id} and temp.id=#{id}
+	</update>
 </mapper>

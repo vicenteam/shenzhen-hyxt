@@ -17,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class IntegralrecordtypeServiceImpl extends ServiceImpl<IntegralrecordtypeMapper, Integralrecordtype> implements IIntegralrecordtypeService {
 
+    @Override
+    public void updateAllIntegralrecordtype(String id) {
+        this.baseMapper.updateAllIntegralrecordtype(id);
+    }
 }

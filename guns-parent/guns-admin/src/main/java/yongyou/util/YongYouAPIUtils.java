@@ -79,12 +79,12 @@ public class YongYouAPIUtils {
 
     public  static String postUrl(String url,String json) throws Exception {
         String jsonStr="";
-        openAPI api = new openAPI("http://47.107.224.140:8080/TPlus/api/v1/", appKey, appSecret);
-//        jsonStr = api.get("Authorization/Logout"); //登出方法
-        jsonStr = api.Login(user, pwd, account);
-        jsonStr= api.ReLogin();
-//        Tools.setProper(rstrpara,jsonstr00);
-        jsonStr = api.getData(url, json);
+//        openAPI api = new openAPI("http://47.107.224.140:8080/TPlus/api/v1/", appKey, appSecret);
+////        jsonStr = api.get("Authorization/Logout"); //登出方法
+//        jsonStr = api.Login(user, pwd, account);
+//        jsonStr= api.ReLogin();
+////        Tools.setProper(rstrpara,jsonstr00);
+//        jsonStr = api.getData(url, json);
         return jsonStr;
     }
 

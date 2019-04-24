@@ -10,6 +10,7 @@ import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IProductReturnChangeService;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.beetl.ext.fn.Json;
 import org.springframework.context.annotation.Scope;
@@ -56,6 +57,8 @@ public class InventoryManagementController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private IProductReturnChangeService productReturnChangeService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到商品库存首页
@@ -64,9 +67,25 @@ public class InventoryManagementController extends BaseController {
     public String index() {
         return PREFIX + "inventoryManagement.html";
     }
+    @RequestMapping("index_out")
+    public String index_out() {
+        return PREFIX + "inventoryManagement_out.html";
+    }
     @RequestMapping("/order_page")
     public String order_page() {
         return PREFIX + "inventoryManagementOrder.html";
+    }
+
+    /**
+     * 跳转到添加商品库存出库
+     */
+    @RequestMapping("/inventoryManagement_out_add")
+    public String inventoryManagement_out_add( Model model) {
+        EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
+        deptEntityWrapper.eq("pid",ShiroKit.getUser().getDeptId());
+        List<Dept> depts = deptService.selectList(deptEntityWrapper);
+        model.addAttribute("depts",depts);
+        return PREFIX + "inventoryManagement_out_add.html";
     }
     /**
      * 跳转到添加商品库存
@@ -110,6 +129,12 @@ public class InventoryManagementController extends BaseController {
 //                a.put("producttype", integralrecordtype.getProducttype() == 0 ? "礼品类" : integralrecordtype.getProducttype() == 1 ? "积分兑换类" : integralrecordtype.getProducttype() == 2 ? "销售类" : "积分+金额类");
                 a.put("producttype",integralrecordtype.getProducttype()) ;
                 a.put("productname",integralrecordtype.getProductname());
+            }
+            if(a.get("toDeptId")!=null){
+                Dept toDeptId = deptService.selectById(a.get("toDeptId") + "");
+                if(toDeptId!=null){
+                    a.put("deptId",toDeptId.getFullname());
+                }
             }
         });
         return super.packForBT(page1);
@@ -230,5 +255,55 @@ public class InventoryManagementController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("inventoryManagementId") Integer inventoryManagementId) {
         return inventoryManagementService.selectById(inventoryManagementId);
+    }
+    /**
+     * 新增商品库存出库
+     */
+    @RequestMapping(value = "/out_add")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Object out_add(InventoryManagement inventoryManagement, Integer productname,String deptId) {
+        //获取商品,名称
+        Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(productname);
+        integralrecordtype.setProductnum(integralrecordtype.getProductnum() - inventoryManagement.getConsumptionNum());
+        iIntegralrecordtypeService.updateById(integralrecordtype);
+        //新增库存记录表
+        inventoryManagement.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        inventoryManagement.setCreateuserid(ShiroKit.getUser().getId() + "");
+        inventoryManagement.setStatus("1");
+        inventoryManagement.setDeptid(ShiroKit.getUser().getDeptId() + "");
+        inventoryManagement.setIntegralrecordtypeid(productname);
+        inventoryManagement.setToDeptId(Integer.parseInt(deptId));
+        inventoryManagement.setName(integralrecordtype.getProductname());
+        inventoryManagementService.insert(inventoryManagement);
+        //分部门进行添加商品
+        EntityWrapper<Integralrecordtype> integralrecordtypeEntityWrapper = new EntityWrapper<>();
+        integralrecordtypeEntityWrapper.eq("productPid",integralrecordtype.getId());
+        integralrecordtypeEntityWrapper.eq("deptid",deptId);
+        Integralrecordtype integralrecordtype1 = iIntegralrecordtypeService.selectOne(integralrecordtypeEntityWrapper);
+        if(integralrecordtype1==null){//新增商品信息
+            integralrecordtype.setId(null);
+            integralrecordtype.setDeptid(deptId);
+            integralrecordtype.setProductnum(0);
+            integralrecordtype.setProductPid(productname);
+            iIntegralrecordtypeService.insert(integralrecordtype);
+        }else {
+            integralrecordtype=integralrecordtype1;
+        }
+        //分部门进行添加库存
+        {
+            //获取商品,名称
+            integralrecordtype.setProductnum(integralrecordtype.getProductnum() + inventoryManagement.getConsumptionNum());
+            iIntegralrecordtypeService.updateById(integralrecordtype);
+            //新增库存记录表
+            inventoryManagement.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            inventoryManagement.setCreateuserid(ShiroKit.getUser().getId() + "");
+            inventoryManagement.setStatus("0");
+            inventoryManagement.setDeptid(deptId);
+            inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
+            inventoryManagement.setName(integralrecordtype.getProductname());
+            inventoryManagementService.insert(inventoryManagement);
+        }
+        return SUCCESS_TIP;
     }
 }

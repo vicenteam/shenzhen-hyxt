@@ -45,6 +45,15 @@ public class InventoryManagement extends Model<InventoryManagement> {
     private Integer isDueToRemind;
     private Double jine;
     private String payType;
+    private int toDeptId;
+
+    public int getToDeptId() {
+        return toDeptId;
+    }
+
+    public void setToDeptId(int toDeptId) {
+        this.toDeptId = toDeptId;
+    }
 
     public Double getJine() {
         return jine;

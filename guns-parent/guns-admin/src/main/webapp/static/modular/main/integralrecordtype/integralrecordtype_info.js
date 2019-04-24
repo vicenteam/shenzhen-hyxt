@@ -90,6 +90,7 @@ IntegralrecordtypeInfoDlg.collectData = function() {
     .set('productjifen')
     .set('productduihuanjifen')
     .set('producteatingdose')
+    .set('InventoryCode')
     .set('deptid')
     .set('createtime')
     .set('updatetime')

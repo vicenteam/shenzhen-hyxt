@@ -27,16 +27,7 @@
                     <#AddressSelect id="city" city="city" name="所属区域"/>
                     <#AddressSelect id="district" district="district" name="所属区县"/>
 
-                        <#select name="同步T+门店" id="tPlusDeptCode" >
-                        @for(item in deptCodes){
-                        <option value="${item.Code}">${item.Name}</option>
-                        @}
-                    </#select>
-                <#select name="同步T+仓库" id="tPlusWarehouseCode" >
-                @for(item in warehouseCodes){
-                <option value="${item.Code}">${item.Name}</option>
-                @}
-            </#select>
+
             </div>
 
             <!-- 父级部门的选择框 -->

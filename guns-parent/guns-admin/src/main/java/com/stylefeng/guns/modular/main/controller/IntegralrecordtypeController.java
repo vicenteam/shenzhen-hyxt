@@ -133,6 +133,7 @@ public class IntegralrecordtypeController extends BaseController {
         Integralrecordtype integralrecordtype = integralrecordtypeService.selectById(integralrecordtypeId);
         integralrecordtype.setStatus(1);
         integralrecordtypeService.updateById(integralrecordtype);
+        integralrecordtypeService.updateAllIntegralrecordtype(integralrecordtype.getId().toString());
         return SUCCESS_TIP;
     }
 
@@ -145,6 +146,7 @@ public class IntegralrecordtypeController extends BaseController {
         integralrecordtype.setUpdatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         integralrecordtype.setUpdateuserid(ShiroKit.getUser().getId() + "");
         integralrecordtypeService.updateById(integralrecordtype);
+        integralrecordtypeService.updateAllIntegralrecordtype(integralrecordtype.getId().toString());
         return SUCCESS_TIP;
     }
 
