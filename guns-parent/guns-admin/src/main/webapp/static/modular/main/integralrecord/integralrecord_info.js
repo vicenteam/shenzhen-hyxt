@@ -135,7 +135,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         loadProduct()
         //执行打印操作
         // IntegralrecordInfoDlg.addSubmit.trigger('done');
-        timeClose= window.setInterval("viewToWord(tempData)",3000);
+        // timeClose= window.setInterval("viewToWord(tempData)",3000);
     },function(data){
         Feng.error("操作失败!" + data.responseJSON.message + "!");
     });

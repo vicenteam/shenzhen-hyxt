@@ -97,6 +97,7 @@ UserAttendanceInfoDlg.addSubmit = function() {
         $("#scannerProductNumSumNum").val("")
         $("#scannerProductNumSumJifen").val("")
         $("#productId").val("")
+        $("#payMoney").val("0")
     },function(data){
         Feng.error("兑换失败!" + data.responseJSON.message + "!");
     });

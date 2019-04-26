@@ -56,7 +56,30 @@ public class Integralrecord extends Model<Integralrecord> {
     private Integer deptid;
     private Integer clearid;
     private Integer staffid;
+    /**
+     * 兑换商品数量
+     */
+    private int duihuanproductNum;
+    /**
+     * 兑换商品数量类型
+     */
+    private int status;
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getDuihuanproductNum() {
+        return duihuanproductNum;
+    }
+
+    public void setDuihuanproductNum(int duihuanproductNum) {
+        this.duihuanproductNum = duihuanproductNum;
+    }
 
     public Integer getId() {
         return id;

@@ -149,6 +149,7 @@ public class InventoryManagementController extends BaseController {
         if(!StringUtils.isEmpty(startTime)&&!StringUtils.isEmpty(endTime))baseEntityWrapper.between("createtime",startTime,endTime);
         baseEntityWrapper.eq("status",1);
         baseEntityWrapper.orderBy("createtime",false);
+        baseEntityWrapper.isNull("toDeptId");
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = page1.getRecords();
         records.forEach(a -> {
@@ -161,6 +162,7 @@ public class InventoryManagementController extends BaseController {
             if (createuserid != null) {
                 a.put("createuserid", createuserid.getName());
             }
+
         });
         return super.packForBT(page1);
     }

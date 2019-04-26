@@ -82,12 +82,19 @@ public class IntegralRecordQueryController extends BaseController {
                     e.put("name","活动兑换积分");
                 }else if(e.get("otherTypeId").equals("3")){
                     e.put("name","生日积分");
+                }else if(e.get("otherTypeId").equals("4")){
+                    e.put("name","积分赠送");
+                }else if(e.get("otherTypeId").equals("5")){
+                    e.put("name","积分清零");
                 }
             }
         });
-        Map<String ,String> map=new HashMap<>();
-        map.put("name","全部");
-        types2.add(0,map);
+        if(type.equals("1")){
+            Map<String ,String> map=new HashMap<>();
+            map.put("name","全部");
+            types2.add(0,map);
+        }
+
         return types2;
     }
 
@@ -158,6 +165,10 @@ public class IntegralRecordQueryController extends BaseController {
                         map.put("typeId","活动兑换积分");
                     }else if(map.get("otherTypeId").equals("3")){
                         map.put("typeId","生日积分");
+                    }else if(map.get("otherTypeId").equals("4")){
+                        map.put("typeId","积分赠送");
+                    }else if(map.get("otherTypeId").equals("5")){
+                        map.put("typeId","积分清零");
                     }
                 }
 //                map.put("typeName",integralrecordtypeService.selectById(map.get("typeId").toString()).getProducttype()); //获取积分类型
@@ -175,9 +186,13 @@ public class IntegralRecordQueryController extends BaseController {
         return super.packForBT(serverPage);
     }
 
-    @RequestMapping(value = "test")
+    /**
+     * 积分兑换统计
+     * @return
+     */
+    @RequestMapping(value = "jifenduihuantongji")
     @ResponseBody
-    public Object shouwMemberInfo(){
+    public Object jifenduihuantongji(){
         return null;
     }
 

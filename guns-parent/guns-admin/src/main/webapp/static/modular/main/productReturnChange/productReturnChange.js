@@ -15,7 +15,8 @@ ProductReturnChange.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
-        {title: '退换货人姓名', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
+        {title: '门店', field: 'memberPhone', visible: true, align: 'center', valign: 'middle'},
+        {title: '退换人', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
         // {title: '退换货人id', field: 'memberId', visible: true, align: 'center', valign: 'middle'},
         {title: '创建时间', field: 'createtime',width:'160px', visible: true, align: 'center', valign: 'middle'},
         {title: '提交申请人', field: 'createuserid', visible: true, align: 'center', valign: 'middle'},

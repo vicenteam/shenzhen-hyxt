@@ -117,7 +117,7 @@ public class ProductReturnChangeController extends BaseController {
     @ResponseBody
     public Object list(String condition, String productName, Integer returnchangeType, Integer status) {
         Page<ProductReturnChange> page = new PageFactory<ProductReturnChange>().defaultPage();
-        BaseEntityWrapper<ProductReturnChange> baseEntityWrapper = new BaseEntityWrapper<>();
+        EntityWrapper<ProductReturnChange> baseEntityWrapper = new EntityWrapper<>();
         if (!StringUtils.isEmpty(condition))
             baseEntityWrapper.like("memberName", condition).or().like("memberPhone", condition);
         if (!StringUtils.isEmpty(productName)) baseEntityWrapper.like("productName", productName);
@@ -129,6 +129,7 @@ public class ProductReturnChangeController extends BaseController {
         records.forEach(a -> {
             User user = userService.selectById(a.getCreateuserid());
             a.setCreateuserid(user.getName());
+            a.setMemberPhone(deptService.selectById(a.getDeptId()).getFullname());
         });
         return super.packForBT(result);
     }

@@ -15,6 +15,8 @@
         <result column="deptid" property="deptid"/>
         <result column="clearid" property="clearid"/>
         <result column="staffid" property="staffid"/>
+        <result column="duihuanproductNum" property="duihuanproductNum"/>
+        <result column="status" property="status"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -88,6 +90,15 @@ GROUP BY
 	a.integralrecordtypeid
 		limit #{pageNum},#{pageSize}
 		) as a
+	</select>
+	<select id="duihuanTableData" resultType="java.lang.Integer">
+		select b.productname,d.fullname ,sum(a.duihuanproductNum) num ,a.status from main_integralrecord a
+		INNER JOIN main_integralrecordtype b on b.id=a.typeid
+		INNER JOIN sys_dept d on d.id=a.deptid
+		GROUP BY b.productname,d.fullname,a.status
+		order by num desc
+		limit #{pageNum},#{pageSize}
+
 	</select>
 
 </mapper>
