@@ -87,6 +87,15 @@ public class IntegralrecordController extends BaseController {
     }
 
     /**
+     * 跳转商品兑换统计
+     * @return
+     */
+    @RequestMapping("duihuanTableInfo")
+    public String duihuanTableInfo() {
+        return PREFIX + "duihuanTableInfo.html";
+    }
+
+    /**
      * 跳转到添加新增积分
      */
     @RequestMapping("/integralrecord_add")
@@ -171,6 +180,56 @@ public class IntegralrecordController extends BaseController {
         return super.packForBT(page);
     }
 
+    /**
+     * 商品兑换排名
+     * @param offset
+     * @param limit
+     * @param deptId
+     * @param monthTime1
+     * @param monthTime2
+     * @param periodTime1
+     * @param periodTime2
+     * @param orderBy
+     * @param desc
+     * @return
+     */
+    @RequestMapping(value = "/duihuanTableData")
+    @ResponseBody
+    public Object duihuanTableData(Integer offset,
+                                      Integer limit,
+                                      Integer deptId,
+                                      String monthTime1,
+                                      String monthTime2,
+                                      String periodTime1,
+                                      String periodTime2,
+                                      String orderBy,
+                                      String desc,String status) {
+        String format1 = DateUtil.format(new Date(), "yyyy-MM");
+        String format2 = DateUtil.format(new Date(), "yyyy-MM-dd");
+        monthTime1 = format1 + "-01";
+        monthTime2 = format2;
+
+        HttpServletRequest request = HttpKit.getRequest();
+        try {
+            orderBy = request.getParameter("sort");         //排序字段名称
+            desc = request.getParameter("order");       //asc或desc(升序或降序)
+        } catch (Exception e) {
+
+        }
+        //获取deptids
+        List<Map<String, Object>> list = (List<Map<String, Object>>) deptController.findDeptLists(deptId.toString());
+        String deptIds = "";
+        for (Map<String, Object> map : list) {
+            deptIds += map.get("id") + ",";
+        }
+        deptIds = deptIds.substring(0, deptIds.length() - 1);
+        Page<Map<String, Object>> page = new PageFactory<Map<String, Object>>().defaultPage();
+        int i = integralrecordService.duihuanTableDataCount(page.getOffset(), page.getLimit(), deptIds.toString(),  periodTime1, periodTime2, orderBy,status, desc);
+        page.setTotal(i);
+        List<Map<String, Object>> mapList = integralrecordService.duihuanTableData(page.getOffset(), page.getLimit(), deptIds.toString(),  periodTime1, periodTime2, orderBy,status, desc);
+        page.setRecords(mapList);
+        return super.packForBT(page);
+    }
     /**
      * 新增积分
      */
@@ -370,7 +429,7 @@ public class IntegralrecordController extends BaseController {
         receiptsInfo.setReceiptsBase64Img(tableNase64Data);
         receiptsInfo.insert();
         //提交T+收款单
-        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true,memberId);
+//        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true,memberId);
         return SUCCESS_TIP;
     }
 

@@ -29,4 +29,14 @@ public class IntegralrecordServiceImpl extends ServiceImpl<IntegralrecordMapper,
     public int productSalesRankingintCount(Integer pagetNum, Integer pageSize, String deptId, String monthTime1, String monthTime2, String periodTime1, String periodTime2, String orderBy, String desc) {
         return this.baseMapper.productSalesRankingCount(pagetNum,pageSize,deptId,monthTime1,monthTime2,periodTime1,periodTime2,orderBy,desc);
     }
+
+    @Override
+    public int duihuanTableDataCount(Integer pagetNum, Integer pageSize, String deptId, String periodTime1, String periodTime2, String orderBy,String status, String desc) {
+        return this.baseMapper.duihuanTableDataCount(pagetNum,pageSize,deptId,periodTime1,periodTime2,orderBy,status,desc);
+    }
+
+    @Override
+    public List<Map<String, Object>> duihuanTableData(Integer pagetNum, Integer pageSize, String deptId, String periodTime1, String periodTime2, String orderBy,String status, String desc) {
+        return  this.baseMapper.duihuanTableData(pagetNum,pageSize,deptId,periodTime1,periodTime2,orderBy,status,desc);
+    }
 }

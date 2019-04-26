@@ -36,5 +36,21 @@ public interface IIntegralrecordService extends IService<Integralrecord> {
                                     String periodTime2,
                                     String orderBy,
                                     String desc);
+    int duihuanTableDataCount(Integer pagetNum,
+                              Integer pageSize,
+                              String deptId,
+                              String periodTime1,
+                              String periodTime2,
+                              String orderBy,
+                              String status,
+                              String desc);
+    List<Map<String,Object>> duihuanTableData(Integer pagetNum,
+                                              Integer pageSize,
+                                              String deptId,
+                                              String periodTime1,
+                                              String periodTime2,
+                                              String orderBy,
+                                              String status,
+                                              String desc);
 
 }

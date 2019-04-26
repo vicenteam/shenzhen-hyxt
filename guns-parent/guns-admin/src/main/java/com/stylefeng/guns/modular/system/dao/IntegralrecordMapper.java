@@ -35,4 +35,22 @@ public interface IntegralrecordMapper extends BaseMapper<Integralrecord> {
                                            @Param("periodTime2")String periodTime2,
                                            @Param("orderBy")String orderBy,
                                            @Param("desc")String desc);
+    int duihuanTableDataCount(@Param("pageNum")Integer pagetNum,
+                                           @Param("pageSize")Integer pageSize,
+                                           @Param("deptId")String deptId,
+                                           @Param("periodTime1")String periodTime1,
+                                           @Param("periodTime2")String periodTime2,
+                                           @Param("orderBy")String orderBy,
+                                           @Param("status")String status,
+                                           @Param("desc")String desc);
+    List<Map<String,Object>> duihuanTableData(@Param("pageNum")Integer pagetNum,
+                                                 @Param("pageSize")Integer pageSize,
+                                                 @Param("deptId")String deptId,
+                                                 @Param("periodTime1")String periodTime1,
+                                                 @Param("periodTime2")String periodTime2,
+                                                 @Param("orderBy")String orderBy,
+                                                 @Param("status")String status,
+                                                 @Param("desc")String desc);
+
+
 }

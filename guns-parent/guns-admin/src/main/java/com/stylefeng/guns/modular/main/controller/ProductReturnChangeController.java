@@ -203,7 +203,7 @@ public class ProductReturnChangeController extends BaseController {
             inventoryManagementService.deleteById(productReturnChange.getInventoryManagementId());
             //更新会员会员等级
             membermanagementController.updateMemberLeave(memberId.toString());
-            productReceiveT(integralrecordtype, "04", (double) returnchangeNum,memberId);
+//            productReceiveT(integralrecordtype, "04", (double) returnchangeNum,memberId);
         }
         productReturnChange.updateById();
 
@@ -308,7 +308,7 @@ public class ProductReturnChangeController extends BaseController {
         mainSynchronousService.updateById(mainSynchronous);
 
         //
-        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),-(baseQuantity*integralrecordtype.getProductpice()),0,"商品退款",true,memberId);
+//        integralrecordController.receiveVoucherCreate(dept.gettPlusDeptCode(),-(baseQuantity*integralrecordtype.getProductpice()),0,"商品退款",true,memberId);
 
     }
 }

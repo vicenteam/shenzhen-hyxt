@@ -91,14 +91,53 @@ GROUP BY
 		limit #{pageNum},#{pageSize}
 		) as a
 	</select>
-	<select id="duihuanTableData" resultType="java.lang.Integer">
-		select b.productname,d.fullname ,sum(a.duihuanproductNum) num ,a.status from main_integralrecord a
+	<select id="duihuanTableData" resultType="map">
+		select b.productname,b.productnum,d.fullname ,sum(a.duihuanproductNum) num ,a.status from main_integralrecord a
 		INNER JOIN main_integralrecordtype b on b.id=a.typeid
 		INNER JOIN sys_dept d on d.id=a.deptid
-		GROUP BY b.productname,d.fullname,a.status
+		WHERE 1=1 and
+		a.deptid in(${deptId})
+
+		<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
+			and (a.createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
+		</if>
+		<if test="status != null and status != 0">
+			and a.status=#{status}
+		</if>
+		<if test="status != null and status == 0">
+			and (a.status=1 or a.status=2)
+		</if>
+		GROUP BY b.productname,d.fullname
+		<if test="status != null and status != 0">
+			,a.status
+		</if>
 		order by num desc
 		limit #{pageNum},#{pageSize}
 
 	</select>
+	<select id="duihuanTableDataCount" resultType="java.lang.Integer">
+		select count(*) from
+		(
+		select b.productname,d.fullname ,sum(a.duihuanproductNum) num ,a.status from main_integralrecord a
+		INNER JOIN main_integralrecordtype b on b.id=a.typeid
+		INNER JOIN sys_dept d on d.id=a.deptid
+		WHERE 1=1 and
+		a.deptid in(${deptId})
 
+		<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
+			and (a.createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
+		</if>
+		<if test="status != null and status != 0">
+			and a.status=#{status}--
+		</if>
+		<if test="status != null and status == 0">
+			and (a.status=1 or a.status=2)
+		</if>
+		GROUP BY b.productname,d.fullname
+		<if test="status != null and status != 0">
+			,a.status
+		</if>
+		) as dd
+
+	</select>
 </mapper>
