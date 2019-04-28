@@ -361,73 +361,73 @@ public class IntegralrecordController extends BaseController {
             }
 
             //同步数据写入T+库
-            String now = DateUtil.format(new Date(), "yyyy-MM-dd");
-            int radomInt = new Random().nextInt(999999);
-            double baseQuantity = (double) parseIntproductNums;
-            //PartnerDTO对象
-//        YongYouAPIUtils.postUrl(YongYouAPIUtils.PARTNER_QUERY,"");
-            //获取存货编码信息
-            String InventoryCode = integralrecordtype.getInventoryCode();
-//        YongYouAPIUtils.postUrl(YongYouAPIUtils.INVENTORY_QUERY,"{\"param\":{\"code\":\""+InventoryCode+"\"}}");
-            int i = mainSynchronousService.selectCount(null);
-            String tableJson = "";
-            boolean busiType = false;
-            if (integralrecordtype.getProducttype() == 0) {//赠送出库
-                busiType = true;
-            }
-            tableJson =
-                    "{\n" +
-                            "    dto:{\n" +
-                            "       VoucherDate: \"" + now + "\",\n" +
-                            "       ExternalCode:\"" +""+memberId+"_"+new Date().getTime() + "\",\n" +
-                            "       Customer: {Code: \""+dept.gettPlusDeptCode()+"\"}, \n" +
-                            "       InvoiceType: {Code: \"00\"},\n" +
-                            "       Address: \"新协会员管理系统\",\n" +
-                            "       LinkMan: \"新协会员管理系统\",\n" +
-                            "       ContactPhone: \"13611111111\",\n" +
-                            "       Department :{code: \"" + dept.gettPlusDeptCode() + "\"},\n" +
-                            "       Memo: \"新协会员管理系统-购买商品-赠品数量："+MianFeiNum+"\",\n" +
-                            "       IsAutoGenerateSaleOut:true,\n" +
-                            "       dynamicPropertyKeys: [\"isautoaudit\",\"isautoauditsaleout\"],"+
-                            "       dynamicPropertyValues: [true,true],"+
-                            "       Warehouse:{code:\"" + integralrecordtype.getWarehouseCode() + "\"},\n" +
-                            "       IsPresent:" + busiType + ",\n" +
-                            "       SaleDeliveryDetails: [{\n" +
-                            "           Inventory:{Code: \"" + InventoryCode + "\"},\n" +
-                            "           Unit: {Name:\"" + integralrecordtype.getUnitName() + "\"},\n" +
-                            "           Quantity: " + baseQuantity + ",\n" +
-                            "           OrigPrice: " + integralrecordtype.getProductpice() * baseQuantity + ",\n" +
-                            "           OrigTaxAmount: " + integralrecordtype.getProductpice() * baseQuantity + ",\n" +
-                            "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
-                            "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
-                            "       }]\n" +
-                            "    } \n" +
-                            "}";
-            MainSynchronous mainSynchronous = new MainSynchronous();
-            mainSynchronous.setSynchronousJson(tableJson);
-            mainSynchronous.setStatus(0);
-            mainSynchronous.setMemberid(memberId);
-            mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            mainSynchronousService.insert(mainSynchronous);
-            //
-//            synchronousData(mainSynchronous);
-            synchronousList.add(mainSynchronous);
-            index++;
+//            String now = DateUtil.format(new Date(), "yyyy-MM-dd");
+//            int radomInt = new Random().nextInt(999999);
+//            double baseQuantity = (double) parseIntproductNums;
+//            //PartnerDTO对象
+////        YongYouAPIUtils.postUrl(YongYouAPIUtils.PARTNER_QUERY,"");
+//            //获取存货编码信息
+//            String InventoryCode = integralrecordtype.getInventoryCode();
+////        YongYouAPIUtils.postUrl(YongYouAPIUtils.INVENTORY_QUERY,"{\"param\":{\"code\":\""+InventoryCode+"\"}}");
+//            int i = mainSynchronousService.selectCount(null);
+//            String tableJson = "";
+//            boolean busiType = false;
+//            if (integralrecordtype.getProducttype() == 0) {//赠送出库
+//                busiType = true;
+//            }
+//            tableJson =
+//                    "{\n" +
+//                            "    dto:{\n" +
+//                            "       VoucherDate: \"" + now + "\",\n" +
+//                            "       ExternalCode:\"" +""+memberId+"_"+new Date().getTime() + "\",\n" +
+//                            "       Customer: {Code: \""+dept.gettPlusDeptCode()+"\"}, \n" +
+//                            "       InvoiceType: {Code: \"00\"},\n" +
+//                            "       Address: \"新协会员管理系统\",\n" +
+//                            "       LinkMan: \"新协会员管理系统\",\n" +
+//                            "       ContactPhone: \"13611111111\",\n" +
+//                            "       Department :{code: \"" + dept.gettPlusDeptCode() + "\"},\n" +
+//                            "       Memo: \"新协会员管理系统-购买商品-赠品数量："+MianFeiNum+"\",\n" +
+//                            "       IsAutoGenerateSaleOut:true,\n" +
+//                            "       dynamicPropertyKeys: [\"isautoaudit\",\"isautoauditsaleout\"],"+
+//                            "       dynamicPropertyValues: [true,true],"+
+//                            "       Warehouse:{code:\"" + integralrecordtype.getWarehouseCode() + "\"},\n" +
+//                            "       IsPresent:" + busiType + ",\n" +
+//                            "       SaleDeliveryDetails: [{\n" +
+//                            "           Inventory:{Code: \"" + InventoryCode + "\"},\n" +
+//                            "           Unit: {Name:\"" + integralrecordtype.getUnitName() + "\"},\n" +
+//                            "           Quantity: " + baseQuantity + ",\n" +
+//                            "           OrigPrice: " + integralrecordtype.getProductpice() * baseQuantity + ",\n" +
+//                            "           OrigTaxAmount: " + integralrecordtype.getProductpice() * baseQuantity + ",\n" +
+//                            "           DynamicPropertyKeys:[\"priuserdefnvc1\",\"priuserdefdecm1\"],\n" +
+//                            "           DynamicPropertyValues:[\"sn001\",\"123\"]\n" +
+//                            "       }]\n" +
+//                            "    } \n" +
+//                            "}";
+//            MainSynchronous mainSynchronous = new MainSynchronous();
+//            mainSynchronous.setSynchronousJson(tableJson);
+//            mainSynchronous.setStatus(0);
+//            mainSynchronous.setMemberid(memberId);
+//            mainSynchronous.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+//            mainSynchronousService.insert(mainSynchronous);
+//            //
+////            synchronousData(mainSynchronous);
+//            synchronousList.add(mainSynchronous);
+//            index++;
         }
-        for (MainSynchronous a : synchronousList) {
-//            synchronousData(a);
-        }
+//        for (MainSynchronous a : synchronousList) {
+////            synchronousData(a);
+//        }
         //新增购买小票
-        ReceiptsInfo receiptsInfo = new ReceiptsInfo();
-        receiptsInfo.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        receiptsInfo.setDeptId(ShiroKit.getUser().deptId);
-        receiptsInfo.setMemberId(memberId);
-        receiptsInfo.setMemberName(membermanagements.get(0).getName());
-        receiptsInfo.setMemberPhone(membermanagements.get(0).getPhone());
-        BigDecimal bigDecimal=new BigDecimal(play);
-        receiptsInfo.setPlayMoney(bigDecimal.setScale(2,BigDecimal.ROUND_UP).doubleValue() + "");
-        receiptsInfo.setReceiptsBase64Img(tableNase64Data);
-        receiptsInfo.insert();
+//        ReceiptsInfo receiptsInfo = new ReceiptsInfo();
+//        receiptsInfo.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+//        receiptsInfo.setDeptId(ShiroKit.getUser().deptId);
+//        receiptsInfo.setMemberId(memberId);
+//        receiptsInfo.setMemberName(membermanagements.get(0).getName());
+//        receiptsInfo.setMemberPhone(membermanagements.get(0).getPhone());
+//        BigDecimal bigDecimal=new BigDecimal(play);
+//        receiptsInfo.setPlayMoney(bigDecimal.setScale(2,BigDecimal.ROUND_UP).doubleValue() + "");
+//        receiptsInfo.setReceiptsBase64Img(tableNase64Data);
+//        receiptsInfo.insert();
         //提交T+收款单
 //        receiveVoucherCreate(dept.gettPlusDeptCode(),play,playType,"商品购买",true,memberId);
         return SUCCESS_TIP;

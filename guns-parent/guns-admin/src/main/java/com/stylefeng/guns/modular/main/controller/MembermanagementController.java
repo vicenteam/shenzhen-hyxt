@@ -237,7 +237,7 @@ public class MembermanagementController extends BaseController {
             baseEntityWrapper.eq("deptid", deptid);
         } else {
             if (ShiroKit.getUser().getAccount().equals("admin")) {
-
+                baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
             } else {
                 baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
             }
@@ -515,6 +515,7 @@ public class MembermanagementController extends BaseController {
 //            membermanagement.setCountPrice(membershipcardtype.getShopping());
             membermanagement.setPrice(membershipcardtype.getUpamount());
         }
+        membermanagement.setIntegral(membermanagement1.getIntegral());
         membermanagementService.updateById(membermanagement);
         //删除历史健康记录
         EntityWrapper<MemberBamedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
@@ -530,6 +531,7 @@ public class MembermanagementController extends BaseController {
                 memberBamedicalService.insert(memberBamedical);
             }
         }
+
         updateMemberInfo(membermanagement);
         return SUCCESS_TIP;
     }

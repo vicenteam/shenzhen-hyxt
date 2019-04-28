@@ -291,7 +291,7 @@ public class Membermanagement extends Model<Membermanagement> {
     }
 
     public void setIntegral(Double integral) {
-        this.integral = integral;
+        this.integral = integral<0.0?0.0:integral;
     }
 
     public String getLevelID() {
