@@ -96,7 +96,7 @@ InventoryManagement.check = function () {
 InventoryManagement.openAddInventoryManagement = function () {
     var index = layer.open({
         type: 2,
-        title: '商品库存出库',
+        title: '单商品库存出库',
         area: ['800px', '420px'], //宽高
         fix: false, //不固定
         maxmin: true,
@@ -104,7 +104,20 @@ InventoryManagement.openAddInventoryManagement = function () {
     });
     this.layerIndex = index;
 };
-
+/**
+ * 点击添加商品库存
+ */
+InventoryManagement.openAddInventoryManagementAll = function () {
+    var index = layer.open({
+        type: 2,
+        title: '多商品库存出库',
+        area: ['800px', '420px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/inventoryManagement/inventoryManagement_out_add_all'
+    });
+    this.layerIndex = index;
+};
 /**
  * 打开查看商品库存详情
  */

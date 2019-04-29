@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8081
 #  tomcat:
 #    maxConnections: 500
 #    maxThreads: 400
@@ -65,10 +65,10 @@ guns:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://39.98.40.220:3306/shenzhen_gunsback?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://39.98.40.220:3306/shenzhen_guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: jksq
     password: akmn123
-    db-name: shenzhen_gunsback #用来搜集数据库的所有表
+    db-name: shenzhen_guns #用来搜集数据库的所有表
     filters: wall,mergeStat
 
 ---

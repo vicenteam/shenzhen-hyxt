@@ -64,6 +64,7 @@ public class IntegralRecordQueryController extends BaseController {
     public Object findIntegralType(String type){
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
         iWrapper.eq("integralType",type);
+        iWrapper.lt("otherTypeId",10);
         if(type.equals("1")) iWrapper.groupBy("typeId");
         if(type.equals("2")) iWrapper.groupBy("otherTypeId");
         List<Map<String,String>> types2 = integralrecordService.selectMaps(iWrapper);

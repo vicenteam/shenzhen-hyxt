@@ -176,7 +176,7 @@ public class IntegralrecordtypeController extends BaseController {
     @RequestMapping(value = "/tongbuData")
     @ResponseBody
     public Object tongbuData() throws Exception {
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         String Warehouse = "";
         if (dept.gettPlusWarehouseCode() != null) {
@@ -203,17 +203,17 @@ public class IntegralrecordtypeController extends BaseController {
                 integralrecordtype.setDeptid(ShiroKit.getUser().deptId + "");
                 integralrecordtype.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.insert(integralrecordtype);
-                sb.append(integralrecordtype.getId()+",");
+                sb.append(integralrecordtype.getId() + ",");
             } else {
                 integralrecordtype1.setProductnum(integralrecordtype.getAvailableQuantity().intValue());
                 integralrecordtypeService.updateById(integralrecordtype1);
-                sb.append(integralrecordtype1.getId()+",");
+                sb.append(integralrecordtype1.getId() + ",");
             }
         }
         BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
-        wrapper.notIn("id",sb.toString());
+        wrapper.notIn("id", sb.toString());
 //        integralrecordtypeService.delete(wrapper);
-        integralrecordtypeService.updateForSet("status=0",wrapper);
+        integralrecordtypeService.updateForSet("status=0", wrapper);
         System.out.println("同步数据完成。。。");
         return "success";
     }
@@ -236,28 +236,62 @@ public class IntegralrecordtypeController extends BaseController {
         StringBuffer resultMessage = new StringBuffer();
         try {
             List<IntegralRecordTypeExcel> excelUpload = ExcelImportUtil.importExcel(file.getInputStream(), IntegralRecordTypeExcel.class, params);
+            String createtime = DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
             for (IntegralRecordTypeExcel integralRecordTypeExcel : excelUpload) {
                 BaseEntityWrapper<Integralrecordtype> iWrapper = new BaseEntityWrapper<>();
                 iWrapper.eq("InventoryCode", integralRecordTypeExcel.getInventoryCode());
                 Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(iWrapper);
                 if (integralrecordtype != null) { //更新导入价格
-                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getProductpice())){
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductpice())) {
                         integralrecordtype.setProductpice(Double.parseDouble(integralRecordTypeExcel.getProductpice()));
                         integralrecordtype.setProductduihuanjifen(Double.parseDouble(integralRecordTypeExcel.getProductpice())); //兑换积分=金额单价
                     }
-                    if(! StringUtils.isEmpty(integralRecordTypeExcel.getRetailPrice()))
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getRetailPrice()))
                         integralrecordtype.setRetailPrice(Double.parseDouble(integralRecordTypeExcel.getRetailPrice()));
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductnum()))
+                        integralrecordtype.setProductnum(Integer.parseInt(integralRecordTypeExcel.getProductnum()));
                     integralrecordtypeService.updateById(integralrecordtype);
                 } else {
+                    integralrecordtype = new Integralrecordtype();
                     resultMessage.append(integralRecordTypeExcel.getInventoryCode() + "、");
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getInventoryCode())) {
+                        integralrecordtype.setInventoryCode(integralRecordTypeExcel.getInventoryCode());
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductname())) {
+                        integralrecordtype.setProductname(integralRecordTypeExcel.getProductname());
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductpice())) {
+                        integralrecordtype.setProductpice(Double.parseDouble(integralRecordTypeExcel.getProductpice()));
+                        integralrecordtype.setProductduihuanjifen(Double.parseDouble(integralRecordTypeExcel.getProductpice()));
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getRetailPrice())) {
+                        integralrecordtype.setRetailPrice(Double.parseDouble(integralRecordTypeExcel.getRetailPrice()));
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductspecification())) {
+                        integralrecordtype.setProductspecification(integralRecordTypeExcel.getProductspecification());
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductnum())) {
+                        integralrecordtype.setProductnum(Integer.parseInt(integralRecordTypeExcel.getProductnum()));
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getUnitName())) {
+                        integralrecordtype.setUnitName(integralRecordTypeExcel.getUnitName());
+                    }
+                    if (!StringUtils.isEmpty(integralRecordTypeExcel.getProducttype())) {
+                        integralrecordtype.setProducttype(Integer.parseInt(integralRecordTypeExcel.getProducttype()));
+                    }
+                    integralrecordtype.setDeptid(ShiroKit.getUser().deptId.toString());
+                    integralrecordtype.setCreatetime(createtime);
+                    integralrecordtype.setCreateuserid(ShiroKit.getUser().id.toString());
+                    integralrecordtype.setStatus(0);
+                    integralrecordtypeService.insert(integralrecordtype);
                 }
             }
-            resJson.put("msg", "导入成功，" + resultMessage == null ? "" : "未找到商品：" + resultMessage.toString());
+            resJson.put("msg", "导入成功，" + resultMessage == null ? "" : "新增到商品：" + resultMessage.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Map<String,String> map=new HashMap<>();
-        map.put("msg","上传成功");
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", "上传成功");
         return map;
     }
 
@@ -324,21 +358,22 @@ public class IntegralrecordtypeController extends BaseController {
         List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
         List<IntegralRecordTypeExcel> excels = new ArrayList<>();
         for (Integralrecordtype detail : details) {
-            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {});
+            IntegralRecordTypeExcel excel = JSON.parseObject(JSON.toJSONString(detail), new TypeReference<IntegralRecordTypeExcel>() {
+            });
             excels.add(excel);
         }
         ExportParams params = new ExportParams();
         params.setSheetName("商品列表");
         Workbook workbook = ExcelExportUtil.exportExcel(params, IntegralRecordTypeExcel.class, excels);
-        response.setHeader("content-Type","application/vnc.ms-excel");
-        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("商品导出", "UTF-8")+".xls");
+        response.setHeader("content-Type", "application/vnc.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("商品导出", "UTF-8") + ".xls");
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             details.clear();
             outputStream.close();
         }

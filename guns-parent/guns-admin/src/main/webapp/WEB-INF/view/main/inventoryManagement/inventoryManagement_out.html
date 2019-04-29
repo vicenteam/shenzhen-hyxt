@@ -23,7 +23,10 @@
                         </div>
                         <div class="hidden-xs" id="InventoryManagementTableToolbar" role="group">
                             @if(shiro.hasPermission("/inventoryManagement/add")){
-                                <#button name="商品库存出库" icon="fa-plus" clickFun="InventoryManagement.openAddInventoryManagement()"/>
+                                <#button name="单商品库存出库" icon="fa-plus" clickFun="InventoryManagement.openAddInventoryManagement()"/>
+                            @}
+                            @if(shiro.hasPermission("/inventoryManagement/add")){
+                                <#button name="多商品库存出库" icon="fa-plus" clickFun="InventoryManagement.openAddInventoryManagementAll()"/>
                             @}
                         </div>
                         <#table id="InventoryManagementTable"/>

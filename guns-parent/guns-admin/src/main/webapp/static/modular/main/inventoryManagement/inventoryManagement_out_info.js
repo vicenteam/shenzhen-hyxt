@@ -87,7 +87,34 @@ InventoryManagementInfoDlg.addSubmit = function() {
     ajax.set(this.inventoryManagementInfoData);
     ajax.start();
 }
+InventoryManagementInfoDlg.addAllSubmit = function() {
 
+    if($("#productname").val().length==0){
+        Feng.error("请选择商品!");
+        return;
+    }
+    if($("#consumptionNum").val().length==0){
+        Feng.error("请输入出库数量!");
+        return;
+    }
+    if (isNaN($("#consumptionNum").val())) {
+        Feng.error("出库数量必须是数字!");
+        return;
+    }
+    this.clearData();
+    this.collectData();
+
+    //提交信息
+    var ajax = new $ax(Feng.ctxPath + "/inventoryManagement/out_add_all", function(data){
+        Feng.success("添加成功!");
+        window.parent.InventoryManagement.table.refresh();
+        InventoryManagementInfoDlg.close();
+    },function(data){
+        Feng.error("添加失败!" + data.responseJSON.message + "!");
+    });
+    ajax.set(this.inventoryManagementInfoData);
+    ajax.start();
+}
 /**
  * 提交修改
  */

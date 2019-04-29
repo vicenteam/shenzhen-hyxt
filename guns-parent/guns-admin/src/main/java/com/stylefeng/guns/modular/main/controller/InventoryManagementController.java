@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.base.tips.SuccessTip;
+import com.stylefeng.guns.core.exception.GunsException;
+import com.stylefeng.guns.core.exception.GunsExceptionEnum;
+import com.stylefeng.guns.core.exception.ServiceExceptionEnum;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
@@ -67,10 +70,12 @@ public class InventoryManagementController extends BaseController {
     public String index() {
         return PREFIX + "inventoryManagement.html";
     }
+
     @RequestMapping("index_out")
     public String index_out() {
         return PREFIX + "inventoryManagement_out.html";
     }
+
     @RequestMapping("/order_page")
     public String order_page() {
         return PREFIX + "inventoryManagementOrder.html";
@@ -80,13 +85,23 @@ public class InventoryManagementController extends BaseController {
      * 跳转到添加商品库存出库
      */
     @RequestMapping("/inventoryManagement_out_add")
-    public String inventoryManagement_out_add( Model model) {
+    public String inventoryManagement_out_add(Model model) {
         EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
-        deptEntityWrapper.eq("pid",ShiroKit.getUser().getDeptId());
+        deptEntityWrapper.eq("pid", ShiroKit.getUser().getDeptId());
         List<Dept> depts = deptService.selectList(deptEntityWrapper);
-        model.addAttribute("depts",depts);
+        model.addAttribute("depts", depts);
         return PREFIX + "inventoryManagement_out_add.html";
     }
+
+    @RequestMapping("/inventoryManagement_out_add_all")
+    public String inventoryManagement_out_add_all(Model model) {
+        EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
+        deptEntityWrapper.eq("pid", ShiroKit.getUser().getDeptId());
+        List<Dept> depts = deptService.selectList(deptEntityWrapper);
+        model.addAttribute("depts", depts);
+        return PREFIX + "inventoryManagement_out_add_all.html";
+    }
+
     /**
      * 跳转到添加商品库存
      */
@@ -111,12 +126,12 @@ public class InventoryManagementController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition,Integer status) {
+    public Object list(String condition, Integer status) {
         Page<InventoryManagement> page = new PageFactory<InventoryManagement>().defaultPage();
         BaseEntityWrapper<InventoryManagement> baseEntityWrapper = new BaseEntityWrapper<>();
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("name",condition);
-        if(status!=null)baseEntityWrapper.eq("status",status);
-        baseEntityWrapper.orderBy("createtime",false);
+        if (!StringUtils.isEmpty(condition)) baseEntityWrapper.like("name", condition);
+        if (status != null) baseEntityWrapper.eq("status", status);
+        baseEntityWrapper.orderBy("createtime", false);
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = page1.getRecords();
         records.forEach(a -> {
@@ -127,36 +142,38 @@ public class InventoryManagementController extends BaseController {
             Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(a.get("integralrecordtypeid") + "");
             if (integralrecordtype != null) {
 //                a.put("producttype", integralrecordtype.getProducttype() == 0 ? "礼品类" : integralrecordtype.getProducttype() == 1 ? "积分兑换类" : integralrecordtype.getProducttype() == 2 ? "销售类" : "积分+金额类");
-                a.put("producttype",integralrecordtype.getProducttype()) ;
-                a.put("productname",integralrecordtype.getProductname());
+                a.put("producttype", integralrecordtype.getProducttype());
+                a.put("productname", integralrecordtype.getProductname());
             }
-            if(a.get("toDeptId")!=null){
+            if (a.get("toDeptId") != null) {
                 Dept toDeptId = deptService.selectById(a.get("toDeptId") + "");
-                if(toDeptId!=null){
-                    a.put("deptId",toDeptId.getFullname());
+                if (toDeptId != null) {
+                    a.put("deptId", toDeptId.getFullname());
                 }
             }
         });
         return super.packForBT(page1);
     }
+
     @RequestMapping(value = "/order")
     @ResponseBody
-    public Object order(String condition,String startTime,String endTime) {
+    public Object order(String condition, String startTime, String endTime) {
         Page<InventoryManagement> page = new PageFactory<InventoryManagement>().defaultPage();
         BaseEntityWrapper<InventoryManagement> baseEntityWrapper = new BaseEntityWrapper<>();
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("memberName",condition);
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.or().like("memberPhone",condition);
-        if(!StringUtils.isEmpty(startTime)&&!StringUtils.isEmpty(endTime))baseEntityWrapper.between("createtime",startTime,endTime);
-        baseEntityWrapper.eq("status",1);
-        baseEntityWrapper.orderBy("createtime",false);
-        baseEntityWrapper.isNull("toDeptId").or("toDeptId=0","0");
+        if (!StringUtils.isEmpty(condition)) baseEntityWrapper.like("memberName", condition);
+        if (!StringUtils.isEmpty(condition)) baseEntityWrapper.or().like("memberPhone", condition);
+        if (!StringUtils.isEmpty(startTime) && !StringUtils.isEmpty(endTime))
+            baseEntityWrapper.between("createtime", startTime, endTime);
+        baseEntityWrapper.eq("status", 1);
+        baseEntityWrapper.orderBy("createtime", false);
+        baseEntityWrapper.isNull("toDeptId").or("toDeptId=0", "0");
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = page1.getRecords();
         records.forEach(a -> {
             Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(a.get("integralrecordtypeid") + "");
             if (integralrecordtype != null) {
-                a.put("producttype",integralrecordtype.getProducttype()) ;
-                a.put("productname",integralrecordtype.getProductname());
+                a.put("producttype", integralrecordtype.getProducttype());
+                a.put("productname", integralrecordtype.getProductname());
             }
             User createuserid = userService.selectById(a.get("createuserid") + "");
             if (createuserid != null) {
@@ -166,6 +183,7 @@ public class InventoryManagementController extends BaseController {
         });
         return super.packForBT(page1);
     }
+
     /**
      * 新增商品库存
      */
@@ -193,29 +211,29 @@ public class InventoryManagementController extends BaseController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer inventoryManagementId,@RequestParam Integer type,String content,String selectNum) throws Exception {
+    public Object delete(@RequestParam Integer inventoryManagementId, @RequestParam Integer type, String content, String selectNum) throws Exception {
         EntityWrapper<ProductReturnChange> productReturnChangeEntityWrapper = new EntityWrapper<>();
-        productReturnChangeEntityWrapper.eq("inventoryManagementId",inventoryManagementId);
+        productReturnChangeEntityWrapper.eq("inventoryManagementId", inventoryManagementId);
         int i = productReturnChangeService.selectCount(productReturnChangeEntityWrapper);
-        if(i>0){
-           throw new Exception("该记录已执行退换货操作!");
+        if (i > 0) {
+            throw new Exception("该记录已执行退换货操作!");
         }
         InventoryManagement inventoryManagement = inventoryManagementService.selectById(inventoryManagementId);
         ProductReturnChange productReturnChange = new ProductReturnChange();
-        productReturnChange.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-        productReturnChange.setCreateuserid(ShiroKit.getUser().getId()+"");
-        productReturnChange.setDeptId(ShiroKit.getUser().getDeptId()+"");
+        productReturnChange.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        productReturnChange.setCreateuserid(ShiroKit.getUser().getId() + "");
+        productReturnChange.setDeptId(ShiroKit.getUser().getDeptId() + "");
         productReturnChange.setMemberId(Integer.parseInt(inventoryManagement.getMemberid()));
         productReturnChange.setMemberName(inventoryManagement.getMemberName());
         productReturnChange.setMemberPhone(inventoryManagement.getMemberPhone());
         productReturnChange.setProductId(inventoryManagement.getIntegralrecordtypeid());
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(inventoryManagement.getIntegralrecordtypeid());
-        if(integralrecordtype!=null)productReturnChange.setProductName(integralrecordtype.getProductname());
+        if (integralrecordtype != null) productReturnChange.setProductName(integralrecordtype.getProductname());
         productReturnChange.setReturnchangeType(type);
         productReturnChange.setReturnchangeproductId(inventoryManagement.getIntegralrecordtypeid());
         productReturnChange.setReturnchangeproductName(integralrecordtype.getProductname());
         productReturnChange.setReturnchangeNum(inventoryManagement.getConsumptionNum());
-        if(!StringUtils.isEmpty(selectNum)){
+        if (!StringUtils.isEmpty(selectNum)) {
             productReturnChange.setReturnchangeNum(Integer.parseInt(selectNum));
         }
         productReturnChange.setStatus(type);
@@ -239,6 +257,7 @@ public class InventoryManagementController extends BaseController {
 
     /**
      * 更改是否进行追销
+     *
      * @param id
      * @return
      */
@@ -250,6 +269,7 @@ public class InventoryManagementController extends BaseController {
         inventoryManagementService.updateById(inventoryManagement);
         return SUCCESS_TIP;
     }
+
     /**
      * 商品库存详情
      */
@@ -258,13 +278,14 @@ public class InventoryManagementController extends BaseController {
     public Object detail(@PathVariable("inventoryManagementId") Integer inventoryManagementId) {
         return inventoryManagementService.selectById(inventoryManagementId);
     }
+
     /**
      * 新增商品库存出库
      */
     @RequestMapping(value = "/out_add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object out_add(InventoryManagement inventoryManagement, Integer productname,String deptId) {
+    public Object out_add(InventoryManagement inventoryManagement, Integer productname, String deptId) {
         //获取商品,名称
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(productname);
         integralrecordtype.setProductnum(integralrecordtype.getProductnum() - inventoryManagement.getConsumptionNum());
@@ -280,17 +301,17 @@ public class InventoryManagementController extends BaseController {
         inventoryManagementService.insert(inventoryManagement);
         //分部门进行添加商品
         EntityWrapper<Integralrecordtype> integralrecordtypeEntityWrapper = new EntityWrapper<>();
-        integralrecordtypeEntityWrapper.eq("productPid",integralrecordtype.getId());
-        integralrecordtypeEntityWrapper.eq("deptid",deptId);
+        integralrecordtypeEntityWrapper.eq("productPid", integralrecordtype.getId());
+        integralrecordtypeEntityWrapper.eq("deptid", deptId);
         Integralrecordtype integralrecordtype1 = iIntegralrecordtypeService.selectOne(integralrecordtypeEntityWrapper);
-        if(integralrecordtype1==null){//新增商品信息
+        if (integralrecordtype1 == null) {//新增商品信息
             integralrecordtype.setId(null);
             integralrecordtype.setDeptid(deptId);
             integralrecordtype.setProductnum(0);
             integralrecordtype.setProductPid(productname);
             iIntegralrecordtypeService.insert(integralrecordtype);
-        }else {
-            integralrecordtype=integralrecordtype1;
+        } else {
+            integralrecordtype = integralrecordtype1;
         }
         //分部门进行添加库存
         {
@@ -305,6 +326,33 @@ public class InventoryManagementController extends BaseController {
             inventoryManagement.setIntegralrecordtypeid(integralrecordtype.getId());
             inventoryManagement.setName(integralrecordtype.getProductname());
             inventoryManagementService.insert(inventoryManagement);
+        }
+        return SUCCESS_TIP;
+    }
+
+    @RequestMapping(value = "/out_add_all")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Object out_add_all(InventoryManagement inventoryManagement, Integer productname, String deptId) {
+        BaseEntityWrapper<Integralrecordtype> integralrecordtypeBaseEntityWrapper = new BaseEntityWrapper<>();
+        integralrecordtypeBaseEntityWrapper.eq("status",0);
+        List<Integralrecordtype> list = iIntegralrecordtypeService.selectList(integralrecordtypeBaseEntityWrapper);
+        for (Integralrecordtype integralrecordtype : list) {
+            if(integralrecordtype.getProductnum()>=inventoryManagement.getConsumptionNum()){
+                out_add(inventoryManagement,integralrecordtype.getId(),deptId);
+            }else {
+                ServiceExceptionEnum serviceExceptionEnum = new ServiceExceptionEnum() {
+                    @Override
+                    public Integer getCode() {
+                        return 500;
+                    }
+                    @Override
+                    public String getMessage() {
+                        return "["+integralrecordtype.getProductname()+"]商品数量不足";
+                    }
+                };
+                throw new GunsException(serviceExceptionEnum);
+            }
         }
         return SUCCESS_TIP;
     }
