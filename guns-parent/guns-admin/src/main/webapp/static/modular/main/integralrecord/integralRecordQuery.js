@@ -18,8 +18,8 @@ Integralrecord.initColumn = function () {
             {title: '会员名称', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
             {title: '身份证号', field: 'membercadid', visible: true, align: 'center', valign: 'middle'},
             {title: '联系电话', field: 'memberPhone', visible: true, align: 'center', valign: 'middle'},
+            {title: '花费金额', field: 'payMoney', visible: true, align: 'center', valign: 'middle'},
             {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-
                      if(value>=0){
                          return "<span style='color: green'>+"+value+"</span>";
                      }else {

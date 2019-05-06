@@ -65,6 +65,16 @@ public class Integralrecord extends Model<Integralrecord> {
      */
     private int status;
 
+    private double payMoney;
+
+    public double getPayMoney() {
+        return payMoney;
+    }
+
+    public void setPayMoney(double payMoney) {
+        this.payMoney = payMoney;
+    }
+
     public int getStatus() {
         return status;
     }

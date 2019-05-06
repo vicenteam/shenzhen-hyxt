@@ -17,6 +17,7 @@
         <result column="staffid" property="staffid"/>
         <result column="duihuanproductNum" property="duihuanproductNum"/>
         <result column="status" property="status"/>
+        <result column="payMoney" property="payMoney"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

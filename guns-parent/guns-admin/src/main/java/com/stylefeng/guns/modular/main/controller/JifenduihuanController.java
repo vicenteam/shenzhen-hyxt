@@ -154,6 +154,7 @@ public class JifenduihuanController extends BaseController {
                 integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
                 integralrecord.setStaffid(ShiroKit.getUser().getId());
                 integralrecord.setDuihuanproductNum(productNum);
+                integralrecord.setPayMoney(payMoney);
                 integralrecordService.insert(integralrecord);
                 integralrecords.add(integralrecord);
             }

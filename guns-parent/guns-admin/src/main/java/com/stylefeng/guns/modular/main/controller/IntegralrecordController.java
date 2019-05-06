@@ -498,6 +498,7 @@ public class IntegralrecordController extends BaseController {
             integralrecord.setMemberid(memberId.getId());
             integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
             integralrecord.setStaffid(ShiroKit.getUser().getId());
+            integralrecord.setPayMoney(price);
             integralrecordService.insert(integralrecord);
             integralrecords.add(integralrecord);
         }
