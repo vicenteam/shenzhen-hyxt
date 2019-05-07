@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +76,8 @@ public class JifenduihuanController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object list(String memberId, String productId, Integer productNum, double payMoney) throws Exception {
-        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
+        double kouchujifen_temp = 0.0;
+//        Dept dept = deptService.selectById(ShiroKit.getUser().deptId);
         Integralrecordtype integralrecordtype = integralrecordtypeServicel.selectById(productId);
         if (integralrecordtype.getProductnum() - productNum < 0) {
             throw new Exception("兑换数量超出库存总量");
@@ -110,7 +112,19 @@ public class JifenduihuanController extends BaseController {
                                 throw new Exception("可用积分不足！");
                             }
                         } else {
-                            memberIdo.setIntegral((nowIntegral + integral) < 0 ? 0.0 : (nowIntegral + integral));
+                            double productduihuanjifen = integralrecordtype.getProductduihuanjifen() * productNum;
+                            BigDecimal bd1 = new BigDecimal(Double.toString(productduihuanjifen));
+                            BigDecimal bd2 = new BigDecimal(Double.toString(payMoney));
+                            double kouchujifen = bd1.subtract(bd2).doubleValue();
+                            integral = -(kouchujifen);
+                            BigDecimal dangqian = new BigDecimal(Double.toString(nowIntegral));
+                            BigDecimal kouchu = new BigDecimal(Double.toString(kouchujifen));
+                            double jieguo = dangqian.subtract(kouchu).doubleValue();
+                            if (jieguo < 0) {
+                                throw new Exception("支付金额不足兑换该数量商品！");
+                            }
+//                            memberIdo.setIntegral((nowIntegral + integral) < 0 ? 0.0 : (nowIntegral + integral));
+                            memberIdo.setIntegral((nowIntegral - kouchujifen) < 0 ? 0.0 : (nowIntegral - kouchujifen));
                             memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (payMoney)); //总消费额
                             integralrecord.setStatus(2);
                         }
