@@ -1,10 +1,16 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
+import com.stylefeng.guns.core.page.PageInfoBT;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
@@ -13,6 +19,9 @@ import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.system.utils.MemberExcel;
+import com.stylefeng.guns.modular.system.utils.MemberJifenExcel;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -21,10 +30,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * 积分记录查询控制器
@@ -195,6 +205,28 @@ public class IntegralRecordQueryController extends BaseController {
     @ResponseBody
     public Object jifenduihuantongji(){
         return null;
+    }
+
+    @RequestMapping(value = "dataexport")
+    public void export(HttpServletResponse response,String condition, String operator, String memberName, String cadId
+            , String type, String integralType, String begindate, String enddate, String memberId) throws Exception {
+        List<MemberJifenExcel> data=new ArrayList<>();
+        PageInfoBT list = (PageInfoBT)list(condition, operator, memberName, cadId, type, integralType, begindate, enddate, memberId);
+        List<MemberJifenExcel> memberExcels =  JSON.parseArray(JSON.toJSONString(list.getRows()), MemberJifenExcel.class);
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, MemberJifenExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员积分导出", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
     }
 
 }

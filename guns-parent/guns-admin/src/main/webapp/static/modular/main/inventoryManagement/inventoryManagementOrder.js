@@ -189,3 +189,10 @@ $(function () {
     table.setPaginationType("server");
     InventoryManagement.table = table.init();
 });
+InventoryManagement.dataexport=function () {
+    window.location.href = Feng.ctxPath + "/inventoryManagement/dataexport2?limit=9999999&offset=0&"+
+        "condition=" + $("#condition").val() +
+        "startTime=" + $("#startTime").val() +
+        "&endTime=" + $("#endTime").val() ;
+
+}

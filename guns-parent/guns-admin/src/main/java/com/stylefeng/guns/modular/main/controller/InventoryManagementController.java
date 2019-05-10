@@ -1,5 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -7,6 +9,7 @@ import com.stylefeng.guns.core.base.tips.SuccessTip;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.exception.GunsExceptionEnum;
 import com.stylefeng.guns.core.exception.ServiceExceptionEnum;
+import com.stylefeng.guns.core.page.PageInfoBT;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
@@ -15,6 +18,10 @@ import com.stylefeng.guns.modular.main.service.IProductReturnChangeService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.system.utils.DingdanExcel;
+import com.stylefeng.guns.modular.system.utils.KucunguanliExcel;
+import com.stylefeng.guns.modular.system.utils.MemberJifenExcel;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.beetl.ext.fn.Json;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -33,6 +40,11 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.main.service.IInventoryManagementService;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -355,5 +367,46 @@ public class InventoryManagementController extends BaseController {
             }
         }
         return SUCCESS_TIP;
+    }
+    @RequestMapping(value = "dataexport")
+    public void export(HttpServletResponse response,String condition, Integer status) throws Exception {
+        List<MemberJifenExcel> data=new ArrayList<>();
+        PageInfoBT list = (PageInfoBT)list(condition,status);
+        List<KucunguanliExcel> memberExcels =  JSON.parseArray(JSON.toJSONString(list.getRows()), KucunguanliExcel.class);
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, KucunguanliExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("库存管理导出", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
+    }
+
+    @RequestMapping(value = "dataexport2")
+    public void dataexport2(HttpServletResponse response,String condition, String startTime, String endTime) throws Exception {
+        List<MemberJifenExcel> data=new ArrayList<>();
+        PageInfoBT list = (PageInfoBT)order(condition,startTime,endTime);
+        List<DingdanExcel> memberExcels =  JSON.parseArray(JSON.toJSONString(list.getRows()), DingdanExcel.class);
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, DingdanExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("订单导出", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
     }
 }

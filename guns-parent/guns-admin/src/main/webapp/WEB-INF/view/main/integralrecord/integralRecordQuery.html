@@ -45,13 +45,14 @@
                             <div class="col-sm-2">
                                 <#TimeCon id="enddate" name="结束时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss" />
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <#button name="搜索" icon="fa-search" clickFun="Integralrecord.search()"/>
                                 <#button name="读卡" icon="fa-search" clickFun="Integralrecord.aaa()"/>
+                                <#button name="数据导出" icon="fa-plus" clickFun="Integralrecord.dataexport()"/>
                             </div>
                             <div class="hidden-xs" id="IntegralrecordTableToolbar" role="group">
-                                @if(shiro.hasPermission("/integralrecord/add")){
-                                    <#button name="添加" icon="fa-plus" clickFun="Integralrecord.openAddIntegralrecord()"/>
+                                @if(shiro.hasPermission("/integralrecordqueryintegralrecordquery/dataexport")){
+
                                 @}
                                 @if(shiro.hasPermission("/integralrecord/update")){
                                     <#button name="修改" icon="fa-edit" clickFun="Integralrecord.openIntegralrecordDetail()" space="true"/>

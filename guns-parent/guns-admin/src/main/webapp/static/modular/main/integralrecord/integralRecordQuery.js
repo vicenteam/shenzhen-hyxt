@@ -163,3 +163,17 @@ Integralrecord.findIntegralType = function (type) {
 $("#type").change(function () {
     Integralrecord.findIntegralType($("#type").val());
 });
+
+Integralrecord.dataexport=function () {
+    window.location.href = Feng.ctxPath + "/integralrecordquery/dataexport?limit=9999999&offset=0&"+
+        "memberName=" + $("#memberName").val() +
+        "&cadId=" + $("#cadId").val() +
+        "&type=" + $("#type").val() +
+        "&integralType=" + $("#integralType").val() +
+        "&operator=" + $("#operator").val() +
+        // "&memberid="+ $("#memberid").val() +
+        // "&townshipid="+ $("#townshipid").val() +
+        "&begindate=" + $("#begindate").val() +
+        "&enddate=" + $("#enddate").val() ;
+
+}

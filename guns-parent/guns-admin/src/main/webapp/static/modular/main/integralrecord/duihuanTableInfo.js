@@ -107,3 +107,11 @@ $(function () {
     table.setQueryParams({deptId:$("#deptId").val(),status:$("#status").val()})
     Integralrecord.table = table.init();
 });
+Integralrecord.dataexport=function () {
+    window.location.href = Feng.ctxPath + "/integralrecord/dataexport2?limit=9999999&offset=0&"+
+        "deptId=" + $("#deptId").val() +
+        "&periodTime1=" + $("#periodTime1").val() +
+        "&status=" + $("#status").val() +
+        "&periodTime2=" + $("#periodTime2").val() ;
+
+}

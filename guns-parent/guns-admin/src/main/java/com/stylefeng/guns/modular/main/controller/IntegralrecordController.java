@@ -1,5 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -10,6 +12,7 @@ import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.log.LogObjectHolder;
+import com.stylefeng.guns.core.page.PageInfoBT;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.support.HttpKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -17,6 +20,10 @@ import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.controller.DeptController;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
+import com.stylefeng.guns.modular.system.utils.JifenduihuanExcel;
+import com.stylefeng.guns.modular.system.utils.MemberJifenExcel;
+import com.stylefeng.guns.modular.system.utils.XiaoliangpaimingExcel;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -29,8 +36,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import yongyou.util.YongYouAPIUtils;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -645,5 +656,61 @@ public class IntegralrecordController extends BaseController {
         mainSynchronous.setMemberid(memberId);
         mainSynchronousService.insert(mainSynchronous);
         System.out.println("---" + s);
+    }
+    @RequestMapping(value = "dataexport")
+    public void export(HttpServletResponse response,Integer offset,
+                       Integer limit,
+                       Integer deptId,
+                       String monthTime1,
+                       String monthTime2,
+                       String periodTime1,
+                       String periodTime2,
+                       String orderBy,
+                       String desc) throws Exception {
+        List<MemberJifenExcel> data=new ArrayList<>();
+        PageInfoBT list = (PageInfoBT)productSalesRanking(offset,limit,deptId,monthTime1,monthTime2,periodTime1,periodTime2,orderBy,desc);
+        List<XiaoliangpaimingExcel> memberExcels =  JSON.parseArray(JSON.toJSONString(list.getRows()), XiaoliangpaimingExcel.class);
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, XiaoliangpaimingExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("商品销量排名导出", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
+    }
+    @RequestMapping(value = "dataexport2")
+    public void export2(HttpServletResponse response,Integer offset,
+                       Integer limit,
+                       Integer deptId,
+                       String monthTime1,
+                       String monthTime2,
+                       String periodTime1,
+                       String periodTime2,
+                       String orderBy,
+                       String desc,String status) throws Exception {
+        List<MemberJifenExcel> data=new ArrayList<>();
+        PageInfoBT list = (PageInfoBT)duihuanTableData(offset,limit,deptId,monthTime1,monthTime1,periodTime1,periodTime2,orderBy,desc,status);
+        List<JifenduihuanExcel> memberExcels =  JSON.parseArray(JSON.toJSONString(list.getRows()), JifenduihuanExcel.class);
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, JifenduihuanExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("商品积分兑换导出", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
     }
 }
