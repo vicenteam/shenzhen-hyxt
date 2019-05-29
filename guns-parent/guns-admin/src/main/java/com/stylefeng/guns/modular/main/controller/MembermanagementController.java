@@ -125,7 +125,7 @@ public class MembermanagementController extends BaseController {
         //获取会员等级
         List<Membershipcardtype> list1 = membershipcardtypeService.selectList(new BaseEntityWrapper<Membershipcardtype>());
         List<BaMedical> baMedicals = baMedicalService.selectList(memberBamedicalEntityWrapper);
-        model.addAttribute("membershipcardtype",list1);
+        model.addAttribute("membershipcardtype", list1);
         model.addAttribute("staffs", list);
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < baMedicals.size(); i++) {
@@ -291,19 +291,19 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code
-            , String otherMemberId,String levelID) throws Exception {
+            , String otherMemberId, String levelID) throws Exception {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
         EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
-        membermanagementEntityWrapper.eq("cadID",membermanagement.getCadID());
-        if(membermanagementService.selectOne(membermanagementEntityWrapper)!=null){
+        membermanagementEntityWrapper.eq("cadID", membermanagement.getCadID());
+        if (membermanagementService.selectOne(membermanagementEntityWrapper) != null) {
             BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
             memberCardBaseEntityWrapper.eq("code", code);
             MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
             memberCardService.deleteById(memberCard.getId());
 //            throw new Exception("注册用户已存在开卡门店！");
-            ErrorTip errorTip = new ErrorTip(202,"该身份证已存在开卡门店！");
-            return  errorTip;
+            ErrorTip errorTip = new ErrorTip(202, "该身份证已存在开卡门店！");
+            return errorTip;
         }
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
@@ -354,20 +354,20 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(introducerId)) {
             //老会员带人积分
             BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
-            mWrapper.eq("id",introducerId);
+            mWrapper.eq("id", introducerId);
             List<Membermanagement> membermanagementList = membermanagementService.selectList(mWrapper);
             Membershipcardtype membershipcardtype2 = membershipcardtypeService.selectById(membermanagementList.get(0).getLevelID());
-            if(null != membershipcardtype2.getNewpoints() && 0 != membershipcardtype2.getNewpoints()){
-               //integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,1, membermanagementList,0,1);
+            if (null != membershipcardtype2.getNewpoints() && 0 != membershipcardtype2.getNewpoints()) {
+                //integralrecordController.insertIntegral(membershipcardtype2.getNewpoints(),2,1, membermanagementList,0,1);
 //
                 {
                     //----
-                    double integral=membershipcardtype2.getNewpoints();
-                    Integer type=2;
-                    Integer typeId=1;
-                    List<Membermanagement> mList=membermanagementList;
-                    int price=0;
-                    int parseIntproductNums=1;
+                    double integral = membershipcardtype2.getNewpoints();
+                    Integer type = 2;
+                    Integer typeId = 1;
+                    List<Membermanagement> mList = membermanagementList;
+                    int price = 0;
+                    int parseIntproductNums = 1;
                     List<Integralrecord> integralrecords = new ArrayList<>();
                     Integralrecord integralrecord = new Integralrecord();
                     double nowIntegral = 0;
@@ -380,14 +380,14 @@ public class MembermanagementController extends BaseController {
                                 if ((nowIntegral + integral) >= 0) {
                                     memberIdo.setIntegral(nowIntegral + integral);
 //                        memberId.setCountPrice(nowCountPrice + integral);
-                                    memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                    memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                                 } else {
                                     throw new Exception("可用积分不足！");
                                 }
                             } else {
                                 memberIdo.setIntegral(nowIntegral + integral);
                                 memberIdo.setCountPrice(nowCountPrice + integral);
-                                memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                                memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                             }
                             // type=1 商品积分
                             integralrecord.setIntegralType(type.toString());
@@ -411,7 +411,7 @@ public class MembermanagementController extends BaseController {
                         }
                         //更新会员总积分和实际积分
                         membermanagementService.updateById(memberIdo);
-                        if(type!=2){
+                        if (type != 2) {
                             updateMemberLeave(memberIdo.getId() + "");
                         }
 
@@ -488,7 +488,7 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
         memberCardBaseEntityWrapper.eq("memberid", memberId);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
-        if (memberCard != null && ! StringUtils.isEmpty(cardID)) {
+        if (memberCard != null && !StringUtils.isEmpty(cardID)) {
             memberCard.setCode(cardID);
             memberCardService.updateById(memberCard);
 //            Membermanagement membermanagement = new Membermanagement();
@@ -510,7 +510,7 @@ public class MembermanagementController extends BaseController {
     public Object update(Membermanagement membermanagement, String baMedicals) {
         Membermanagement membermanagement1 = membermanagementService.selectById(membermanagement.getId());
         Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
-        logger.info("修改会员等级+Leave"+membermanagement1.getName()+" 原等级id："+membermanagement1.getLevelID() +" 修改后等级Id:"+membershipcardtype.getId());
+        logger.info("修改会员等级+Leave" + membermanagement1.getName() + " 原等级id：" + membermanagement1.getLevelID() + " 修改后等级Id:" + membershipcardtype.getId());
         if (membershipcardtype != null) {
 //            membermanagement.setCountPrice(membershipcardtype.getShopping());
             membermanagement.setPrice(membershipcardtype.getUpamount());
@@ -567,8 +567,8 @@ public class MembermanagementController extends BaseController {
                     return "202";
                 }
             }
-        }else if(memberCard!=null&&memberCard.getMemberid()==null){
-            memberCard=null;
+        } else if (memberCard != null && memberCard.getMemberid() == null) {
+            memberCard = null;
         }
         return memberCard;
     }
@@ -583,10 +583,10 @@ public class MembermanagementController extends BaseController {
 //        memberCardBaseEntityWrapper.eq("code", sb.toString());
         memberCardBaseEntityWrapper.eq("code", code);
         MemberCard memberCard1 = memberCardService.selectOne(memberCardBaseEntityWrapper);
-        if (memberCard1!=null&&memberCard1.getMemberid()!=null) {
+        if (memberCard1 != null && memberCard1.getMemberid() != null) {
             throw new Exception("失败");
 //            getXieKaValInfo(code);
-        }else if(memberCard1==null){
+        } else if (memberCard1 == null) {
             MemberCard memberCard = new MemberCard();
 //        memberCard.setCode(sb.toString());
             memberCard.setCode(code);
@@ -750,10 +750,10 @@ public class MembermanagementController extends BaseController {
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
         for (Membershipcardtype membershipcardtype : list) {
-            System.out.println(price +"-----");
-            System.out.println( membershipcardtype.getUpamount());
-            if (price.doubleValue()>= membershipcardtype.getUpamount().doubleValue()) {
-                logger.info("修改会员等级+Leave"+membermanagement.getName()+" 原等级id："+membermanagement.getLevelID() +" 总消费金额："+membermanagement.getPrice()+"  修改后等级Id:"+membershipcardtype.getId());
+            System.out.println(price + "-----");
+            System.out.println(membershipcardtype.getUpamount());
+            if (price.doubleValue() >= membershipcardtype.getUpamount().doubleValue()) {
+                logger.info("修改会员等级+Leave" + membermanagement.getName() + " 原等级id：" + membermanagement.getLevelID() + " 总消费金额：" + membermanagement.getPrice() + "  修改后等级Id:" + membershipcardtype.getId());
                 membermanagement.setLevelID(membershipcardtype.getId() + "");
 //                membermanagement.setPrice(membershipcardtype.getUpamount());
                 System.out.println(membershipcardtype.getId());
@@ -805,21 +805,22 @@ public class MembermanagementController extends BaseController {
             mMap.put("mIsoldsociety", m.getIsoldsociety());
             mMap.put("mLevel", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
             mMap.put("mCreateDt", m.getCreateTime());
-            mMap.put("mDeptName", deptService.selectById(m.getDeptId())==null?"":deptService.selectById(m.getDeptId()).getFullname());
-            MemberExcel memberExcel = JSON.parseObject(JSON.toJSONString(mMap), new TypeReference<MemberExcel>() {});
+            mMap.put("mDeptName", deptService.selectById(m.getDeptId()) == null ? "" : deptService.selectById(m.getDeptId()).getFullname());
+            MemberExcel memberExcel = JSON.parseObject(JSON.toJSONString(mMap), new TypeReference<MemberExcel>() {
+            });
             memberExcels.add(memberExcel);
         }
         ExportParams params = new ExportParams();
         Workbook workbook = ExcelExportUtil.exportExcel(params, MemberExcel.class, memberExcels);
-        response.setHeader("content-Type","application/vnc.ms-excel");
-        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员信息导出", "UTF-8")+".xls");
+        response.setHeader("content-Type", "application/vnc.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("会员信息导出", "UTF-8") + ".xls");
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             memberExcels.clear();
             outputStream.close();
         }
@@ -879,23 +880,24 @@ public class MembermanagementController extends BaseController {
         }
         return resJson;
     }
+
     @BussinessLog(value = "积分赠送", key = "jifenzengsong")
     @RequestMapping("/jifenzengsong")
     @ResponseBody
-    public Object jifenzengsong(String id,Double jifenNum) throws Exception {
+    public Object jifenzengsong(String id, Double jifenNum) throws Exception {
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
-        wrapper.eq("id",id);
+        wrapper.eq("id", id);
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
         //integralrecordController.insertIntegral(jifenNum,2,10,ms,0,1);
         {
             //----
-                double integral=jifenNum;
-            Integer type=2;
-            Integer typeId=4;
-            List<Membermanagement> mList=ms;
-            int price=0;
-            int parseIntproductNums=1;
+            double integral = jifenNum;
+            Integer type = 2;
+            Integer typeId = 4;
+            List<Membermanagement> mList = ms;
+            int price = 0;
+            int parseIntproductNums = 1;
             List<Integralrecord> integralrecords = new ArrayList<>();
             Integralrecord integralrecord = new Integralrecord();
             double nowIntegral = 0;
@@ -908,14 +910,14 @@ public class MembermanagementController extends BaseController {
                         if ((nowIntegral + integral) >= 0) {
                             memberIdo.setIntegral(nowIntegral + integral);
 //                        memberId.setCountPrice(nowCountPrice + integral);
-                            memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                            memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                         } else {
                             throw new Exception("可用积分不足！");
                         }
                     } else {
                         memberIdo.setIntegral(nowIntegral + integral);
                         memberIdo.setCountPrice(nowCountPrice + integral);
-                        memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                        memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                     }
                     // type=1 商品积分
                     integralrecord.setIntegralType(type.toString());
@@ -939,7 +941,7 @@ public class MembermanagementController extends BaseController {
                 }
                 //更新会员总积分和实际积分
                 membermanagementService.updateById(memberIdo);
-                if(type!=2){
+                if (type != 2) {
                     updateMemberLeave(memberIdo.getId() + "");
                 }
 
@@ -957,6 +959,22 @@ public class MembermanagementController extends BaseController {
         }
         return SUCCESS_TIP;
     }
+
+    @BussinessLog(value = "可签到积分次数赠送", key = "jifencishuzengsong")
+    @RequestMapping("/jifencishuzengsong")
+    @ResponseBody
+    public Object jifencishuzengsong(String id, int jifenNum) throws Exception {
+        BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+        wrapper.eq("id", id);
+        List<Membermanagement> ms = membermanagementService.selectList(wrapper);
+        if (ms.size() == 1) {
+            Membermanagement membermanagement = ms.get(0);
+            membermanagement.setCheckInNum(membermanagement.getCheckInNum() == null ? (0 + jifenNum) : membermanagement.getCheckInNum() + jifenNum);
+            membermanagement.updateById();
+        }
+        return SUCCESS_TIP;
+    }
+
     @BussinessLog(value = "积分清零", key = "jifenqingchu")
     @RequestMapping("/jifenqingchu")
     @ResponseBody
@@ -966,19 +984,19 @@ public class MembermanagementController extends BaseController {
 //        membermanagementService.updateById(membermanagement);
 
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
-        wrapper.eq("id",id);
+        wrapper.eq("id", id);
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
         //积分添加操作
         //integralrecordController.insertIntegral(jifenNum,2,10,ms,0,1);
         {
             //----
-            double integral=ms.get(0).getIntegral();
-            System.out.println("----"+ms.get(0).getIntegral());
-            Integer type=2;
-            Integer typeId=5;
-            List<Membermanagement> mList=ms;
-            int price=0;
-            int parseIntproductNums=1;
+            double integral = ms.get(0).getIntegral();
+            System.out.println("----" + ms.get(0).getIntegral());
+            Integer type = 2;
+            Integer typeId = 5;
+            List<Membermanagement> mList = ms;
+            int price = 0;
+            int parseIntproductNums = 1;
             List<Integralrecord> integralrecords = new ArrayList<>();
             Integralrecord integralrecord = new Integralrecord();
             double nowIntegral = 0;
@@ -991,14 +1009,14 @@ public class MembermanagementController extends BaseController {
                         if ((nowIntegral + integral) >= 0) {
                             memberIdo.setIntegral(nowIntegral + integral);
 //                        memberId.setCountPrice(nowCountPrice + integral);
-                            memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                            memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                         } else {
                             throw new Exception("可用积分不足！");
                         }
                     } else {
                         memberIdo.setIntegral(nowIntegral + integral);
                         memberIdo.setCountPrice(nowCountPrice + integral);
-                        memberIdo.setPrice(memberIdo.getPrice().doubleValue()+(price*parseIntproductNums)); //总消费额
+                        memberIdo.setPrice(memberIdo.getPrice().doubleValue() + (price * parseIntproductNums)); //总消费额
                     }
                     // type=1 商品积分
                     integralrecord.setIntegralType(type.toString());
@@ -1022,7 +1040,7 @@ public class MembermanagementController extends BaseController {
                 }
                 //更新会员总积分和实际积分
                 membermanagementService.updateById(memberIdo);
-                if(type!=2){
+                if (type != 2) {
                     updateMemberLeave(memberIdo.getId() + "");
                 }
 
@@ -1041,7 +1059,7 @@ public class MembermanagementController extends BaseController {
         return SUCCESS_TIP;
     }
 
-    public void updateMemberInfo(Membermanagement membermanagement){
-        logger.info("deptId:"+membermanagement.getDeptId()+"-userId:"+membermanagement.getId()+"json:"+JSON.toJSONString(membermanagement));
+    public void updateMemberInfo(Membermanagement membermanagement) {
+        logger.info("deptId:" + membermanagement.getDeptId() + "-userId:" + membermanagement.getId() + "json:" + JSON.toJSONString(membermanagement));
     }
 }
