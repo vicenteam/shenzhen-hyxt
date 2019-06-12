@@ -302,8 +302,8 @@ public class IntegralrecordController extends BaseController {
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
 //            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
             getIntegral = Double.parseDouble(integralrecordtype.getProductjifen());
-//            List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
-            List<Integralrecord> integralrecords = insertIntegral(integral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
+            List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
+//            List<Integralrecord> integralrecords = insertIntegral(integral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
 
             integralrecordtype.setProductnum(integralrecordtype.getProductnum() - parseIntproductNums);//库存减
             integralrecordtype.setUpdatetime(DateUtil.getTime());
@@ -423,7 +423,7 @@ public class IntegralrecordController extends BaseController {
 //            //
 ////            synchronousData(mainSynchronous);
 //            synchronousList.add(mainSynchronous);
-//            index++;
+            index++;
         }
 //        for (MainSynchronous a : synchronousList) {
 ////            synchronousData(a);

@@ -314,6 +314,7 @@ public class MembermanagementController extends BaseController {
             membermanagement.setLevelID(membershipcardtype.getId() + "");
 //            membermanagement.setCountPrice(membershipcardtype.getShopping());
             membermanagement.setPrice(membershipcardtype.getUpamount());
+            membermanagement.setCheckInNum(membershipcardtype.getMoRenkeqiandaonum());
         }
 
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))

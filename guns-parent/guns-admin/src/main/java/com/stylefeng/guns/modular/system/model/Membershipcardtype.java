@@ -65,6 +65,15 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     private String updatedt;
     private Integer checkleavenum;
     private Integer leaves;
+    private int  moRenkeqiandaonum;
+
+    public int getMoRenkeqiandaonum() {
+        return moRenkeqiandaonum;
+    }
+
+    public void setMoRenkeqiandaonum(int moRenkeqiandaonum) {
+        this.moRenkeqiandaonum = moRenkeqiandaonum;
+    }
 
     /**
      * 等级

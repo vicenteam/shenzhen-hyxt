@@ -21,6 +21,7 @@
         <result column="leaves" property="leaves" />
         <result column="cardlevel" property="cardlevel" />
         <result column="keqiandaonum" property="keqiandaonum" />
+        <result column="moRenkeqiandaonum" property="moRenkeqiandaonum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
