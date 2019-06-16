@@ -237,7 +237,7 @@ public class MembermanagementController extends BaseController {
             baseEntityWrapper.eq("deptid", deptid);
         } else {
             if (ShiroKit.getUser().getAccount().equals("admin")) {
-                baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
+//                baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
             } else {
                 baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
             }
