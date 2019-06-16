@@ -355,6 +355,7 @@ public class IntegralrecordtypeController extends BaseController {
 //        }
 
         BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
+        wrapper.eq("status",0);
         List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
         List<IntegralRecordTypeExcel> excels = new ArrayList<>();
         for (Integralrecordtype detail : details) {

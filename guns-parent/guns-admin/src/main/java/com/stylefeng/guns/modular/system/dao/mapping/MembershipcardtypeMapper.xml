@@ -28,5 +28,7 @@
     <sql id="Base_Column_List">
         id, cardname, signin, shopping, newpoints, signinnew, shoppingnew, upamount, deptid, tips, status, createdt, updatedt,leave, cardlevel
     </sql>
-
+    <update id="updateInfoByLeaves">
+     update main_membershipcardtype set moRenkeqiandaonum=#{moRenkeqiandaonum} where `leaves`=#{leaves}
+    </update>
 </mapper>

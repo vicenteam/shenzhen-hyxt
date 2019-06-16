@@ -187,7 +187,7 @@ Membermanagement.openintroducer = function (id) {
  * 删除会员基础信息
  */
 Membermanagement.delete = function (id) {
-    layer.confirm('您确定要删除本条数据吗？', {btn: ['确定', '取消']}, function () {
+    layer.confirm('您确定要删除本条数据吗？', {btn: ['确定','<span style="color: red">强制删除</span>', '取消']}, function () {
         layer.closeAll('dialog');
         var ajax = new $ax(Feng.ctxPath + "/membermanagement/delete", function (data) {
             Feng.success("删除成功!");
@@ -196,8 +196,24 @@ Membermanagement.delete = function (id) {
             Feng.error("删除失败!" + data.responseJSON.message + "!");
         });
         ajax.set("membermanagementId", id);
+        ajax.set("type", 0);
         ajax.start();
-    });
+    } , function () {
+        layer.confirm('强制删除数据将无法恢复 是否确认删除？', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/membermanagement/delete", function (data) {
+                Feng.success("删除成功!");
+                Membermanagement.table.refresh();
+            }, function (data) {
+                Feng.error("删除失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("membermanagementId", id);
+            ajax.set("type", 1);
+            ajax.start();
+        })
+
+        }
+    );
 };
 
 /**

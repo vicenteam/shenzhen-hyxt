@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IMembershipcardtypeService extends IService<Membershipcardtype> {
 
+     public int updateInfoByLeaves(int mo,int leave);
 }

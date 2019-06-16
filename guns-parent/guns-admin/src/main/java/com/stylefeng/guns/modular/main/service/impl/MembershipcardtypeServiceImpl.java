@@ -17,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MembershipcardtypeServiceImpl extends ServiceImpl<MembershipcardtypeMapper, Membershipcardtype> implements IMembershipcardtypeService {
 
+    @Override
+    public int updateInfoByLeaves(int mo,int leave) {
+        return this.baseMapper.updateInfoByLeaves(mo,leave);
+    }
 }

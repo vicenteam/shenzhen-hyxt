@@ -149,7 +149,8 @@ public class MembershipcardtypeController extends BaseController {
     @ResponseBody
     public Object update(Membershipcardtype membershipcardtype) {
         membershipcardtype.setUpdatedt(DateUtil.getTime());
-        membershipcardtypeService.updateById(membershipcardtype);
+        Membershipcardtype membershipcardtype1 = membershipcardtypeService.selectById(membershipcardtype.getId());
+        membershipcardtypeService.updateInfoByLeaves(membershipcardtype.getMoRenkeqiandaonum(),membershipcardtype1.getLeaves());
         return SUCCESS_TIP;
     }
 

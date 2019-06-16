@@ -467,10 +467,17 @@ public class MembermanagementController extends BaseController {
     @BussinessLog(value = "删除会员管理", key = "deleteMember")
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer membermanagementId) {
-        Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
-        membermanagement.setState(1);
-        membermanagementService.updateById(membermanagement);
+    public Object delete(@RequestParam Integer membermanagementId,@RequestParam int type) {
+       if(type==0){
+           Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
+           membermanagement.setState(1);
+           membermanagementService.updateById(membermanagement);
+       }else if(type==1) {
+           EntityWrapper<MemberCard> memberCardEntityWrapper = new EntityWrapper<>();
+           memberCardEntityWrapper.eq("memberId",membermanagementId);
+           memberCardService.delete(memberCardEntityWrapper);
+           membermanagementService.deleteById(membermanagementId);
+       }
         return SUCCESS_TIP;
     }
 
