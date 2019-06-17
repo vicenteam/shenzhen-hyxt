@@ -250,7 +250,8 @@ public class IntegralrecordtypeController extends BaseController {
                         integralrecordtype.setRetailPrice(Double.parseDouble(integralRecordTypeExcel.getRetailPrice()));
                     if (!StringUtils.isEmpty(integralRecordTypeExcel.getProductnum()))
                         integralrecordtype.setProductnum(Integer.parseInt(integralRecordTypeExcel.getProductnum()));
-                    integralrecordtypeService.updateById(integralrecordtype);
+                        integralrecordtype.setStatus(0);
+                        integralrecordtypeService.updateById(integralrecordtype);
                 } else {
                     integralrecordtype = new Integralrecordtype();
                     resultMessage.append(integralRecordTypeExcel.getInventoryCode() + "、");
@@ -355,7 +356,7 @@ public class IntegralrecordtypeController extends BaseController {
 //        }
 
         BaseEntityWrapper<Integralrecordtype> wrapper = new BaseEntityWrapper<>();
-        wrapper.eq("status",0);
+        wrapper.eq("status", 0);
         List<Integralrecordtype> details = integralrecordtypeService.selectList(wrapper);
         List<IntegralRecordTypeExcel> excels = new ArrayList<>();
         for (Integralrecordtype detail : details) {

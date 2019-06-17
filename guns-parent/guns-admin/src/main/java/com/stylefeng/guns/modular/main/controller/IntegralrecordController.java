@@ -301,7 +301,7 @@ public class IntegralrecordController extends BaseController {
             typeWrapper.eq("id", parseIntTemp);
             Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(typeWrapper);
 //            getIntegral = integralrecordtype.getProductpice() / lType.getShopping();
-            getIntegral = Double.parseDouble(integralrecordtype.getProductjifen());
+            getIntegral = Double.parseDouble(integralrecordtype.getProductjifen())*parseIntproductNums;
             List<Integralrecord> integralrecords = insertIntegral(getIntegral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
 //            List<Integralrecord> integralrecords = insertIntegral(integral, 1, parseIntTemp, membermanagements, integralrecordtype.getProductpice(),parseIntproductNums);
 
