@@ -101,6 +101,10 @@ public class InventoryManagementController extends BaseController {
         EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
         deptEntityWrapper.eq("pid", ShiroKit.getUser().getDeptId());
         List<Dept> depts = deptService.selectList(deptEntityWrapper);
+        Dept top=new Dept();
+        top.setId(-1);
+        top.setFullname("全部");
+        depts.add(0,top);
         model.addAttribute("depts", depts);
         return PREFIX + "inventoryManagement_out_add.html";
     }
@@ -110,6 +114,10 @@ public class InventoryManagementController extends BaseController {
         EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
         deptEntityWrapper.eq("pid", ShiroKit.getUser().getDeptId());
         List<Dept> depts = deptService.selectList(deptEntityWrapper);
+        Dept top=new Dept();
+        top.setId(-1);
+        top.setFullname("全部");
+        depts.add(0,top);
         model.addAttribute("depts", depts);
         return PREFIX + "inventoryManagement_out_add_all.html";
     }
@@ -298,6 +306,36 @@ public class InventoryManagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object out_add(InventoryManagement inventoryManagement, Integer productname, String deptId) {
+        if("-1".equals(deptId)){
+            EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
+            deptEntityWrapper.ne("id",ShiroKit.getUser().deptId);
+            List<Dept> depts = deptService.selectList(deptEntityWrapper);
+            Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(productname);
+            if(integralrecordtype.getProductnum()>=inventoryManagement.getConsumptionNum()*depts.size()){
+                depts.forEach(a->{
+                    excuted(inventoryManagement,productname,a.getId().toString());
+                });
+            }else {
+                ServiceExceptionEnum serviceExceptionEnum = new ServiceExceptionEnum() {
+                    @Override
+                    public Integer getCode() {
+                        return 500;
+                    }
+                    @Override
+                    public String getMessage() {
+                        return "["+integralrecordtype.getProductname()+"]商品数量不足";
+                    }
+                };
+                throw new GunsException(serviceExceptionEnum);
+            }
+        }else {
+            excuted(inventoryManagement,productname,deptId);
+        }
+
+        return SUCCESS_TIP;
+    }
+
+    public void  excuted(InventoryManagement inventoryManagement, Integer productname, String deptId){
         //获取商品,名称
         Integralrecordtype integralrecordtype = iIntegralrecordtypeService.selectById(productname);
         integralrecordtype.setProductnum(integralrecordtype.getProductnum() - inventoryManagement.getConsumptionNum());
@@ -339,7 +377,6 @@ public class InventoryManagementController extends BaseController {
             inventoryManagement.setName(integralrecordtype.getProductname());
             inventoryManagementService.insert(inventoryManagement);
         }
-        return SUCCESS_TIP;
     }
 
     @RequestMapping(value = "/out_add_all")
@@ -351,7 +388,31 @@ public class InventoryManagementController extends BaseController {
         List<Integralrecordtype> list = iIntegralrecordtypeService.selectList(integralrecordtypeBaseEntityWrapper);
         for (Integralrecordtype integralrecordtype : list) {
             if(integralrecordtype.getProductnum()>=inventoryManagement.getConsumptionNum()){
-                out_add(inventoryManagement,integralrecordtype.getId(),deptId);
+                if(deptId.equals("-1")){
+                    EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
+                    deptEntityWrapper.ne("id",ShiroKit.getUser().deptId);
+                    List<Dept> depts = deptService.selectList(deptEntityWrapper);
+                    if(integralrecordtype.getProductnum()>=inventoryManagement.getConsumptionNum()*depts.size()){
+                        depts.forEach(a->{
+                            out_add(inventoryManagement,integralrecordtype.getId(),a.getId().toString());
+                        });
+                    }else {
+                        ServiceExceptionEnum serviceExceptionEnum = new ServiceExceptionEnum() {
+                            @Override
+                            public Integer getCode() {
+                                return 500;
+                            }
+                            @Override
+                            public String getMessage() {
+                                return "["+integralrecordtype.getProductname()+"]商品数量不足";
+                            }
+                        };
+                        throw new GunsException(serviceExceptionEnum);
+                    }
+                }else {
+                    out_add(inventoryManagement,integralrecordtype.getId(),deptId);
+
+                }
             }else {
                 ServiceExceptionEnum serviceExceptionEnum = new ServiceExceptionEnum() {
                     @Override
