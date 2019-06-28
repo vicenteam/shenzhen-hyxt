@@ -6,6 +6,7 @@
             <input type="hidden" id="id" value="${dept.id}">
             <input type="hidden" id="tPlusWarehouseCodeTemp" value="${dept.tPlusWarehouseCode}">
             <input type="hidden" id="tPlusDeptCodeTemp" value="${dept.tPlusDeptCode}">
+            <input type="hidden" id="temp_checkJifenSwitch" value="${dept.checkJifenSwitch}">
 
             <div class="row">
                 <div class="col-sm-6 b-r">
@@ -29,16 +30,11 @@
                     <#AddressSelect id="province" province="province" name="所属地区"/>
                     <#AddressSelect id="city" city="city" name="所属区域"/>
                     <#AddressSelect id="district" district="district" name="所属区县"/>
-                    <#select name="同步T+门店" id="tPlusDeptCode" >
-                    @for(item in deptCodes){
-                    <option value="${item.Code}">${item.Name}</option>
-                    @}
+                    <span style="color: red">tips:总公司开启后默认全部门店开启，总公司关闭后默认其他门店关闭，总公司关闭后当前门店开启其他门店配置将不受影响</span>
+                    <#select name="门店签到积分奖励开关" id="checkJifenSwitch" >
+                    <option value="0">开启</option>
+                    <option value="1">关闭</option>
                 </#select>
-                <#select name="同步T+仓库" id="tPlusWarehouseCode" >
-                @for(item in warehouseCodes){
-                <option value="${item.Code}">${item.Name}</option>
-                @}
-            </#select>
                 </div>
             </div>
 
@@ -68,6 +64,7 @@
         $("#district").val(${dept.districtid});
         $("#tPlusDeptCode").val($("#tPlusDeptCodeTemp").val())
         $("#tPlusWarehouseCode").val($("#tPlusWarehouseCodeTemp").val())
+        $("#checkJifenSwitch").val($("#temp_checkJifenSwitch").val())
     });
 </script>
 @}

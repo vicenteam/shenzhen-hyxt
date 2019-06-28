@@ -27,7 +27,11 @@
                     <#AddressSelect id="city" city="city" name="所属区域"/>
                     <#AddressSelect id="district" district="district" name="所属区县"/>
 
-
+                    <span style="color: red">tips:总公司开启后默认全部门店开启，总公司关闭后默认其他门店关闭，总公司关闭后当前门店开启其他门店配置将不受影响</span>
+                    <#select name="门店签到积分奖励开关" id="checkJifenSwitch" >
+                    <option value="0">开启</option>
+                    <option value="1">关闭</option>
+                </#select>
             </div>
 
             <!-- 父级部门的选择框 -->

@@ -6,6 +6,7 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -54,6 +55,8 @@ public class QiandaoCheckinController extends BaseController {
     private MembermanagementController membermanagementController;
     @Autowired
     private IIntegralrecordService integralrecordService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到复签记录首页
@@ -133,6 +136,11 @@ public class QiandaoCheckinController extends BaseController {
             Membershipcardtype membershipcardtype1 = membershipcardtypeService.selectById(membermanagement.getLevelID());
             membermanagements.add(membermanagement);
             Double integral  = membershipcardtype1.getSignin(); //签到积分
+            Dept dept = deptService.selectById(53);
+            Dept dept1 = deptService.selectById(ShiroKit.getUser().deptId);
+            if(dept!=null&&dept.getCheckJifenSwitch()==1||dept1.getCheckJifenSwitch()==1){
+                integral=0.0;
+            }
 //            if(! StringUtils.isEmpty(membermanagement.getBirthday())){
 //                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //                Date date = sdf.parse(membermanagement.getBirthday());

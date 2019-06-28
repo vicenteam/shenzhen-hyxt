@@ -82,6 +82,9 @@
                             @if(shiro.hasPermission("/membermanagement/jifencishuzengsong")){
                             <#button name="可签到积分次数赠送" icon="fa-pencil" clickFun="Membermanagement.jifencishuzengsong()" space="true"/>
                             @}
+                            @if(shiro.hasPermission("/membermanagement/jifencishuzengsong")){
+                            <#button name="门店会员可签到积分次数赠送" icon="fa-pencil" clickFun="Membermanagement.deptjifencishuzengsong()" space="true"/>
+                            @}
                             <input type="hidden" id="editSecurity" value='${shiro.hasPermission("/hyxx_edit")}'>
                             <input type="hidden" id="deleteSecurity" value='${shiro.hasPermission("/hyxx_delete")}'>
                         </div>

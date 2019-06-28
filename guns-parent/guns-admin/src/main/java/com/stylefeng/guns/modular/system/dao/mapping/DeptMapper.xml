@@ -26,6 +26,7 @@
         <result column="tPlusDeptName" property="tPlusDeptName"/>
         <result column="tPlusWarehouseName" property="tPlusWarehouseName"/>
         <result column="tPlusWarehouseCode" property="tPlusWarehouseCode"/>
+        <result column="checkJifenSwitch" property="checkJifenSwitch"/>
     </resultMap>
 
     <select id="tree" resultType="com.stylefeng.guns.core.node.ZTreeNode">

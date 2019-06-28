@@ -86,6 +86,16 @@ public class Dept extends Model<Dept> {
 	private String tPlusWarehouseName;
 	private String tPlusWarehouseCode;
 
+	private int checkJifenSwitch;
+
+	public int getCheckJifenSwitch() {
+		return checkJifenSwitch;
+	}
+
+	public void setCheckJifenSwitch(int checkJifenSwitch) {
+		this.checkJifenSwitch = checkJifenSwitch;
+	}
+
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}

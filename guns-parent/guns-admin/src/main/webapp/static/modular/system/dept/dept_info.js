@@ -130,7 +130,7 @@ DeptInfoDlg.hideDeptSelectTree = function () {
 DeptInfoDlg.collectData = function () {
     this.set('id').set('simplename').set('fullname').set('tips').set('num').set('pid').set("linkman")
         .set("tel").set("email").set("address").set("province").set("city").set("district").set("createdt")
-        .set("updatedt").set("status").set("tPlusDeptCode").set("tPlusWarehouseCode");
+        .set("updatedt").set("status").set("tPlusDeptCode").set("tPlusWarehouseCode").set("checkJifenSwitch");
 }
 
 /**

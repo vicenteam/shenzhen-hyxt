@@ -982,7 +982,26 @@ public class MembermanagementController extends BaseController {
         }
         return SUCCESS_TIP;
     }
+    @BussinessLog(value = "门店可签到积分次数赠送", key = "deptjifencishuzengsong")
+    @RequestMapping("/deptjifencishuzengsong")
+    @ResponseBody
+    public Object deptjifencishuzengsong(String id,int jifenNum) throws Exception {
+        EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
+        if(!com.alibaba.druid.util.StringUtils.isEmpty(id))deptEntityWrapper.eq("id",id);
+        List<Dept> depts = deptService.selectList(deptEntityWrapper);
+        depts.forEach(a->{
+            BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
+            wrapper.eq("deptId", a.getId());
+            List<Membermanagement> ms = membermanagementService.selectList(wrapper);
+            ms.forEach(b->{
+                Membermanagement membermanagement = b;
+                membermanagement.setCheckInNum(membermanagement.getCheckInNum() == null ? (0 + jifenNum) : membermanagement.getCheckInNum() + jifenNum);
+                membermanagement.updateById();
+            });
+        });
 
+        return SUCCESS_TIP;
+    }
     @BussinessLog(value = "积分清零", key = "jifenqingchu")
     @RequestMapping("/jifenqingchu")
     @ResponseBody
