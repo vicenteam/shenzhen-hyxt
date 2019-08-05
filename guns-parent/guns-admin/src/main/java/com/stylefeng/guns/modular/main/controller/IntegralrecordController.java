@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -184,9 +186,35 @@ public class IntegralrecordController extends BaseController {
         }
         deptIds = deptIds.substring(0, deptIds.length() - 1);
         Page<Map<String, Object>> page = new PageFactory<Map<String, Object>>().defaultPage();
-        int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), deptIds.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        int i = integralrecordService.productSalesRankingintCount(page.getOffset(), page.getLimit(), deptId.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc).size();
         page.setTotal(i);
-        List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), deptIds.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        List<Map<String, Object>> mapList = integralrecordService.productSalesRanking(page.getOffset(), page.getLimit(), deptId.toString(), monthTime1, monthTime2, periodTime1, periodTime2, orderBy, desc);
+        //设置月销售量
+        String format = DateUtil.format(new Date(), "yyyy-MM-");
+        for(Map<String, Object> map:mapList){
+            String inventoryCode = map.get("productname").toString();
+            EntityWrapper<InventoryManagement> inventoryManagementEntityWrapper = new EntityWrapper<>();
+            inventoryManagementEntityWrapper.eq("name",inventoryCode);
+            inventoryManagementEntityWrapper.ne("memberName","");
+            inventoryManagementEntityWrapper.between("createtime",format+"01 00:00:00",format+"31 23:59:59");
+            List<InventoryManagement> inventoryManagements = inventoryManagementService.selectList(inventoryManagementEntityWrapper);
+            int sum= inventoryManagements.stream().mapToInt(InventoryManagement::getConsumptionNum).sum();
+            map.put("month",sum);
+        }
+        //时间段查询
+        if(!StringUtils.isEmpty(periodTime1)&&!StringUtils.isEmpty(periodTime2)){
+            for(Map<String, Object> map:mapList){
+                String inventoryCode = map.get("productname").toString();
+                EntityWrapper<InventoryManagement> inventoryManagementEntityWrapper = new EntityWrapper<>();
+                inventoryManagementEntityWrapper.eq("name",inventoryCode);
+                inventoryManagementEntityWrapper.ne("memberName","");
+                inventoryManagementEntityWrapper.between("createtime",periodTime1+" 00:00:00",periodTime2+" 23:59:59");
+                List<InventoryManagement> inventoryManagements = inventoryManagementService.selectList(inventoryManagementEntityWrapper);
+                int sum= inventoryManagements.stream().mapToInt(InventoryManagement::getConsumptionNum).sum();
+                map.put("time_to_end",sum);
+            }
+        }
+        System.out.println(JSON.toJSONString(mapList));
         page.setRecords(mapList);
         return super.packForBT(page);
     }

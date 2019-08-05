@@ -88,7 +88,10 @@ public class BarRankingController extends BaseController {
 
     @RequestMapping("export_excel")
     public void detailsExport(HttpServletResponse response, HttpServletRequest request)throws Exception{
-        BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+        EntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+        if(ShiroKit.getUser().account.equals("admin")){
+            mWrapper = new EntityWrapper<>();
+        }
         mWrapper.orderBy("integral",false);
         List<Map<String,Object>> maps = membermanagementService.selectMaps(mWrapper);
         List<BarRankingExcel> mapsExcel = new ArrayList<>();

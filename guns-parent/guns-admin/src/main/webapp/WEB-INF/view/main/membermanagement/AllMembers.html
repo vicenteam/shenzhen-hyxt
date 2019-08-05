@@ -1,0 +1,46 @@
+@layout("/common/_container.html"){
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="${ctxPath}/static/layui/css/layui.css" rel="stylesheet"/>
+    <script src="${ctxPath}/static/layui/layui.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <style>
+        body{overflow-x: scroll;}
+    </style>
+</head>
+<body >
+
+<div style="width: 100%">
+    <div style="">
+
+        <table class="layui-hide" id="test" lay-data="{width:800}"></table>
+    </div>
+</div>
+
+</body>
+<script>
+    //获取全部门店信息
+    var ajax = new $ax(Feng.ctxPath + "/membermanagement/AllMembersHeadData", function(data){
+        console.log(data)
+        layui.use('table', function(){
+            var table = layui.table;
+
+            table.render({
+                elem: '#test'
+                ,url:'/membermanagement/leaveData'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [data]
+            });
+        });
+    },function(data){
+    });
+    ajax.start();
+
+</script>
+</html>
+@}

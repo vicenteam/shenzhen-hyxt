@@ -55,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -467,17 +468,17 @@ public class MembermanagementController extends BaseController {
     @BussinessLog(value = "删除会员管理", key = "deleteMember")
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Object delete(@RequestParam Integer membermanagementId,@RequestParam int type) {
-       if(type==0){
-           Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
-           membermanagement.setState(1);
-           membermanagementService.updateById(membermanagement);
-       }else if(type==1) {
-           EntityWrapper<MemberCard> memberCardEntityWrapper = new EntityWrapper<>();
-           memberCardEntityWrapper.eq("memberId",membermanagementId);
-           memberCardService.delete(memberCardEntityWrapper);
-           membermanagementService.deleteById(membermanagementId);
-       }
+    public Object delete(@RequestParam Integer membermanagementId, @RequestParam int type) {
+        if (type == 0) {
+            Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
+            membermanagement.setState(1);
+            membermanagementService.updateById(membermanagement);
+        } else if (type == 1) {
+            EntityWrapper<MemberCard> memberCardEntityWrapper = new EntityWrapper<>();
+            memberCardEntityWrapper.eq("memberId", membermanagementId);
+            memberCardService.delete(memberCardEntityWrapper);
+            membermanagementService.deleteById(membermanagementId);
+        }
         return SUCCESS_TIP;
     }
 
@@ -814,6 +815,15 @@ public class MembermanagementController extends BaseController {
             mMap.put("mLevel", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
             mMap.put("mCreateDt", m.getCreateTime());
             mMap.put("mDeptName", deptService.selectById(m.getDeptId()) == null ? "" : deptService.selectById(m.getDeptId()).getFullname());
+            mMap.put("remak",m.getRemarks());
+            //获取病史
+            EntityWrapper<MemberBamedical> wrapper = new EntityWrapper<>();
+            wrapper.eq("memberid",m.getId());
+            List<MemberBamedical> memberBamedicals = memberBamedicalService.selectList(wrapper);
+            for(MemberBamedical ba:memberBamedicals){
+                BaMedical baMedical = baMedicalService.selectById(ba.getBamedicalid());
+                mMap.put("bs",mMap.get("bs")==null?mMap.get("bs").toString():mMap.get("bs").toString()+baMedical.getName()+",");
+            }
             MemberExcel memberExcel = JSON.parseObject(JSON.toJSONString(mMap), new TypeReference<MemberExcel>() {
             });
             memberExcels.add(memberExcel);
@@ -982,18 +992,19 @@ public class MembermanagementController extends BaseController {
         }
         return SUCCESS_TIP;
     }
+
     @BussinessLog(value = "门店可签到积分次数赠送", key = "deptjifencishuzengsong")
     @RequestMapping("/deptjifencishuzengsong")
     @ResponseBody
-    public Object deptjifencishuzengsong(String id,int jifenNum) throws Exception {
+    public Object deptjifencishuzengsong(String id, int jifenNum) throws Exception {
         EntityWrapper<Dept> deptEntityWrapper = new EntityWrapper<>();
-        if(!com.alibaba.druid.util.StringUtils.isEmpty(id))deptEntityWrapper.eq("id",id);
+        if (!com.alibaba.druid.util.StringUtils.isEmpty(id)) deptEntityWrapper.eq("id", id);
         List<Dept> depts = deptService.selectList(deptEntityWrapper);
-        depts.forEach(a->{
+        depts.forEach(a -> {
             BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
             wrapper.eq("deptId", a.getId());
             List<Membermanagement> ms = membermanagementService.selectList(wrapper);
-            ms.forEach(b->{
+            ms.forEach(b -> {
                 Membermanagement membermanagement = b;
                 membermanagement.setCheckInNum(membermanagement.getCheckInNum() == null ? (0 + jifenNum) : membermanagement.getCheckInNum() + jifenNum);
                 membermanagement.updateById();
@@ -1002,6 +1013,7 @@ public class MembermanagementController extends BaseController {
 
         return SUCCESS_TIP;
     }
+
     @BussinessLog(value = "积分清零", key = "jifenqingchu")
     @RequestMapping("/jifenqingchu")
     @ResponseBody
@@ -1088,5 +1100,95 @@ public class MembermanagementController extends BaseController {
 
     public void updateMemberInfo(Membermanagement membermanagement) {
         logger.info("deptId:" + membermanagement.getDeptId() + "-userId:" + membermanagement.getId() + "json:" + JSON.toJSONString(membermanagement));
+    }
+
+    @RequestMapping("/AllMembers")
+    public String AllMembers(Model model) {
+        return PREFIX + "AllMembers.html";
+    }
+
+    @RequestMapping("/AllMembersHeadData")
+    @ResponseBody
+    public Object AllMembersHeadData() {
+        EntityWrapper<Dept> wrapper = new EntityWrapper<>();
+        wrapper.ne("id",53);
+        List<Dept> depts = this.deptService.selectList(null);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Dept de : depts) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("field", "deptId" + de.getId());
+            map.put("title", de.getFullname());
+            map.put("minWidth", "100");
+            map.put("align:", "center");
+            result.add(map);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("field", "leaveName");
+        map.put("title", "---------------");
+        map.put("minWidth", "100");
+        map.put("align:", "center");
+        result.add(0, map);
+
+        map = new HashMap<>();
+        map.put("field", "deptCount");
+        map.put("title", "总门店会员数");
+        map.put("minWidth", "100");
+        map.put("align:", "center");
+        result.add( map);
+        return result;
+    }
+
+    @RequestMapping("/leaveData")
+    @ResponseBody
+    public Object leaveData() {
+        //{ "top":"","deptId53":"20" }
+        EntityWrapper<Membershipcardtype> membershipcardtypeEntityWrapper = new EntityWrapper<>();
+        membershipcardtypeEntityWrapper.groupBy("cardname");
+        membershipcardtypeEntityWrapper.orderBy("upamount",true);
+        List<Membershipcardtype> membershipcardtypes = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
+        EntityWrapper<Dept> wrapper = new EntityWrapper<>();
+
+        List<Dept> depts = this.deptService.selectList(wrapper);
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Membershipcardtype me : membershipcardtypes) {
+            Map<String, Object> map = new HashMap<>();
+            int deptCount=0;
+            map.put("leaveName", me.getCardname());
+            for (Dept dept : depts) {
+                membershipcardtypeEntityWrapper = new EntityWrapper<>();
+                membershipcardtypeEntityWrapper.eq("deptId", dept.getId());
+                membershipcardtypeEntityWrapper.eq("cardname", me.getCardname());
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectOne(membershipcardtypeEntityWrapper);
+                if (membershipcardtype != null) {
+                    //获取当前等级当前门店会员数量
+                    EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
+                    membermanagementEntityWrapper.eq("levelID", membershipcardtype.getId());
+                    int i = membermanagementService.selectCount(membermanagementEntityWrapper);
+                    deptCount+=i;
+                    map.put("deptId" + dept.getId(), i);
+                }
+            }
+
+            map.put("deptCount", deptCount);
+            list.add(map);
+        }
+        Map<String, Object> map = new HashMap<>();//统计各个门店总会员数
+        map.put("leaveName","总计：");
+        for (Dept dept : depts) {
+            EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
+            membermanagementEntityWrapper.eq("deptId",dept.getId());
+            int i = membermanagementService.selectCount(membermanagementEntityWrapper);
+            map.put("deptId" + dept.getId(), i);
+        }
+        map.put("deptCount",membermanagementService.selectCount(null));
+        list.add(map);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", 0);
+        result.put("count", membershipcardtypes.size());
+        result.put("data", list);
+        result.put("msg", "");
+
+        return result;
     }
 }

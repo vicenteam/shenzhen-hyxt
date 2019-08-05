@@ -3,6 +3,7 @@ package com.stylefeng.guns.modular.main.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.system.controller.DeptController;
@@ -49,18 +50,41 @@ public class PiesimpleController extends BaseController {
         List<Membershipcardtype> list=membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
         int index=0;
         for(Membershipcardtype membershipcardtype:list){
-            Integer meid= membershipcardtype.getId();
-            String mename=membershipcardtype.getCardname();
-            wapper= new EntityWrapper<Membermanagement>();
-            wapper.eq("deptId",deptId);
-            wapper.eq("levelID",meid);
-            int count= membermanagementService.selectCount(wapper);
-            Map<String,Object> map=new HashMap<>();
-            map.put("name",mename);
-            map.put("value",count);
-            map.put("index",index);
-            result.add(map);
-            index++;
+            if(ShiroKit.getUser().account.equals("admin" )&& ("53".equals(deptId))){
+                Integer meid= membershipcardtype.getId();
+                String mename=membershipcardtype.getCardname();
+                //获取全部名称为当前会员等级名称的数据
+                EntityWrapper<Membershipcardtype> wrapper = new EntityWrapper<>();
+                wrapper.eq("cardname",mename);
+                String ids="";
+                List<Membershipcardtype> membershipcardtypes = membershipcardtypeService.selectList(wrapper);
+                for(Membershipcardtype m:membershipcardtypes){
+                    ids+=m.getId()+",";
+                }
+                wapper= new EntityWrapper<Membermanagement>();
+                wapper.in("levelID",ids);
+                int count= membermanagementService.selectCount(wapper);
+                Map<String,Object> map=new HashMap<>();
+                map.put("name",mename);
+                map.put("value",count);
+                map.put("index",index);
+                result.add(map);
+                index++;
+            }else {
+                Integer meid= membershipcardtype.getId();
+                String mename=membershipcardtype.getCardname();
+                wapper= new EntityWrapper<Membermanagement>();
+                wapper.eq("deptId",deptId);
+                wapper.eq("levelID",meid);
+                int count= membermanagementService.selectCount(wapper);
+                Map<String,Object> map=new HashMap<>();
+                map.put("name",mename);
+                map.put("value",count);
+                map.put("index",index);
+                result.add(map);
+                index++;
+            }
+
         }
         return result;
     }

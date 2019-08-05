@@ -3,6 +3,7 @@ package com.stylefeng.guns.modular.main.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.api.controller.MemberInfoController;
 import com.stylefeng.guns.modular.main.service.ICheckinService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
@@ -181,7 +182,10 @@ public class BarbrushController extends BaseController {
 
     @RequestMapping("export_excel")
     public void signInDetailsExport(HttpServletResponse response, HttpServletRequest request, String beginTime, String endTime) throws Exception{
-        BaseEntityWrapper<QiandaoCheckin> qWrapper = new BaseEntityWrapper<>();
+       EntityWrapper<QiandaoCheckin> qWrapper = new BaseEntityWrapper<>();
+       if(ShiroKit.getUser().account.equals("admin")){
+           qWrapper = new EntityWrapper<>();
+       }
         if(! StringUtils.isEmpty(beginTime) || !StringUtils.isEmpty(endTime)){
             qWrapper.between("createTime",beginTime,endTime);
         }
@@ -203,6 +207,7 @@ public class BarbrushController extends BaseController {
                signInExcels.add(map);
            }
         }
+        if(signInExcels.size()==0)return;
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
         SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
         Map<String,Object> mapTile = signInExcels.get(0);

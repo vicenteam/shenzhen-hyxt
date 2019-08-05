@@ -26,70 +26,37 @@
     </sql>
 	<!--商品销量排名分页查询-->
 	<select id="productSalesRanking" resultType="map">
-		select asd.productname ,asd.productnum,asd.producttype ,sum(asd.count) count, sum(asd.month) month, <if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">sum(asd.time_to_end) time_to_end,</if>asd.deptid FROM
-		(
 		SELECT
-		b.productname,
-		b.productnum,
-		b.producttype,
-		sum(a.consumptionNum) AS count,
-		<if test="monthTime1 != null and monthTime1 != '' and monthTime2 != null and monthTime2 != ''">
-			(
-			select 	sum(consumptionNum)
-			FROM
-			main_inventory_management
-			WHERE
-			1=1
-			and status= 1 and deptid in(${deptId}) and memberId!='' and
-			integralrecordtypeid = b.id and (createTime between CONCAT(#{monthTime1},' 00:00:00') and CONCAT(#{monthTime2},' 23:59:59'))
-			) month,
+		a.InventoryCode,
+		a.productname,
+		a.producttype,
+		a.productnum,
+		sum(b.consumptionNum) count,a.deptid
+		FROM `main_integralrecordtype` a
+		inner join main_inventory_management b on b.integralrecordtypeid=a.id
+		where  a.producttype=1 and b.memberName!=''
+		<if test="deptId != null and deptId != 53">
+			and b.deptid=#{deptId}
 		</if>
-		<if test="periodTime1 != null and periodTime1 != '' and periodTime2 != null and periodTime2 != ''">
-			(
-			select 	sum(consumptionNum)
-			FROM
-			main_inventory_management
-			WHERE
-			1=1
-			and status= 1 and deptid in(${deptId}) and  memberId!=''and
-			integralrecordtypeid = b.id and (createTime between CONCAT(#{periodTime1},' 00:00:00') and CONCAT(#{periodTime2},' 23:59:59'))
-			) time_to_end,
-		</if>
-		b.deptid
-		FROM
-		main_inventory_management a
-		INNER JOIN main_integralrecordtype b ON b.id = a.integralrecordtypeid
-		WHERE
-		a.deptid in(${deptId}) and a.status=1 and a.memberId!=''
-		GROUP BY
-		a.integralrecordtypeid
-		) asd
-		GROUP BY asd.productname
-		<choose>
-			<when test="orderBy !=null and orderBy != ''">
-				ORDER BY ${orderBy} ${desc}
-			</when>
-			<otherwise>
-				ORDER BY
-				count DESC
-			</otherwise>
-		</choose>
+		GROUP BY a.InventoryCode
+		order by count desc
 		limit #{pageNum},#{pageSize}
 	</select>
 
-	<select id="productSalesRankingCount" resultType="java.lang.Integer">
-		select count(1) from
-		(
+	<select id="productSalesRankingCount" resultType="map">
 		SELECT
-		count(*)
-		FROM
-		main_inventory_management a
-INNER JOIN main_integralrecordtype b ON b.id = a.integralrecordtypeid
-WHERE
-	a.deptid in(${deptId}) and a.status=1 and a.memberId!=''
-GROUP BY
-	a.integralrecordtypeid
-		) as a
+		a.productname,
+		a.producttype,
+		a.productnum,
+		sum(b.consumptionNum) count,a.deptid
+		FROM `main_integralrecordtype` a
+		inner join main_inventory_management b on b.integralrecordtypeid=a.id
+		where  a.producttype=1 and b.memberName!=''
+		<if test="deptId != null and deptId != 53">
+			and b.deptid=#{deptId}
+		</if>
+		GROUP BY a.InventoryCode
+		order by count desc
 	</select>
 	<select id="duihuanTableData" resultType="map">
 		select b.productname,b.productnum,d.fullname ,sum(a.duihuanproductNum) num ,a.status from main_integralrecord a
@@ -112,7 +79,7 @@ GROUP BY
 			,a.status
 		</if>
 		order by num desc
-		limit #{pageNum},#{pageSize}
+
 
 	</select>
 	<select id="duihuanTableDataCount" resultType="java.lang.Integer">
@@ -138,6 +105,5 @@ GROUP BY
 			,a.status
 		</if>
 		) as dd
-
 	</select>
 </mapper>

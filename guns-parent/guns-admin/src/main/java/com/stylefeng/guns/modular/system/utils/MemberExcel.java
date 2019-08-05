@@ -28,6 +28,26 @@ public class MemberExcel {
     private String mCreateDt;
     @Excel(name = "门店名称",orderNum = "8")
     private String mDeptName;
+    @Excel(name = "病史",orderNum = "9")
+    private String bs;
+    @Excel(name = "备注",orderNum = "10")
+    private String remak;
+
+    public String getBs() {
+        return bs;
+    }
+
+    public void setBs(String bs) {
+        this.bs = bs;
+    }
+
+    public String getRemak() {
+        return remak;
+    }
+
+    public void setRemak(String remak) {
+        this.remak = remak;
+    }
 
     public String getmName() {
         return mName;

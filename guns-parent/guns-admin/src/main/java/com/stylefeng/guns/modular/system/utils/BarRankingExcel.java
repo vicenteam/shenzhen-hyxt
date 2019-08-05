@@ -12,6 +12,8 @@ public class BarRankingExcel {
     private String mLevel;
     @Excel(name = "积分值",orderNum = "3")
     private String mIntegral;
+//    @Excel(name = "所属门店",orderNum = "4")
+//    private String deptName;
 
     public String getmName() {
         return mName;
@@ -36,4 +38,12 @@ public class BarRankingExcel {
     public void setmIntegral(String mIntegral) {
         this.mIntegral = mIntegral;
     }
+
+//    public String getDeptName() {
+//        return deptName;
+//    }
+//
+//    public void setDeptName(String deptName) {
+//        this.deptName = deptName;
+//    }
 }

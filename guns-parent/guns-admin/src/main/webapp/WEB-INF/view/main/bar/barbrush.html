@@ -436,14 +436,8 @@
 <script src="${ctxPath}/static/js/plugins/layer/layer.js"></script>
 <script>
     function exportExcel() {
-        layer.open({
-            type: 2,
-            title: '签到记录导出向导',
-            area: ['800px', '450px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: '/barbrush/exportView'
-        });
+
+        //window.location.href="/barranking/export_excel"
 
     }
 </script>

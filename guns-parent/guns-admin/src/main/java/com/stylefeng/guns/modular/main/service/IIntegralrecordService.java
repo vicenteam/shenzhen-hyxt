@@ -27,7 +27,7 @@ public interface IIntegralrecordService extends IService<Integralrecord> {
                                                   String orderBy,
                                                   String desc);
 
-    int productSalesRankingintCount(Integer pagetNum,
+    List<Map<String, Object>>  productSalesRankingintCount(Integer pagetNum,
                                     Integer pageSize,
                                     String deptId,
                                     String monthTime1,

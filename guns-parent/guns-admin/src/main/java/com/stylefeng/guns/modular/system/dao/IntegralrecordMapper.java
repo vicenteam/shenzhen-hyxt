@@ -26,7 +26,7 @@ public interface IntegralrecordMapper extends BaseMapper<Integralrecord> {
                                                  @Param("periodTime2")String periodTime2,
                                                  @Param("orderBy")String orderBy,
                                                  @Param("desc")String desc);
-    int productSalesRankingCount(@Param("pageNum")Integer pagetNum,
+    List<Map<String, Object>>  productSalesRankingCount(@Param("pageNum")Integer pagetNum,
                                            @Param("pageSize")Integer pageSize,
                                            @Param("deptId")String deptId,
                                            @Param("monthTime1")String monthTime1,
