@@ -1147,7 +1147,7 @@ public class MembermanagementController extends BaseController {
         membershipcardtypeEntityWrapper.orderBy("upamount",true);
         List<Membershipcardtype> membershipcardtypes = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
         EntityWrapper<Dept> wrapper = new EntityWrapper<>();
-
+        wrapper.ne("id",53);
         List<Dept> depts = this.deptService.selectList(wrapper);
         List<Map<String, Object>> list = new ArrayList<>();
         for (Membershipcardtype me : membershipcardtypes) {

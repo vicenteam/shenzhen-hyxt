@@ -92,7 +92,23 @@ public class MembermanagementIsVisitController extends BaseController {
         membermanagementService.updateisvisit(getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), 2));
         return PREFIX + "membermanagement.html";
     }
+    @RequestMapping("list2Page")
+    public String list2Page(Model model) {
+        BaseEntityWrapper<User> deptBaseEntityWrapper = new BaseEntityWrapper<>();
+        List list = userService.selectList(deptBaseEntityWrapper);
+        model.addAttribute("staffs", list);
+        EntityWrapper<Dept> deptBaseEntityWrapper1 = new EntityWrapper<>();
+        if (ShiroKit.getUser().getAccount().equals("admin")) {
+        } else {
+            deptBaseEntityWrapper1.eq("id", ShiroKit.getUser().getDeptId());
+        }
+        List depts = deptService.selectList(deptBaseEntityWrapper1);
+        model.addAttribute("depts", depts);
+        //更改待回访状态
 
+        membermanagementService.updateisvisit(getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), 2));
+        return PREFIX + "membermanagement2.html";
+    }
 
     /**
      * 获取会员管理列表
@@ -124,7 +140,29 @@ public class MembermanagementIsVisitController extends BaseController {
         }
         return super.packForBT(mapPage);
     }
+    @RequestMapping(value = "/list2")
+    @ResponseBody
+    public Object list2(Integer name) {
+        Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
+        String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
+        BaseEntityWrapper<Membermanagement> membermanagementEntityWrapper = new BaseEntityWrapper<>();
+        Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, membermanagementEntityWrapper);
+        String startTime=specifiedDayBefore+" 00:00:00";
+        String endTime=DateUtil.formatDate(new Date(),"yyyy-MM-dd")+" 23:59:59";
 
+        mapPage.setTotal(qiandaoCheckinService.list2Count(name,ShiroKit.getUser().deptId,startTime,endTime));
+        mapPage.setRecords(qiandaoCheckinService.list2(name, ShiroKit.getUser().deptId, startTime, endTime, page.getOffset(), page.getLimit()));
+        List<Map<String, Object>> records = mapPage.getRecords();
+        for (Map<String, Object> map : records) {
+            String s = (String) map.get("levelID");
+            Integer id = (int) map.get("id");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+            if (membershipcardtype != null) {
+                map.put("levelID", membershipcardtype.getCardname());
+            }
+        }
+        return super.packForBT(mapPage);
+    }
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer membermanagementId) {

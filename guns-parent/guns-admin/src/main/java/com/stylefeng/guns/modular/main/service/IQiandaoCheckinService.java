@@ -2,6 +2,10 @@ package com.stylefeng.guns.modular.main.service;
 
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.baomidou.mybatisplus.service.IService;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -26,4 +30,7 @@ public interface IQiandaoCheckinService extends IService<QiandaoCheckin> {
      * @return
      */
     String selectNewUpdateTime(Integer memberId, String beginTime, String endTime);
+
+    int list2Count(@Param("dayse")Integer dayse,@Param("deptId")Integer deptId, @Param("beginTime")String beginTime, @Param("endTime")String endTime);
+    List<Map<String,Object>> list2(Integer dayse, Integer deptId, String beginTime, String endTime, int pageNum, int pageSize);
 }

@@ -1,8 +1,12 @@
 package com.stylefeng.guns.modular.system.dao;
 
+import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -27,4 +31,7 @@ public interface QiandaoCheckinMapper extends BaseMapper<QiandaoCheckin> {
      * @return
      */
     String selectNewUpdateTime(@Param("memberId")Integer memberId, @Param("beginTime")String beginTime, @Param("endTime")String endTime);
+
+    List<Map<String,Object>> list2(@Param("dayse")Integer dayse, @Param("deptId")Integer deptId, @Param("beginTime")String beginTime, @Param("endTime")String endTime, @Param("pageNum")int pageNum, @Param("pageSize")int pageSize);
+    int list2Count(@Param("dayse")Integer dayse,@Param("deptId")Integer deptId, @Param("beginTime")String beginTime, @Param("endTime")String endTime);
 }

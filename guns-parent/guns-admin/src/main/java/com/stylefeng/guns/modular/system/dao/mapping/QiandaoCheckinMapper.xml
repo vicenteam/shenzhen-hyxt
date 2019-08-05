@@ -51,4 +51,25 @@
             </if>
             )
     </select>
+
+
+    <select id="list2" resultType="map">
+        select * from main_membermanagement
+where id in
+(
+select b.memberid from (select count(a.memberid) as dayse,a.memberid from main_qiandao_checkin a
+where  a.deptid=#{deptId} and a.updatetime BETWEEN #{beginTime} and #{endTime}
+GROUP BY a.memberid) b
+WHERE b.dayse=#{dayse}
+)
+limit #{pageNum},#{pageSize}
+    </select>
+    <select id="list2Count" resultType="java.lang.Integer">
+       select count(1) from (select count(a.memberid) as dayse,a.memberid from main_qiandao_checkin a
+where  a.deptid=#{deptId} and a.updatetime BETWEEN #{beginTime} and #{endTime}
+GROUP BY a.memberid) b
+WHERE b.dayse=#{dayse}
+    </select>
+
+
 </mapper>
