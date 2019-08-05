@@ -1112,7 +1112,7 @@ public class MembermanagementController extends BaseController {
     public Object AllMembersHeadData() {
         EntityWrapper<Dept> wrapper = new EntityWrapper<>();
         wrapper.ne("id",53);
-        List<Dept> depts = this.deptService.selectList(null);
+        List<Dept> depts = this.deptService.selectList(wrapper);
         List<Map<String, Object>> result = new ArrayList<>();
         for (Dept de : depts) {
             Map<String, Object> map = new HashMap<>();
