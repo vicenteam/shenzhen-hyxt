@@ -14,10 +14,8 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
-import com.stylefeng.guns.modular.system.model.Integralrecord;
-import com.stylefeng.guns.modular.system.model.Integralrecordtype;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
-import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.utils.MemberExcel;
 import com.stylefeng.guns.modular.system.utils.MemberJifenExcel;
@@ -57,6 +55,8 @@ public class IntegralRecordQueryController extends BaseController {
     private IUserService userService;
     @Autowired
     private IIntegralrecordtypeService integralrecordtypeService;
+    @Autowired
+    private IDeptService deptService;
 
     @RequestMapping("")
     public String index(Model model){
@@ -188,6 +188,15 @@ public class IntegralRecordQueryController extends BaseController {
                     map.put("memberName",membermanagement.getName());
                     map.put("memberPhone",membermanagement.getPhone());
                     map.put("membercadid",membermanagement.getCadID());
+                    //获取现有积分总数
+                    map.put("integral",membermanagement.getIntegral());
+                    //获取已消耗积分总数
+                    EntityWrapper<Integralrecord> integralrecordEntityWrapper = new EntityWrapper<>();
+                    integralrecordEntityWrapper.eq("memberId",membermanagement.getId());
+                    integralrecordEntityWrapper.isNotNull("typeId");
+                    List<Integralrecord> integralrecords = integralrecordService.selectList(integralrecordEntityWrapper);
+                    double sum = integralrecords.stream().mapToDouble(Integralrecord::getIntegral).sum();
+                    map.put("useIntegral",sum);
                 }
                 if(map.get("staffid") != null){
                     map.put("staffName",userService.selectById(map.get("staffid").toString()).getName());
@@ -228,5 +237,48 @@ public class IntegralRecordQueryController extends BaseController {
             outputStream.close();
         }
     }
-
+    @RequestMapping("jfmxb")
+    public String jfmxb(Model model){
+        return PREFIX + "jifenmingxibiao.html";
+    }
+    @RequestMapping(value = "/jifenmingxibiaoList")
+    @ResponseBody
+    public Object jifenmingxibiaoList(String condition) {
+        Page<Dept> page = new PageFactory<Dept>().defaultPage();
+        EntityWrapper<Dept> iWrapper = new EntityWrapper<>();
+        if(!StringUtils.isEmpty(condition))iWrapper.like("fullname",condition);
+        Page<Map<String, Object>> mapPage = deptService.selectMapsPage(page, iWrapper);
+        for(Map<String, Object> map : mapPage.getRecords()){
+            String deptId = map.get("id").toString();
+            //查询会员人数
+            EntityWrapper<Membermanagement> wrapper = new EntityWrapper<>();
+            wrapper.eq("deptId",deptId);
+            int i = membermanagementService.selectCount(wrapper);
+            map.put("sumRen",i);
+            //查询积分总分
+            double sum1 = membermanagementService.selectList(wrapper).stream().mapToDouble(Membermanagement::getCountPrice).sum();
+            map.put("sumJifenzongshu",sum1);
+            //查询已消耗积分总数
+            EntityWrapper<Integralrecord> wrapper1 = new EntityWrapper<>();
+            wrapper1.eq("deptId",deptId);
+            wrapper1.isNotNull("typeId");
+            double sum = integralrecordService.selectList(wrapper1).stream().mapToDouble(Integralrecord::getIntegral).sum();
+            map.put("sumXiaohao",sum);
+            //查询签到积分数
+            EntityWrapper<Integralrecord> wrapper2 = new EntityWrapper<>();
+            wrapper2.eq("deptId",deptId);
+            wrapper2.eq("otherTypeId",0);
+            double sum2 = integralrecordService.selectList(wrapper2).stream().mapToDouble(Integralrecord::getIntegral).sum();
+            map.put("sumQiandao",sum2);
+            //查询空包装兑换加的积分数
+            //查询哪种商品兑换的总分总数
+            //查询积分兑换总数
+            EntityWrapper<Integralrecord> wrapper3 = new EntityWrapper<>();
+            wrapper3.eq("deptId",deptId);
+            wrapper3.eq("typeId",1).or().eq("typeId",3);
+            double sum3 = integralrecordService.selectList(wrapper3).stream().mapToDouble(Integralrecord::getIntegral).sum();
+            map.put("sumDuihuan",sum3);
+        }
+        return super.packForBT(mapPage);
+    }
 }

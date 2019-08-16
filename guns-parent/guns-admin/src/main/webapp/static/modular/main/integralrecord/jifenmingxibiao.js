@@ -15,24 +15,13 @@ Integralrecord.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             {title: '积分记录编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '会员名称', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
-            {title: '身份证号', field: 'membercadid', visible: true, align: 'center', valign: 'middle'},
-            {title: '联系电话', field: 'memberPhone', visible: true, align: 'center', valign: 'middle'},
-            {title: '花费金额', field: 'payMoney', visible: true, align: 'center', valign: 'middle'},
-            {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                     if(value>=0){
-                         return "<span style='color: green'>+"+value+"</span>";
-                     }else {
-                         return "<span style='color: red'>-"+value+"</span>";
-                     }
-                }},
-            {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},
-            {title: '积分总数', field: 'integral', visible: true, align: 'center', valign: 'middle'},
-            {title: '消耗总数', field: 'useIntegral', visible: true, align: 'center', valign: 'middle'},
-            {title: '积分明细', field: 'typeId', visible: true, align: 'center', valign: 'middle'},
-            {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '门店名称', field: 'simplename', visible: true, align: 'center', valign: 'middle'},
+            {title: '门店人数', field: 'sumRen', visible: true, align: 'center', valign: 'middle'},
+            {title: '积分总分', field: 'sumJifenzongshu', visible: true, align: 'center', valign: 'middle'},
+            {title: '消耗积分数', field: 'sumXiaohao', visible: true, align: 'center', valign: 'middle'},
+            {title: '签到总分', field: 'sumQiandao', visible: true, align: 'center', valign: 'middle'},
+            {title: '积分兑换总分', field: 'sumDuihuan', visible: true, align: 'center', valign: 'middle'},
+
     ];
 };
 
@@ -55,7 +44,7 @@ Integralrecord.check = function () {
  */
 Integralrecord.search = function () {
     var queryData = {};
-    queryData['operator'] = $("#operator").val();
+    queryData['condition'] = $("#condition").val();
     queryData['memberName'] = $("#memberName").val();
     queryData['cadId'] = $("#cadId").val();
     queryData['type'] = $("#type").val();
@@ -116,6 +105,7 @@ Integralrecord.form = function () {
     var queryData = {};
     queryData['operator'] = $("#operator").val();
     queryData['memberName'] = $("#memberName").val();
+    queryData['condition'] = $("#condition").val();
     queryData['cadId'] = $("#cadId").val();
     queryData['type'] = $("#type").val();
     queryData['integralType'] = $("#integralType").val();
@@ -126,10 +116,8 @@ Integralrecord.form = function () {
 };
 
 $(function () {
-    console.log($("#type").val());
-    Integralrecord.findIntegralType($("#type").val());
     var defaultColunms = Integralrecord.initColumn();
-    var table = new BSTable(Integralrecord.id, "/integralrecordquery/list", defaultColunms);
+    var table = new BSTable(Integralrecord.id, "/integralrecordquery/jifenmingxibiaoList", defaultColunms);
     //table.setPaginationType("client");
     table.setPaginationType("server");
     table.setQueryParams(Integralrecord.form());
@@ -142,24 +130,7 @@ $(function () {
  */
 Integralrecord.findIntegralType = function (type) {
     //清除数据
-    $("#integralType").empty();
-    var ajax = new $ax(Feng.ctxPath + "/integralrecordquery/findIntegralType", function (data) {
-        //    动态添加dom元素
-        if(type == "1"){
-            for(var i=0;i<data.length;i++){
-                $("#integralType").append('<option value="'+data[i].typeId+'">'+data[i].name+'</option>');
-            }
-        }else {
-            for(var i=0;i<data.length;i++){
-                $("#integralType").append('<option value="'+data[i].otherTypeId+'">'+data[i].name+'</option>');
-            }
-        }
 
-    }, function (data) {
-        Feng.error("活动积分明细失败!");
-    });
-    ajax.set("type", type);
-    ajax.start();
 };
 
 $("#type").change(function () {
