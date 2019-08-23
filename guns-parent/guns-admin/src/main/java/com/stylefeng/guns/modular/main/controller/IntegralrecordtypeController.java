@@ -164,6 +164,7 @@ public class IntegralrecordtypeController extends BaseController {
     public Object findCode(@PathVariable("productCode") String productCode) {
         BaseEntityWrapper<Integralrecordtype> integralrecordtypeBaseEntityWrapper = new BaseEntityWrapper<>();
         integralrecordtypeBaseEntityWrapper.eq("InventoryCode", productCode);
+        integralrecordtypeBaseEntityWrapper.eq("status", 0);
         Integralrecordtype integralrecordtype = integralrecordtypeService.selectOne(integralrecordtypeBaseEntityWrapper);
         return integralrecordtype == null ? "error" : integralrecordtype;
     }
