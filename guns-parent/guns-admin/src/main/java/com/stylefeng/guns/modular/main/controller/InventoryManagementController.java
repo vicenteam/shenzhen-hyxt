@@ -186,7 +186,8 @@ public class InventoryManagementController extends BaseController {
             baseEntityWrapper.between("createtime", startTime, endTime);
         baseEntityWrapper.eq("status", 1);
         baseEntityWrapper.orderBy("createtime", false);
-        baseEntityWrapper.isNull("toDeptId").or("toDeptId=0", "0");
+//        baseEntityWrapper.isNull("toDeptId").or("toDeptId=0", "0");
+        baseEntityWrapper.andNew("toDeptId is null or toDeptId=0","");
         Page<Map<String, Object>> page1 = inventoryManagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = page1.getRecords();
         records.forEach(a -> {

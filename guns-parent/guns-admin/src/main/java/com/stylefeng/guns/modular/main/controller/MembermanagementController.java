@@ -801,7 +801,7 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
         if (!StringUtils.isEmpty(townshipid)) baseEntityWrapper.eq("townshipid", townshipid);
 //        baseEntityWrapper.eq("state", 0);
-        List<Membermanagement> membermanagements = membermanagementService.selectList(baseEntityWrapper);
+            List<Membermanagement> membermanagements = membermanagementService.selectList(baseEntityWrapper);
         for (Membermanagement m : membermanagements) {
             Map<String, Object> mMap = new LinkedHashMap<>();
             mMap.put("mName", m.getName());
@@ -822,7 +822,7 @@ public class MembermanagementController extends BaseController {
             List<MemberBamedical> memberBamedicals = memberBamedicalService.selectList(wrapper);
             for(MemberBamedical ba:memberBamedicals){
                 BaMedical baMedical = baMedicalService.selectById(ba.getBamedicalid());
-                mMap.put("bs",mMap.get("bs")==null?mMap.get("bs").toString():mMap.get("bs").toString()+baMedical.getName()+",");
+                mMap.put("bs",mMap.get("bs")==null?"".toString():mMap.get("bs").toString()+baMedical.getName()+",");
             }
             MemberExcel memberExcel = JSON.parseObject(JSON.toJSONString(mMap), new TypeReference<MemberExcel>() {
             });
