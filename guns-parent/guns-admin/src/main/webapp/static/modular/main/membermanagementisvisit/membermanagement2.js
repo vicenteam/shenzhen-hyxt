@@ -113,7 +113,10 @@ Membermanagement.check = function () {
         return true;
     }
 };
+Membermanagement.dataexport = function () {
+    window.location.href = Feng.ctxPath + "/membermanagementisvisit/export_excel?name="+$("#name").val()+"&time="+$("#time").val()
 
+};
 /**
  * 点击添加会员基础信息
  */
@@ -197,7 +200,7 @@ Membermanagement.delete = function (id) {
 Membermanagement.search = function () {
     var queryData = {};
     queryData['name'] = $("#name").val();
-    queryData['address'] = $("#address").val();
+    queryData['time'] = $("#address").val();
     queryData['fstatus'] = $("#fstatus").val();
     queryData['sex'] = $("#sex").val();
     queryData['idcard'] = $("#idcard").val();
@@ -262,5 +265,5 @@ $(function () {
 });
 
 Membermanagement.exportExcel = function () {
-    window.location.href = Feng.ctxPath + "/membermanagementisvisit/export_excel";
+    window.location.href = Feng.ctxPath + "/membermanagementisvisit/export_excel2";
 };

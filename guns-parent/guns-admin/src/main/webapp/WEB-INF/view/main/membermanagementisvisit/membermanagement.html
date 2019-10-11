@@ -12,9 +12,13 @@
                             <div class="col-sm-2">
                                 <#NameCon id="name" name="连续未签到天数" />
                             </div>
+                            <div class="col-sm-2">
+                                <#TimeCon id="time" name="时间" isTime="false" pattern="yyyy-MM-dd" />
+                            </div>
 
                             <div class="col-sm-2">
                                 <#button name="搜索" icon="fa-search" clickFun="Membermanagement.search()"/>
+                                <#button name="数据导出" icon="fa-plus" clickFun="Membermanagement.dataexport()"/>
                                 <!--<#button name="读卡" icon="fa-search" clickFun="Membermanagement.search1()"/>-->
                             </div>
                         </div>

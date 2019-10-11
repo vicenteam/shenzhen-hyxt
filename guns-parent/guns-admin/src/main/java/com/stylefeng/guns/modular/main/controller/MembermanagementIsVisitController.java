@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -115,11 +116,17 @@ public class MembermanagementIsVisitController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(Integer name) {
+    public Object list(Integer name,String time ) {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
-        baseEntityWrapper.le("CheckINTime1",specifiedDayBefore+" 23:59:59");
+        if(!StringUtils.isEmpty(time)){
+            specifiedDayBefore=time;
+        }
+        specifiedDayBefore = specifiedDayBefore+" 23:59:59";
+
+        baseEntityWrapper.le("CheckINTime1",specifiedDayBefore);
+
         baseEntityWrapper.eq("deptId",ShiroKit.getUser().getDeptId());
         if(name!=null){
             baseEntityWrapper.eq("state", 0);
@@ -142,11 +149,14 @@ public class MembermanagementIsVisitController extends BaseController {
     }
     @RequestMapping(value = "/list2")
     @ResponseBody
-    public Object list2(Integer name) {
+    public Object list2(Integer name,String time) {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
         BaseEntityWrapper<Membermanagement> membermanagementEntityWrapper = new BaseEntityWrapper<>();
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, membermanagementEntityWrapper);
+        if(!StringUtils.isEmpty(time)){
+            specifiedDayBefore=time;
+        }
         String startTime=specifiedDayBefore+" 00:00:00";
         String endTime=DateUtil.formatDate(new Date(),"yyyy-MM-dd")+" 23:59:59";
 
@@ -173,49 +183,136 @@ public class MembermanagementIsVisitController extends BaseController {
     }
     @BussinessLog(value = "会员资料导出", key = "export_excel")
     @RequestMapping("export_excel")
-    public void export(HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public void export(HttpServletResponse response, HttpServletRequest request,Integer name,String time) throws Exception {
         List<Map<String, Object>> memberExcels = new ArrayList<>();
-        for (Membermanagement m : membermanagements) {
-            Map<String, Object> mMap = new LinkedHashMap<>();
-            mMap.put("name", m.getName());
-            mMap.put("sex", m.getSex());
-            mMap.put("phone", m.getPhone());
-            mMap.put("address", m.getAddress());
-            mMap.put("integral", m.getIntegral());
-            mMap.put("countPrice", m.getCountPrice());
-            mMap.put("isoldsociety", m.getIsoldsociety());
-            mMap.put("level", membershipcardtypeService.selectById(m.getLevelID()).getCardname());
-            mMap.put("createDt", m.getCreateTime());
-            mMap.put("deptName", deptService.selectById(m.getDeptId()).getFullname());
-            memberExcels.add(mMap);
+        Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
+        String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
+        BaseEntityWrapper<Membermanagement> membermanagementEntityWrapper = new BaseEntityWrapper<>();
+        Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, membermanagementEntityWrapper);
+        if(!StringUtils.isEmpty(time)){
+            specifiedDayBefore=time;
+        }
+        String startTime=specifiedDayBefore+" 00:00:00";
+        String endTime=DateUtil.formatDate(new Date(),"yyyy-MM-dd")+" 23:59:59";
+
+        List<Map<String, Object>> list = qiandaoCheckinService.list2(name, ShiroKit.getUser().deptId, startTime, endTime, page.getOffset(), 9999999);
+
+        for (Map<String, Object> m : list) {
+            String s = (String) m.get("levelID");
+            Integer id = (int) m.get("id");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+            if (membershipcardtype != null) {
+                m.put("levelID", membershipcardtype.getCardname());
+            }
+            memberExcels.add(m);
         }
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
         SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
-        Map<String, Object> mapTile = memberExcels.get(0);
+        Map<String, Object> mapTile = new HashMap<>();
+        if(memberExcels.size()>0){
+            mapTile = memberExcels.get(0);
+        }
         //创建excel 数据列名
         SXSSFRow rowTitle = sxssfSheet.createRow(0);
         Integer j = 0;
         for (Map.Entry<String, Object> entry : mapTile.entrySet()) {
             if (entry.getKey().equals("name")) {
-                CellUtil.createCell(rowTitle, j, "客户名称");
+                CellUtil.createCell(rowTitle, j, "姓名");
             } else if (entry.getKey().equals("sex")) {
                 CellUtil.createCell(rowTitle, j, "性别");
             } else if (entry.getKey().equals("phone")) {
                 CellUtil.createCell(rowTitle, j, "联系电话");
-            } else if (entry.getKey().equals("address")) {
-                CellUtil.createCell(rowTitle, j, "联系地址");
+            } else if (entry.getKey().equals("isvisit")) {
+                CellUtil.createCell(rowTitle, j, "回访状态");
             } else if (entry.getKey().equals("integral")) {
-                CellUtil.createCell(rowTitle, j, "可用积分");
-            } else if (entry.getKey().equals("countPrice")) {
-                CellUtil.createCell(rowTitle, j, "总积分");
+                CellUtil.createCell(rowTitle, j, "当前积分");
+            } else if (entry.getKey().equals("levelID")) {
+                CellUtil.createCell(rowTitle, j, "会员等级");
             } else if (entry.getKey().equals("isoldsociety")) {
                 CellUtil.createCell(rowTitle, j, "是否老年协会会员");
-            } else if (entry.getKey().equals("level")) {
-                CellUtil.createCell(rowTitle, j, "卡片等级");
-            } else if (entry.getKey().equals("createDt")) {
-                CellUtil.createCell(rowTitle, j, "开卡时间");
-            } else if (entry.getKey().equals("deptName")) {
-                CellUtil.createCell(rowTitle, j, "门店名称");
+            } else if (entry.getKey().equals("countPrice")) {
+                CellUtil.createCell(rowTitle, j, "总获得积分");
+            }
+            j++;
+        }
+        for (int i = 0; i < memberExcels.size(); i++) {
+            Map<String, Object> nMap = memberExcels.get(i);
+            SXSSFRow row = sxssfSheet.createRow(i + 1);
+            // 数据
+            Integer k = 0;
+            for (Map.Entry<String, Object> ma : nMap.entrySet()) {
+                String value = "";
+                if (ma.getValue() != null) {
+                    value = ma.getValue().toString();
+                }
+                CellUtil.createCell(row, k, value);
+                k++;
+            }
+        }
+        response.setHeader("content-Type", "application/vnc.ms-excel;charset=utf-8");
+        //文件名使用uuid，避免重复
+        response.setHeader("Content-Disposition", "attachment;filename=" + "会员信息" + ".xlsx");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            sxssfWorkbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
+    }
+
+    @RequestMapping("export_excel2")
+    public void export2(HttpServletResponse response, HttpServletRequest request,Integer name,String time) throws Exception {
+        List<Map<String, Object>> memberExcels = new ArrayList<>();
+        Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
+        String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
+        BaseEntityWrapper<Membermanagement> membermanagementEntityWrapper = new BaseEntityWrapper<>();
+        Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, membermanagementEntityWrapper);
+        if(!StringUtils.isEmpty(time)){
+            specifiedDayBefore=time;
+        }
+        String startTime=specifiedDayBefore+" 00:00:00";
+        String endTime=DateUtil.formatDate(new Date(),"yyyy-MM-dd")+" 23:59:59";
+
+        List<Map<String, Object>> list = qiandaoCheckinService.list2(name, ShiroKit.getUser().deptId, startTime, endTime, page.getOffset(), 999999);
+        for (Map<String, Object> m : list) {
+            String s = (String) m.get("levelID");
+            Integer id = (int) m.get("id");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+            if (membershipcardtype != null) {
+                m.put("levelID", membershipcardtype.getCardname());
+            }
+            memberExcels.add(m);
+        }
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+        Map<String, Object> mapTile = new HashMap<>();
+        if(memberExcels.size()>0){
+            mapTile = memberExcels.get(0);
+        }
+        //创建excel 数据列名
+        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+        Integer j = 0;
+        for (Map.Entry<String, Object> entry : mapTile.entrySet()) {
+            if (entry.getKey().equals("name")) {
+                CellUtil.createCell(rowTitle, j, "姓名");
+            } else if (entry.getKey().equals("sex")) {
+                CellUtil.createCell(rowTitle, j, "性别");
+            } else if (entry.getKey().equals("phone")) {
+                CellUtil.createCell(rowTitle, j, "联系电话");
+            } else if (entry.getKey().equals("isvisit")) {
+                CellUtil.createCell(rowTitle, j, "回访状态");
+            } else if (entry.getKey().equals("integral")) {
+                CellUtil.createCell(rowTitle, j, "当前积分");
+            } else if (entry.getKey().equals("levelID")) {
+                CellUtil.createCell(rowTitle, j, "会员等级");
+            } else if (entry.getKey().equals("isoldsociety")) {
+                CellUtil.createCell(rowTitle, j, "是否老年协会会员");
+            } else if (entry.getKey().equals("countPrice")) {
+                CellUtil.createCell(rowTitle, j, "总获得积分");
             }
             j++;
         }
