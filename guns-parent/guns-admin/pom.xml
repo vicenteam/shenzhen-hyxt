@@ -147,7 +147,7 @@
             <version>3.0.1</version>
             <scope>system</scope>
             <systemPath>
-                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-httpclient-3.0.1.jar
+                F:/2019-5-14/code/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-httpclient-3.0.1.jar
             </systemPath>
         </dependency>
         <dependency>
@@ -156,7 +156,7 @@
             <version>1.9</version>
             <scope>system</scope>
             <systemPath>
-                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-codec-1.9.jar
+                F:/2019-5-14/code/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/commons-codec-1.9.jar
             </systemPath>
         </dependency>
         <dependency>
@@ -165,7 +165,7 @@
             <version>2.6</version>
             <scope>system</scope>
             <systemPath>
-                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/JDiy-2.6.jar
+                F:/2019-5-14/code/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/JDiy-2.6.jar
             </systemPath>
         </dependency>
         <dependency>
@@ -174,8 +174,18 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>
-                D:/1-2018-10-29/codepool/stylefeng-guns-master/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/openApi.jar
+                F:/2019-5-14/code/shenzhen-hyxt/guns-parent/guns-admin/src/main/java/yongyou/lib/openApi.jar
             </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.12</version>
+        </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
         </dependency>
     </dependencies>
 

@@ -346,6 +346,7 @@ public class MembermanagementIsVisitController extends BaseController {
     }
 
     public static String getSpecifiedDayBefore(String specifiedDay,Integer cds) {
+        Base64.getEncoder();
 //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         Date date = null;
